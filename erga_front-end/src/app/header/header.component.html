@@ -1,30 +1,94 @@
+<!--<div id="headerContent">-->
+<!--  <p>A GENOME ATLAS OF EUROPEAN BIODIVERSITY</p>-->
+<!--  <video role="presentation" crossorigin="anonymous" playsinline="" preload="auto" muted="" loop="" autoplay="" tabindex="-1">-->
+<!--    <source src="../../assets/Jellyfish.mp4" type="video/mp4">-->
+<!--    Your browser does not support HTML5 video.-->
+<!--  </video>-->
+<!--</div>-->
 
-  <mat-toolbar>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button>
-    <span>ERGA Data Portal</span>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon favorite-icon"
-            aria-label="Example icon-button with heart icon" matTooltip="About">
-      <mat-icon>zoom_in</mat-icon>
-    </button>
-    <button mat-icon-button class="example-icon favorite-icon"
-            aria-label="Example icon-button with heart icon" matTooltip="API documentation">
-      <mat-icon>api</mat-icon>
-    </button>
-    <button mat-icon-button class="example-icon"
-            aria-label="Example icon-button with share icon" matTooltip="Help">
-      <mat-icon>help</mat-icon>
-    </button>
-  </mat-toolbar>
-
-<div id="headerContent">
-  <p>A GENOME ATLAS OF EUROPEAN BIODIVERSITY</p>
-  <video autoplay muted loop id="myVideo">
-    <source src="../../assets/Jellyfish%20-%2026818.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
-  </video>
-</div>
-
-
+<mat-sidenav-container>
+  <mat-sidenav  #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home">
+        <mat-icon class="icon">backup_table</mat-icon>
+        <span class="label">Data portal</span>
+      </a>
+      <a mat-list-item routerLink="/status_tracking">
+        <mat-icon class="icon">timeline</mat-icon>
+        <span class="label">Status tracking</span>
+      </a>
+      <a mat-list-item routerLink="/phylogeny">
+        <mat-icon class="icon">account_tree</mat-icon>
+        <span class="label">Phylogeny</span>
+      </a>
+      <a  mat-list-item type="button" routerLink="/about">
+        <mat-icon class="icon">zoom_in</mat-icon>
+        <span class="label">About</span>
+      </a>
+      <a  mat-list-item type="button" routerLink="/api_documentation">
+        <mat-icon class="icon">api</mat-icon>
+        <span class="label">API Documentation</span>
+      </a>
+      <a  mat-list-item type="button" routerLink="/help">
+        <mat-icon class="icon">help</mat-icon>
+        <span class="label">Help</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <div fxHide.gt-xs>
+        <button mat-icon-button (click)="snav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+      <div>
+        <a>
+          ERGA Data Portal
+        </a>
+      </div>
+      <div fxFlex fxLayout fxLayoutAlign="flex-end"  fxHide.xs>
+        <ul fxLayout fxLayoutGap="20px" class="navigation-items">
+          <li>
+            <a routerLink="/home">
+              <mat-icon class="icon">backup_table</mat-icon>
+              <span  class="label">Data portal</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/status_tracking">
+              <mat-icon class="icon">timeline</mat-icon>
+              <span class="label">Status tracking</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/phylogeny">
+              <mat-icon class="icon">account_tree</mat-icon>
+              <span class="label">Phylogeny</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/about">
+              <mat-icon class="icon">zoom_in</mat-icon>
+              <span class="label">About</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/api_documentation">
+              <mat-icon class="icon">api</mat-icon>
+              <span class="label">API Documentation</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/help">
+              <mat-icon class="icon">help</mat-icon>
+              <span class="label">Help</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </mat-toolbar>
+    <main>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
