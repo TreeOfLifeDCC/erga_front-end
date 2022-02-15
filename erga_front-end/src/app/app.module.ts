@@ -14,6 +14,7 @@ import { AboutComponent } from './about/about.component';
 import { ApiDocumentationComponent } from './api-documentation/api-documentation.component';
 import { HelpComponent } from './help/help.component';
 import { BannerComponent } from './banner/banner.component';
+import { DataPortalComponent } from './data-portal/data-portal.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { BannerComponent } from './banner/banner.component';
     AboutComponent,
     ApiDocumentationComponent,
     HelpComponent,
-    BannerComponent
+    BannerComponent,
+    DataPortalComponent
   ],
   imports: [
     BrowserModule,

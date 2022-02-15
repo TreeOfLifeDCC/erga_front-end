@@ -1,38 +1,194 @@
-<p>Home works!</p>
-<!--<mat-grid-list cols="4" rowHeight="100px">-->
-<!--&lt;!&ndash;  <mat-grid-tile&ndash;&gt;-->
-<!--&lt;!&ndash;    *ngFor="let tile of tiles"&ndash;&gt;-->
-<!--&lt;!&ndash;    [colspan]="tile.cols"&ndash;&gt;-->
-<!--&lt;!&ndash;    [rowspan]="tile.rows"&ndash;&gt;-->
-<!--&lt;!&ndash;    [style.background]="tile.color">&ndash;&gt;-->
-<!--&lt;!&ndash;    {{tile.text}}&ndash;&gt;-->
-<!--&lt;!&ndash;  </mat-grid-tile>&ndash;&gt;-->
-<!--  <mat-grid-tile colspan="2" rowspan="1">-->
-<!--    <button mat-flat-button color="primary" style="width: 50em; height: 3em;">-->
-<!--      Data Portal-->
-<!--      <mat-icon>backup_table</mat-icon>-->
-<!--    </button>-->
-<!--  </mat-grid-tile>-->
-<!--  <mat-grid-tile colspan="2" rowspan="2">-->
-<!--    <h1 class="page-header">-->
-<!--      Tweets-->
-<!--    </h1>-->
-<!--&lt;!&ndash;    <div class="text-center">&ndash;&gt;-->
-<!--&lt;!&ndash;      <a class="twitter-timeline" href="https://twitter.com/darwintreelife?ref_src=twsrc%5Etfw" data-height="300" data-theme="light" data-width="650" data-chrome="noborders nofooter noscrollbar transparent">&ndash;&gt;-->
-<!--&lt;!&ndash;      </a>&ndash;&gt;-->
-<!--&lt;!&ndash;      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>&ndash;&gt;-->
-<!--&lt;!&ndash;    </div>&ndash;&gt;-->
-<!--  </mat-grid-tile>-->
-<!--  <mat-grid-tile colspan="1" rowspan="1">-->
-<!--    <button mat-flat-button color="primary" style="width: 25em; height: 3em;">-->
-<!--      Phylogeny-->
-<!--      <mat-icon>account_tree</mat-icon>-->
-<!--    </button>-->
-<!--  </mat-grid-tile>-->
-<!--  <mat-grid-tile colspan="1" rowspan="1">-->
-<!--    <button mat-flat-button color="primary" style="width: 25em; height: 3em;">-->
-<!--      Status Tracking-->
-<!--      <mat-icon>timeline</mat-icon>-->
-<!--    </button>-->
-<!--  </mat-grid-tile>-->
-<!--</mat-grid-list>-->
+<app-banner></app-banner>
+<br>
+<div class="container">
+  <div class-="item">
+          <mat-card>
+            <mat-card-title>Data Portal</mat-card-title>
+            <mat-card-subtitle>Data Portal description</mat-card-subtitle>
+            <mat-card-actions>
+              <mat-chip-list aria-label="Statistics">
+                <mat-chip>
+                  Species
+                  <button mat-button color="primary">
+                    2888
+                  </button>
+                </mat-chip>
+                <mat-chip>
+                  Organisms
+                  <button mat-button color="primary">
+                    8661
+                  </button>
+                </mat-chip>
+                <mat-chip color="primary">
+                  Specimens
+                  <button mat-button color="primary">
+                    14678
+                  </button>
+                </mat-chip>
+              </mat-chip-list>
+              <mat-chip-list aria-label="Project">
+                <mat-chip color="accent" selected>
+                  ERGA
+                  <button mat-button color="primary">
+                    0
+                  </button>
+                </mat-chip>
+                <mat-chip color="accent" selected>
+                  DToL
+                  <button mat-button color="primary">
+                    2863
+                  </button>
+                </mat-chip>
+                <mat-chip color="accent" selected>
+                  25 Genomes
+                  <button mat-button color="primary">
+                    25
+                  </button>
+                </mat-chip>
+              </mat-chip-list>
+              <mat-chip-list aria-label="Project">
+                <mat-chip color="accent" selected>
+                  Raw data submitted to ENA
+                  <button mat-button color="primary">
+                    0
+                  </button>
+                </mat-chip>
+                <mat-chip color="accent" selected>
+                  Mapped reads submitted to ENA
+                  <button mat-button color="primary">
+                    2863
+                  </button>
+                </mat-chip>
+                <mat-chip color="accent" selected>
+                  Assemblies submitted to ENA
+                  <button mat-button color="primary">
+                    25
+                  </button>
+                </mat-chip>
+              </mat-chip-list>
+            </mat-card-actions>
+            <button mat-flat-button color="primary">
+              Data portal
+            </button>
+          </mat-card>
+  </div>
+
+  <div class-="item">
+    <mat-card>
+      <mat-card-title>Twitter</mat-card-title>
+      <mat-card-subtitle>Twitter</mat-card-subtitle>
+      <mat-card-actions>
+        <a class="twitter-timeline"
+           data-height="250" data-theme="light" data-width="650"
+           data-chrome="noborders nofooter noscrollbar transparent"
+           href="https://twitter.com/erga_biodiv">Tweets by profile</a>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+<br>
+
+<div class="container">
+    <div class-="item">
+      <mat-card>
+        <mat-card-title>Phylogeny</mat-card-title>
+        <mat-card-subtitle>Phylogeny description</mat-card-subtitle>
+        <mat-card-actions>
+          <mat-chip-list aria-label="Statistics">
+            <mat-chip color="warn" selected>
+              Fungi
+              <button mat-button color="primary">
+                28
+              </button>
+            </mat-chip>
+            <mat-chip>
+              Metazoa
+              <button mat-button color="primary">
+                1999
+              </button>
+            </mat-chip>
+            <mat-chip color="primary">
+              Viridiplanta
+              <button mat-button color="primary">
+                669
+              </button>
+            </mat-chip>
+          </mat-chip-list>
+          <mat-chip-list aria-label="Statistics">
+            <mat-chip color="warn" selected>
+              Apicomplexa
+              <button mat-button color="primary">
+                28
+              </button>
+            </mat-chip>
+            <mat-chip>
+              Ciliophora
+              <button mat-button color="primary">
+                1999
+              </button>
+            </mat-chip>
+            <mat-chip color="primary">
+              Rhodophyta
+              <button mat-button color="primary">
+                669
+              </button>
+            </mat-chip>
+          </mat-chip-list>
+        </mat-card-actions>
+        <button mat-flat-button color="primary">
+          Phylogeny
+        </button>
+      </mat-card>
+    </div>
+    <div class-="item">
+      <mat-card>
+        <mat-card-title>Status tracking</mat-card-title>
+        <mat-card-subtitle>Status Tracking description</mat-card-subtitle>
+        <mat-card-actions>
+          <mat-chip-list aria-label="Statistics">
+            <mat-chip color="warn" selected>
+              Submitted to BioSamples
+              <button mat-button color="primary">
+                2888
+              </button>
+            </mat-chip>
+            <mat-chip>
+              Raw Data submitted to ENA
+              <button mat-button color="primary">
+                8661
+              </button>
+            </mat-chip>
+            <mat-chip color="primary">
+              Mapped Reads submitted to ENA
+              <button mat-button color="primary">
+                14678
+              </button>
+            </mat-chip>
+          </mat-chip-list>
+          <mat-chip-list aria-label="Statistics">
+            <mat-chip>
+              Assemblies submitted
+              <button mat-button color="primary">
+                2888
+              </button>
+            </mat-chip>
+            <mat-chip>
+              Annotation completed
+              <button mat-button color="primary">
+                8661
+              </button>
+            </mat-chip>
+            <mat-chip color="primary">
+              Annotation submitted to ENA
+              <button mat-button color="primary">
+                14678
+              </button>
+            </mat-chip>
+          </mat-chip-list>
+        </mat-card-actions>
+        <button mat-flat-button color="primary">
+          Status Tracking
+        </button>
+      </mat-card>
+    </div>
+</div>

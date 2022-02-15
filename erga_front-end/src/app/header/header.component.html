@@ -9,7 +9,7 @@
 <mat-sidenav-container>
   <mat-sidenav  #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
     <mat-nav-list>
-      <a mat-list-item routerLink="/home">
+      <a mat-list-item routerLink="/data_portal">
         <mat-icon class="icon">backup_table</mat-icon>
         <span class="label">Data portal</span>
       </a>
@@ -43,14 +43,14 @@
         </button>
       </div>
       <div>
-        <a>
+        <a routerLink="/home">
           ERGA Data Portal
         </a>
       </div>
       <div fxFlex fxLayout fxLayoutAlign="flex-end"  fxHide.xs>
         <ul fxLayout fxLayoutGap="20px" class="navigation-items">
           <li>
-            <a routerLink="/home">
+            <a routerLink="/data_portal">
               <mat-icon class="icon">backup_table</mat-icon>
               <span  class="label">Data portal</span>
             </a>

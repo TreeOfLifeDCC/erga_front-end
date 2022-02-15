@@ -7,6 +7,10 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
+import {MatCardModule} from "@angular/material/card";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatChipsModule} from "@angular/material/chips";
+import {MatBadgeModule} from "@angular/material/badge";
 
 
 
@@ -20,7 +24,11 @@ import {MatListModule} from "@angular/material/list";
     MatGridListModule,
     MatTooltipModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatCardModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatBadgeModule
   ],
   exports: [
     MatToolbarModule,
@@ -29,7 +37,11 @@ import {MatListModule} from "@angular/material/list";
     MatGridListModule,
     MatTooltipModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatCardModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatBadgeModule
   ]
 })
 export class MaterialModule { }

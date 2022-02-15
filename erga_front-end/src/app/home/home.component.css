@@ -1,3 +1,10 @@
-button {
-  font-size: 2em;
+.container {
+  display: flex; /* or inline-flex */
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  gap: 10px 20px;
 }
+
+/*.example-spacer {*/
+/*  flex: 1 1 auto;*/
+/*}*/
