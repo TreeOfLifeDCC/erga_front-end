@@ -15,6 +15,7 @@ import { ApiDocumentationComponent } from './api-documentation/api-documentation
 import { HelpComponent } from './help/help.component';
 import { BannerComponent } from './banner/banner.component';
 import { DataPortalComponent } from './data-portal/data-portal.component';
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { DataPortalComponent } from './data-portal/data-portal.component';
     BrowserAnimationsModule,
     RoutingModule,
     MaterialModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

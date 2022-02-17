@@ -11,6 +11,10 @@ import {MatCardModule} from "@angular/material/card";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatBadgeModule} from "@angular/material/badge";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 
@@ -28,7 +32,11 @@ import {MatBadgeModule} from "@angular/material/badge";
     MatCardModule,
     MatDividerModule,
     MatChipsModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule
   ],
   exports: [
     MatToolbarModule,
@@ -41,7 +49,11 @@ import {MatBadgeModule} from "@angular/material/badge";
     MatCardModule,
     MatDividerModule,
     MatChipsModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule
   ]
 })
 export class MaterialModule { }
