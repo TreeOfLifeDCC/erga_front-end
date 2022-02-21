@@ -36,7 +36,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
-          return this._apiService.getData(
+          return this._apiService.getData(this.paginator.pageIndex,
+            this.paginator.pageSize
           ).pipe(catchError(() => observableOf(null)));
         }),
         map(data => {
@@ -53,11 +54,19 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
           // would prevent users from re-triggering requests.
           this.resultsLength = data.count;
           this.aggregations = data.aggregations;
-          console.log(this.aggregations);
           return data.results;
         }),
       )
       .subscribe(data => (this.data = data));
+  }
+
+  getStatusCount(data: any) {
+    if (data) {
+      for (let i=0; i < data.length; ++i) {
+        if (data[i]['key'] === 'Done')
+          return data[i]['doc_count'];
+      }
+    }
   }
 
 }

@@ -12,7 +12,7 @@
             <h4 matLine>BioSamples - Submitted</h4>
             <mat-chip-list>
               <mat-chip style="font-size: 10px">
-                2887
+                {{getStatusCount(aggregations?.biosamples.buckets)}}
               </mat-chip>
             </mat-chip-list>
           </mat-list-item>
@@ -20,7 +20,7 @@
             <h4 matLine>Raw Data - Submitted</h4>
             <mat-chip-list>
               <mat-chip style="font-size: 10px">
-                278
+                {{getStatusCount(aggregations?.raw_data.buckets)}}
               </mat-chip>
             </mat-chip-list>
           </mat-list-item>
@@ -28,7 +28,7 @@
             <h4 matLine>Mapped Reads - Submitted</h4>
             <mat-chip-list>
               <mat-chip style="font-size: 10px">
-                278
+                {{getStatusCount(aggregations?.mapped_reads.buckets)}}
               </mat-chip>
             </mat-chip-list>
           </mat-list-item>
@@ -36,7 +36,7 @@
             <h4 matLine>Assemblies - Submitted</h4>
             <mat-chip-list>
               <mat-chip style="font-size: 10px">
-                237
+                {{getStatusCount(aggregations?.assemblies_status.buckets)}}
               </mat-chip>
             </mat-chip-list>
           </mat-list-item>
@@ -145,7 +145,7 @@
         </table>
       </div>
 
-      <mat-paginator [length]="resultsLength" [pageSize]="30" aria-label="Select page of GitHub search results"></mat-paginator>
+      <mat-paginator [length]="resultsLength" [pageSizeOptions]="[15, 50, 100]" aria-label="Select page of GitHub search results"></mat-paginator>
     </div>
 
   </div>

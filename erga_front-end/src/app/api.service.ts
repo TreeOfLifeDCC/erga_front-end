@@ -10,7 +10,11 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getData() {
-    return this.http.get<any>('http://45.88.80.62/api/data_portal');
+  getData(pageIndex: number, pageSize: number) {
+    console.log(pageIndex);
+    console.log(pageSize);
+    const offset = pageIndex * pageSize;
+    const url = `https://portal.erga-biodiversity.eu/api/data_portal?limit=${pageSize}&offset=${offset}`;
+    return this.http.get<any>(url);
   }
 }
