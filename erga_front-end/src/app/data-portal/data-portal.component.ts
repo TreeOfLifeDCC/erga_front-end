@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, EventEmitter} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {merge, of as observableOf} from "rxjs";
+import {merge, Observable, of as observableOf, Subject} from "rxjs";
+
 
 @Component({
   selector: 'app-data-portal',
@@ -13,6 +14,8 @@ import {merge, of as observableOf} from "rxjs";
 export class DataPortalComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['organism', 'commonName', 'currentStatus'];
   data: any;
+  searchValue: string;
+  searchChanged = new EventEmitter<any>();
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -20,7 +23,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
   aggregations: any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  // @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private _apiService: ApiService) { }
 
@@ -29,15 +32,16 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // If the user changes the sort order, reset back to the first page.
-    // this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+    this.searchChanged.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.paginator.page)
+    merge(this.paginator.page, this.sort.sortChange, this.searchChanged)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
           return this._apiService.getData(this.paginator.pageIndex,
-            this.paginator.pageSize
+            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction
           ).pipe(catchError(() => observableOf(null)));
         }),
         map(data => {
@@ -67,6 +71,11 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
           return data[i]['doc_count'];
       }
     }
+  }
+
+  applyFilter(event: Event) {
+    this.searchValue = (event.target as HTMLInputElement).value;
+    this.searchChanged.emit();
   }
 
 }

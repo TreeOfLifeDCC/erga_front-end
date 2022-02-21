@@ -63,3 +63,6 @@ table {
 .item0 {
   flex-grow: 1;
 }
+.search_field {
+  width: 100%;
+}
