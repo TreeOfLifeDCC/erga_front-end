@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-data-portal-details',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DataPortalDetailsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    const routeParams = this.route.snapshot.paramMap;
+    const organismId = routeParams.get('organismId');
+    console.log(organismId);
   }
 
 }

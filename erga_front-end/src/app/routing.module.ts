@@ -8,11 +8,13 @@ import {AboutComponent} from "./about/about.component";
 import {ApiDocumentationComponent} from "./api-documentation/api-documentation.component";
 import {HelpComponent} from "./help/help.component";
 import {DataPortalComponent} from "./data-portal/data-portal.component";
+import {DataPortalDetailsComponent} from "./data-portal/data-portal-details/data-portal-details.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
   { path: 'home', component: HomeComponent },
   { path: 'data_portal', component: DataPortalComponent },
+  { path: 'data_portal/:organismId', component: DataPortalDetailsComponent },
   { path: 'status_tracking', component: StatusTrackingComponent },
   { path: 'phylogeny', component: PhylogenyComponent },
   { path: 'about', component: AboutComponent },
