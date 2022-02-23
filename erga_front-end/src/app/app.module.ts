@@ -16,6 +16,7 @@ import { HelpComponent } from './help/help.component';
 import { BannerComponent } from './banner/banner.component';
 import { DataPortalComponent } from './data-portal/data-portal.component';
 import {HttpClientModule} from "@angular/common/http";
+import { DataPortalDetailsComponent } from './data-portal/data-portal-details/data-portal-details.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {HttpClientModule} from "@angular/common/http";
     ApiDocumentationComponent,
     HelpComponent,
     BannerComponent,
-    DataPortalComponent
+    DataPortalComponent,
+    DataPortalDetailsComponent
   ],
   imports: [
     BrowserModule,

@@ -3,7 +3,7 @@ import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {merge, Observable, of as observableOf, Subject} from "rxjs";
+import {merge, of as observableOf} from "rxjs";
 
 
 @Component({
@@ -39,6 +39,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.searchChanged.subscribe(() => (this.paginator.pageIndex = 0));
+    this.filterChanged.subscribe(() => (this.paginator.pageIndex = 0));
 
     merge(this.paginator.page, this.sort.sortChange, this.searchChanged, this.filterChanged)
       .pipe(
