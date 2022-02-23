@@ -16,11 +16,16 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
   data: any;
   searchValue: string;
   searchChanged = new EventEmitter<any>();
+  filterChanged = new EventEmitter<any>();
 
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
   aggregations: any;
+
+  activeFilters = new Array<string>();
+
+  currentStyle: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,13 +40,13 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.searchChanged.subscribe(() => (this.paginator.pageIndex = 0));
 
-    merge(this.paginator.page, this.sort.sortChange, this.searchChanged)
+    merge(this.paginator.page, this.sort.sortChange, this.searchChanged, this.filterChanged)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
           return this._apiService.getData(this.paginator.pageIndex,
-            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction
+            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters
           ).pipe(catchError(() => observableOf(null)));
         }),
         map(data => {
@@ -76,6 +81,21 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
   applyFilter(event: Event) {
     this.searchValue = (event.target as HTMLInputElement).value;
     this.searchChanged.emit();
+  }
+
+
+  onFilterClick(filterValue: string) {
+    const index = this.activeFilters.indexOf(filterValue);
+    index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
+    this.filterChanged.emit();
+  }
+
+  checkStyle(filterValue: string) {
+    if (this.activeFilters.includes(filterValue)) {
+      return 'background-color: #7b1fa2';
+    } else {
+      return '';
+    }
   }
 
 }
