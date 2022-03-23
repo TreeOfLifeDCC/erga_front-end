@@ -12,7 +12,7 @@ export class ApiService {
   }
 
   getData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
-          filterValue: string[]) {
+          filterValue: string[], currentClass: string, phylogeny_filters: string[]) {
     console.log(filterValue);
     const project_names = ['DToL', '25 genomes'];
     const offset = pageIndex * pageSize;
@@ -36,13 +36,22 @@ export class ApiService {
           } else
             filterItem = `${filterItem}:Done`;
         } else {
-          filterItem = `kingdom:${filterValue[i]}`;
+          filterItem = `${currentClass}:${filterValue[i]}`;
         }
         filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
         console.log(filterStr);
       }
       url += filterStr;
     }
+    if (phylogeny_filters.length !== 0) {
+      let filterStr = '&phylogeny_filters=';
+      for (let i = 0; i<phylogeny_filters.length; i++) {
+        filterStr === '&phylogeny_filters=' ? filterStr += `${phylogeny_filters[i]}` : filterStr += `-${phylogeny_filters[i]}`;
+      }
+      console.log(filterStr);
+      url += filterStr;
+    }
+    url += `&current_class=${currentClass}`;
     console.log(url);
     return this.http.get<any>(url);
   }

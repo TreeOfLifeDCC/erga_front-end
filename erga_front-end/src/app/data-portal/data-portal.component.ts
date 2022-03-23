@@ -26,6 +26,15 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
   activeFilters = new Array<string>();
 
   currentStyle: string;
+  currentClass = 'kingdom';
+  classes = ["superkingdom", "kingdom", "subkingdom", "superphylum", "phylum","subphylum","superclass","class",
+    "subclass", "infraclass", "cohort", "subcohort", "superorder", "order", "suborder", "infraorder", "parvorder",
+    "section", "subsection", "superfamily", "family"," subfamily"," tribe", "subtribe", "genus", "series", "subgenus",
+    "species_group", "species_subgroup", "species", "subspecies", "varietas", "forma"];
+  timer: any;
+  phylogenyFilters: string[] = [];
+
+  preventSimpleClick = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -47,7 +56,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
           return this._apiService.getData(this.paginator.pageIndex,
-            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters
+            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
+            this.currentClass, this.phylogenyFilters
           ).pipe(catchError(() => observableOf(null)));
         }),
         map(data => {
@@ -94,6 +104,9 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
 
   onFilterClick(filterValue: string) {
+    console.log('double click');
+    this.preventSimpleClick = true;
+    clearTimeout(this.timer);
     const index = this.activeFilters.indexOf(filterValue);
     index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
     this.filterChanged.emit();
@@ -105,6 +118,34 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     } else {
       return '';
     }
+  }
+
+  changeCurrentClass(filterValue: string) {
+    console.log('single click');
+    let delay = 200;
+    this.preventSimpleClick = false;
+    this.timer = setTimeout(() => {
+      if (!this.preventSimpleClick) {
+        this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
+        const index = this.classes.indexOf(this.currentClass) + 1;
+        this.currentClass = this.classes[index];
+        console.log(this.phylogenyFilters);
+        this.filterChanged.emit();
+      }
+    }, delay);
+  }
+
+  onHistoryClick() {
+    this.phylogenyFilters.splice(this.phylogenyFilters.length - 1, 1);
+    const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
+    this.currentClass = this.classes[previousClassIndex];
+    this.filterChanged.emit();
+  }
+
+  onRefreshClick() {
+    this.phylogenyFilters = [];
+    this.currentClass = 'kingdom';
+    this.filterChanged.emit();
   }
 
 }

@@ -70,12 +70,20 @@
     </mat-card>
     <br>
     <mat-card>
-      <mat-card-title>Phylogeny</mat-card-title>
+      <mat-card-title>
+        Phylogeny/{{currentClass}}
+        <mat-icon *ngIf="phylogenyFilters.length !== 0" (click)="onRefreshClick()" style="cursor: pointer">
+          refresh
+        </mat-icon>
+        <mat-icon *ngIf="phylogenyFilters.length !== 0" (click)="onHistoryClick()" style="cursor: pointer">
+          arrow_circle_left
+        </mat-icon>
+      </mat-card-title>
       <mat-card-actions>
         <mat-list role="list">
-          <mat-list-item role="listbox" *ngFor="let phylogeny_name of aggregations?.taxonomies.kingdom.buckets"
+          <mat-list-item role="listbox" *ngFor="let phylogeny_name of aggregations?.taxonomies[currentClass]?.buckets"
                          style="cursor: pointer" [style]="checkStyle(phylogeny_name.key)"
-                         (click)="onFilterClick(phylogeny_name.key)">
+                         (dblclick)="onFilterClick(phylogeny_name.key)" (click)="changeCurrentClass(phylogeny_name.key)">
             <h4 matLine>{{phylogeny_name.key}}</h4>
             <mat-chip-list>
               <mat-chip style="font-size: 10px">
@@ -95,7 +103,7 @@
            *ngIf="isLoadingResults || isRateLimitReached">
         <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
         <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
-          GitHub's API rate limit has been reached. It will be reset in one minute.
+          Something went wrong, please try again!
         </div>
       </div>
 
