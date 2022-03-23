@@ -55,27 +55,13 @@
       <mat-card-title>Projects</mat-card-title>
       <mat-card-actions>
         <mat-list role="list">
-          <mat-list-item role="listitem">
-            <h4 matLine>25 genomes</h4>
+          <mat-list-item role="listitem" *ngFor="let project of aggregations?.project_name.buckets"
+                         style="cursor: pointer" [style]="checkStyle(convertProjectName(project.key))"
+                         (click)="onFilterClick(convertProjectName(project.key))">
+            <h4 matLine>{{convertProjectName(project.key)}}</h4>
             <mat-chip-list>
               <mat-chip style="font-size: 10px">
-                0
-              </mat-chip>
-            </mat-chip-list>
-          </mat-list-item>
-          <mat-list-item role="listitem">
-            <h4 matLine>ERGA</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                0
-              </mat-chip>
-            </mat-chip-list>
-          </mat-list-item>
-          <mat-list-item role="listitem">
-            <h4 matLine>DToL</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                2887
+                {{project.doc_count}}
               </mat-chip>
             </mat-chip-list>
           </mat-list-item>
@@ -87,27 +73,13 @@
       <mat-card-title>Phylogeny</mat-card-title>
       <mat-card-actions>
         <mat-list role="list">
-          <mat-list-item role="listitem">
-            <h4 matLine>Metazoa</h4>
+          <mat-list-item role="listbox" *ngFor="let phylogeny_name of aggregations?.taxonomies.kingdom.buckets"
+                         style="cursor: pointer" [style]="checkStyle(phylogeny_name.key)"
+                         (click)="onFilterClick(phylogeny_name.key)">
+            <h4 matLine>{{phylogeny_name.key}}</h4>
             <mat-chip-list>
               <mat-chip style="font-size: 10px">
-                1999
-              </mat-chip>
-            </mat-chip-list>
-          </mat-list-item>
-          <mat-list-item role="listitem">
-            <h4 matLine>Viridiplantae</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                669
-              </mat-chip>
-            </mat-chip-list>
-          </mat-list-item>
-          <mat-list-item role="listitem">
-            <h4 matLine>Fungi</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                98
+                {{phylogeny_name.doc_count}}
               </mat-chip>
             </mat-chip-list>
           </mat-list-item>
@@ -132,7 +104,7 @@
         <div class="container2">
           <mat-chip-list>
             <div *ngFor="let item of activeFilters" class="item4">
-              <mat-chip  selected (click)="onFilterClick(item)">
+              <mat-chip  selected (click)="onFilterClick(item)" style="cursor: pointer">
                 {{item}}
                 <mat-icon>close</mat-icon>
               </mat-chip>

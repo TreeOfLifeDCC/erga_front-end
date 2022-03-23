@@ -79,6 +79,14 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
   }
 
+  convertProjectName(data: string) {
+    if (data === 'dtol') {
+      return 'DToL';
+    } else {
+      return data;
+    }
+  }
+
   applyFilter(event: Event) {
     this.searchValue = (event.target as HTMLInputElement).value;
     this.searchChanged.emit();

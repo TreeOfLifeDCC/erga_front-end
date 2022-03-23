@@ -4,3 +4,24 @@
   justify-content: space-evenly;
   gap: 5px 5px;
 }
+
+mat-card {
+  width: 100%;
+}
+
+/*.item1 {*/
+/*  flex-grow: 2;*/
+/*}*/
+
+.item2 {
+  flex-grow: 25;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+table {
+  width: 100%;
+}
+mat-form-field {
+  width: 100%;
+}
