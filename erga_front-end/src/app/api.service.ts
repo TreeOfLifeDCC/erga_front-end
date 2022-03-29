@@ -12,11 +12,11 @@ export class ApiService {
   }
 
   getData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
-          filterValue: string[], currentClass: string, phylogeny_filters: string[]) {
+          filterValue: string[], currentClass: string, phylogeny_filters: string[], index_name: string) {
     console.log(filterValue);
     const project_names = ['DToL', '25 genomes'];
     const offset = pageIndex * pageSize;
-    let url = `https://portal.erga-biodiversity.eu/api/data_portal?limit=${pageSize}&offset=${offset}`;
+    let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
     if (searchValue) {
       url += `&search=${searchValue}`;
     }
