@@ -147,4 +147,12 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     this.filterChanged.emit();
   }
 
+  checkColor(status: string) {
+    if (status === 'Done')
+      return 'accent'
+    else
+      return 'yellow'
+  }
+
+
 }
