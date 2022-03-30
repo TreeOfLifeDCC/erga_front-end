@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router, NavigationEnd} from "@angular/router";
+import {ApiService} from "../api.service";
 
 @Component({
   selector: 'app-home',
@@ -8,12 +9,17 @@ import {Router, NavigationEnd} from "@angular/router";
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private twitter: any;
+  data: any;
 
-  constructor(private _router: Router) {
+  constructor(private _router: Router, private _apiService: ApiService) {
     this.initTwitterWidget();
   }
 
   ngOnInit(): void {
+    this._apiService.getSummaryData().subscribe(data => {
+      this.data = data['results'][0]['_source'];
+      console.log(this.data);
+    });
   }
 
   initTwitterWidget() {
@@ -46,6 +52,11 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.twitter.unsubscribe();
+  }
+
+  getData(data: any, key: string) {
+    if (data)
+      return data[key];
   }
 
 }

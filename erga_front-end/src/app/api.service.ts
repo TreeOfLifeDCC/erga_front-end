@@ -60,4 +60,8 @@ export class ApiService {
     const url = `https://portal.erga-biodiversity.eu/api/data_portal/${organismName}`;
     return this.http.get<any>(url);
   }
+
+  getSummaryData() {
+    return this.http.get<any>('https://portal.erga-biodiversity.eu/api/summary');
+  }
 }
