@@ -181,20 +181,20 @@
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="annotation_status">
+          <ng-container matColumnDef="annotation_complete">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Annotation complete</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.annotation_status)}}">
-                {{row._source.annotation_status}}
+              <mat-chip selected color="{{checkColor(row._source.annotation_complete)}}">
+                {{row._source.annotation_complete}}
               </mat-chip>
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="annotation_complete">
+          <ng-container matColumnDef="annotation_status">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Annotation submitted to ENA</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.annotation_complete)}}">
-                {{row._source.annotation_complete}}
+              <mat-chip selected color="{{checkColor(row._source.annotation_status)}}">
+                {{row._source.annotation_status}}
               </mat-chip>
             </td>
           </ng-container>
