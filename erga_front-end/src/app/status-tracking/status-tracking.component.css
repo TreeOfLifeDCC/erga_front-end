@@ -49,9 +49,15 @@ table {
 }
 
 /* Column Widths */
-.mat-column-number,
-.mat-column-state {
-  max-width: 64px;
+.mat-column-organism,
+.mat-column-commonName,
+.mat-column-biosamples,
+.mat-column-raw_data,
+.mat-column-mapped_reads,
+.mat-column-assemblies_status,
+.mat-column-annotation_complete,
+.mat-column-annotation_status {
+  max-width: 20px;
 }
 
 .mat-column-created {
@@ -77,6 +83,21 @@ table {
   width: 100%;
 }
 
+/*ng-container {*/
+/*  word-wrap: break-word !important;*/
+/*  white-space: unset !important;*/
+/*  flex: 0 0 5% !important;*/
+/*  width: 5% !important;*/
+/*  overflow-wrap: break-word;*/
+/*  word-wrap: break-word;*/
+
+/*  word-break: break-word;*/
+
+/*  -ms-hyphens: auto;*/
+/*  -moz-hyphens: auto;*/
+/*  -webkit-hyphens: auto;*/
+/*}*/
 /*a {*/
 /*  color: white;*/
 /*}*/
+

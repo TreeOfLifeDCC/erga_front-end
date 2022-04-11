@@ -45,7 +45,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // If the user changes the sort order, reset back to the first page.
+    // If the user changes the metadataSort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
     this.searchChanged.subscribe(() => (this.paginator.pageIndex = 0));
     this.filterChanged.subscribe(() => (this.paginator.pageIndex = 0));
@@ -69,8 +69,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             return [];
           }
 
-          // Only refresh the result length if there is new data. In case of rate
-          // limit errors, we do not want to reset the paginator to zero, as that
+          // Only refresh the result length if there is new metadataData. In case of rate
+          // limit errors, we do not want to reset the metadataPaginator to zero, as that
           // would prevent users from re-triggering requests.
           this.resultsLength = data.count;
           this.aggregations = data.aggregations;

@@ -33,23 +33,32 @@ dd {
   width: 80%;
 }
 
-/*mat-card {*/
-/*  width: 100%;*/
-/*}*/
+table {
+  width: 100%;
+}
 
-/*!*.item1 {*!*/
-/*!*  flex-grow: 2;*!*/
-/*!*}*!*/
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+h1 {
+  color: white;
+}
 
-/*.item2 {*/
-/*  flex-grow: 25;*/
-/*  margin-left: 5px;*/
-/*  margin-right: 5px;*/
-/*}*/
+.example-loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-/*table {*/
-/*  width: 100%;*/
-/*}*/
-/*mat-form-field {*/
-/*  width: 100%;*/
-/*}*/
+.example-rate-limit-reached {
+  max-width: 360px;
+  text-align: center;
+}

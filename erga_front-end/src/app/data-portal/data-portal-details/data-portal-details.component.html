@@ -24,91 +24,246 @@
     </mat-card>
     <br>
     <mat-tab-group>
-      <mat-tab label="First"> Content 1 </mat-tab>
-      <mat-tab label="Second"> Content 2 </mat-tab>
-      <mat-tab label="Third"> Content 3 </mat-tab>
+      <mat-tab label="Metadata" *ngIf="showMetadata">
+        <div class="example-loading-shade"
+             *ngIf="isLoadingResults || isRateLimitReached">
+          <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+          <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+            Something went wrong, please try again!
+          </div>
+        </div>
+        <mat-form-field appearance="standard">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'metadata')" placeholder="Ex. Mia" #input>
+        </mat-form-field>
+          <table mat-table [dataSource]="metadataData" matSort #metadataSort="matSort">
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="accession">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Accession </th>
+              <td mat-cell *matCellDef="let row"> {{row.accession}} </td>
+            </ng-container>
+
+            <!-- Progress Column -->
+            <ng-container matColumnDef="organism">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism </th>
+              <td mat-cell *matCellDef="let row"> {{row.organism.text}} </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="commonName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Common Name </th>
+              <td mat-cell *matCellDef="let row"> {{row.commonName}} </td>
+            </ng-container>
+
+            <!-- Fruit Column -->
+            <ng-container matColumnDef="sex">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Sex </th>
+              <td mat-cell *matCellDef="let row"> {{row.sex}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="organismPart">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism Part </th>
+              <td mat-cell *matCellDef="let row"> {{row.organismPart}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="trackingSystem">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+              <td mat-cell *matCellDef="let row"> {{row.trackingSystem}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="metadataDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: metadataDisplayedColumns;"></tr>
+
+            <!-- Row shown when there is no matching metadataData. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            </tr>
+          </table>
+
+          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+                         #metadataPaginator [length]="metadataDataLength"></mat-paginator>
+
+      </mat-tab>
+      <mat-tab label="Data">
+        <div class="example-loading-shade"
+             *ngIf="isLoadingResults || isRateLimitReached">
+          <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+          <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+            Something went wrong, please try again!
+          </div>
+        </div>
+        <br>
+        <h1>Annotation</h1>
+        <mat-form-field appearance="standard">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'annotation')" placeholder="Illumina" #input>
+        </mat-form-field>
+        <table mat-table [dataSource]="annotationData" matSort #annotationSort="matSort">
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="species">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Species </th>
+            <td mat-cell *matCellDef="let row"> {{row.species}} </td>
+          </ng-container>
+
+          <!-- Progress Column -->
+          <ng-container matColumnDef="accession">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Accession </th>
+            <td mat-cell *matCellDef="let row"> {{row.accession}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="annotation_gtf">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Annotation GTF </th>
+<!--            <td mat-cell *matCellDef="let row"> {{row.annotation.GTF}} </td>-->
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row['annotation']['GTF']}}">GTF</a>
+            </td>
+          </ng-container>
+
+          <!-- Fruit Column -->
+          <ng-container matColumnDef="annotation_gff3">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> annotation GTF3 </th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row.annotation.GFF3}}">GFF3</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="proteins">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Proteins FASTA </th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row.proteins.FASTA}}">FASTA</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="transcripts">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Transcripts FASTA </th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row.transcripts.FASTA}}">FASTA</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="softmasked_genome">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Softmasked Genome FASTA </th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row.softmasked_genome.FASTA}}">FASTA</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="repeat_library">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Repeat Library FASTA </th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row.repeat_library.FASTA}}">FASTA</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="other_data">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Other Data FTP Dumps </th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row.other_data.ftp_dumps}}">FTP Dumps</a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="view_in_browser">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> View in Browser </th>
+<!--            <td mat-cell *matCellDef="let row"> {{row.view_in_browser}} </td>-->
+            <td mat-cell *matCellDef="let row">
+              <a mat-button href="{{row.view_in_browser}}">Ensembl</a>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="annotationsDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: annotationsDisplayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching metadataData. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" #annotationPaginator
+                       [length]="annotationDataLength">
+        </mat-paginator>
+
+        <br>
+
+        <h1>Related Assemblies</h1>
+
+        <mat-form-field appearance="standard">
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event, 'assemblies')" placeholder="Illumina" #input>
+        </mat-form-field>
+        <table mat-table [dataSource]="assembliesData" matSort #assembliesSort="matSort">
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="accession">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Accession </th>
+            <td mat-cell *matCellDef="let row"> {{row.accession}} </td>
+          </ng-container>
+
+          <!-- Progress Column -->
+          <ng-container matColumnDef="version">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Version </th>
+            <td mat-cell *matCellDef="let row"> {{row.version}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="assembly_name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Assembly Name </th>
+            <!--            <td mat-cell *matCellDef="let row"> {{row.annotation.GTF}} </td>-->
+            <td mat-cell *matCellDef="let row">{{row.assembly_name}}</td>
+          </ng-container>
+
+          <!-- Fruit Column -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+            <td mat-cell *matCellDef="let row">{{row.description}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="assembliesDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: assembliesDisplayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching metadataData. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users" #assembliesPaginator
+                       [length]="assembliesDataLength">
+        </mat-paginator>
+
+        <br>
+        <h1>Related Files</h1>
+        <table mat-table [dataSource]="filesData" matSort #filesSort="matSort">
+          <ng-container [matColumnDef]="column" *ngFor="let column of filesDisplayedColumns">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{getHumanReadableName(column)}} </th>
+            <td mat-cell *matCellDef="let element">
+<!--              <a mat-button href="{{element[column]}}">Link</a>-->
+              Link
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="filesDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: filesDisplayedColumns;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page" #filesPaginator
+                       [length]="filesDataLength" showFirstLastButtons>
+        </mat-paginator>
+
+      </mat-tab>
+      <mat-tab label="Genome Note" *ngIf="showGenomeNote">
+        <div class="example-loading-shade"
+             *ngIf="isLoadingResults || isRateLimitReached">
+          <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+          <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
+            Something went wrong, please try again!
+          </div>
+        </div>
+        Content 3
+      </mat-tab>
     </mat-tab-group>
   </div>
   <div class="item3"></div>
-<!--  <div class="item2">-->
-<!--    <mat-card>-->
-<!--      <mat-card-title>-->
-<!--        <h1 style="text-align: center">{{organismData?.organism}}</h1>-->
-<!--      </mat-card-title>-->
-<!--      <mat-card-actions>-->
-<!--        <mat-list>-->
-<!--          <mat-list-item *ngIf="organismData?.commonName">-->
-<!--            <b>Common name:</b>-->
-<!--            &nbsp;&nbsp;&nbsp;-->
-<!--            {{organismData?.commonName}}-->
-<!--          </mat-list-item>-->
-<!--          <mat-list-item *ngIf="organismData?.tolid">-->
-<!--            <b>ToL ID:</b>-->
-<!--            &nbsp;&nbsp;&nbsp;-->
-<!--            {{organismData?.tolid}}-->
-<!--          </mat-list-item>-->
-<!--          <mat-list-item *ngIf="organismData?.sex">-->
-<!--            <b>Sex:</b>-->
-<!--            &nbsp;&nbsp;&nbsp;-->
-<!--            {{organismData?.sex}}-->
-<!--          </mat-list-item>-->
-<!--        </mat-list>-->
-<!--      </mat-card-actions>-->
-<!--    </mat-card>-->
-
-<!--    <br>-->
-
-<!--    <mat-card *ngIf="organismData?.assemblies.length !== 0">-->
-<!--      <mat-card-title>-->
-<!--        <h1 style="text-align: center">-->
-<!--          Related Assemblies-->
-<!--        </h1>-->
-<!--      </mat-card-title>-->
-<!--      <mat-card-actions>-->
-<!--        <mat-form-field appearance="standard">-->
-<!--          <mat-label>Filter</mat-label>-->
-<!--          <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>-->
-<!--        </mat-form-field>-->
-
-<!--        <div class="mat-elevation-z8">-->
-<!--          <table mat-table [dataSource]="assembliesDataSource" matSort>-->
-
-<!--            &lt;!&ndash; ID Column &ndash;&gt;-->
-<!--            <ng-container matColumnDef="accession">-->
-<!--              <th mat-header-cell *matHeaderCellDef mat-sort-header> Accession </th>-->
-<!--              <td mat-cell *matCellDef="let row"> {{row.accession}} </td>-->
-<!--            </ng-container>-->
-
-<!--            &lt;!&ndash; Progress Column &ndash;&gt;-->
-<!--            <ng-container matColumnDef="version">-->
-<!--              <th mat-header-cell *matHeaderCellDef mat-sort-header> Version </th>-->
-<!--              <td mat-cell *matCellDef="let row"> {{row.version}} </td>-->
-<!--            </ng-container>-->
-
-<!--            &lt;!&ndash; Name Column &ndash;&gt;-->
-<!--            <ng-container matColumnDef="assembly_name">-->
-<!--              <th mat-header-cell *matHeaderCellDef mat-sort-header> Assembly Name </th>-->
-<!--              <td mat-cell *matCellDef="let row"> {{row.assembly_name}} </td>-->
-<!--            </ng-container>-->
-
-<!--            &lt;!&ndash; Fruit Column &ndash;&gt;-->
-<!--            <ng-container matColumnDef="description">-->
-<!--              <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>-->
-<!--              <td mat-cell *matCellDef="let row"> {{row.description}} </td>-->
-<!--            </ng-container>-->
-
-<!--            <tr mat-header-row *matHeaderRowDef="assembliesDisplayedColumns"></tr>-->
-<!--            <tr mat-row *matRowDef="let row; columns: assembliesDisplayedColumns;"></tr>-->
-
-<!--            &lt;!&ndash; Row shown when there is no matching data. &ndash;&gt;-->
-<!--            <tr class="mat-row" *matNoDataRow>-->
-<!--              <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>-->
-<!--            </tr>-->
-<!--          </table>-->
-
-<!--          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>-->
-<!--        </div>-->
-<!--      </mat-card-actions>-->
-<!--    </mat-card>-->
-<!--  </div>-->
 </div>
