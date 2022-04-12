@@ -18,6 +18,7 @@ import { DataPortalComponent } from './data-portal/data-portal.component';
 import {HttpClientModule} from "@angular/common/http";
 import { DataPortalDetailsComponent } from './data-portal/data-portal-details/data-portal-details.component';
 import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
+import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {OrganismDetailsComponent} from "./organism-details/organism-details.comp
     BannerComponent,
     DataPortalComponent,
     DataPortalDetailsComponent,
-    OrganismDetailsComponent
+    OrganismDetailsComponent,
+    SpecimenDetailsComponent
   ],
   imports: [
     BrowserModule,
