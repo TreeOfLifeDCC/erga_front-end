@@ -24,7 +24,7 @@
     </mat-card>
     <br>
     <mat-tab-group>
-      <mat-tab label="Metadata" *ngIf="showMetadata">
+      <mat-tab label="Metadata">
         <div class="example-loading-shade"
              *ngIf="isLoadingResults || isRateLimitReached">
           <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
@@ -240,8 +240,15 @@
           <ng-container [matColumnDef]="column" *ngFor="let column of filesDisplayedColumns">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{getHumanReadableName(column)}} </th>
             <td mat-cell *matCellDef="let element">
-<!--              <a mat-button href="{{element[column]}}">Link</a>-->
-              Link
+              <ng-container *ngIf="column === 'study_accession'">
+                <a mat-button href="{{getStudyLink(element[column])}}">{{element[column]}}</a>
+              </ng-container>
+              <ng-container *ngIf="keyInSpecialColumns(column)">
+                <a mat-button href="{{element.column}}">{{getKeyFromSpecialColumns(element[column])}}</a>
+              </ng-container>
+              <ng-container *ngIf="!keyInSpecialColumns(column) && column !== 'study_accession'">
+                {{element[column]}}
+              </ng-container>
             </td>
           </ng-container>
 

@@ -35,6 +35,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     library_construction_protocol: 'Library Construction Protocol'
   };
 
+  specialColumns = ['fastq_ftp', 'submitted_ftp', 'sra_ftp']
+
   metadataData: any;
   metadataDataLength: number;
   annotationData: any;
@@ -130,6 +132,23 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
   getHumanReadableName(key: string) {
     return this.humanReadableColumns[key as keyof typeof this.humanReadableColumns];
+  }
+
+  keyInSpecialColumns(key: string) {
+    return this.specialColumns.indexOf(key) !== -1;
+  }
+
+  getKeyFromSpecialColumns(key: string) {
+    if (key) {
+      const length = key.split("/").length;
+      return key.split("/")[length - 1];
+    } else {
+      return null;
+    }
+  }
+
+  getStudyLink(study_id: string) {
+    return `https://www.ebi.ac.uk/ena/browser/view/${study_id}`;
   }
 
 }
