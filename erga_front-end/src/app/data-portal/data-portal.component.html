@@ -150,7 +150,7 @@
           <ng-container matColumnDef="currentStatus">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Current Status</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="accent">
+              <mat-chip selected [style]="getStyle(row['_source']['currentStatus'])">
                 {{row._source.currentStatus}}
               </mat-chip>
             </td>

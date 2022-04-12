@@ -161,4 +161,12 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     return `https://www.ebi.ac.uk/ena/browser/view/${study_id}`;
   }
 
+  getStyle(status: string) {
+    if (status === 'Assemblies - Submitted') {
+      return 'background-color: limegreen; color: black';
+    } else {
+      return 'background-color: yellow; color: black';
+    }
+  }
+
 }

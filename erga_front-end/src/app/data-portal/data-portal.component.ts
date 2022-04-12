@@ -148,4 +148,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     this.filterChanged.emit();
   }
 
+  getStyle(status: string) {
+    if (status === 'Annotation Complete') {
+      return 'background-color: limegreen; color: black';
+    } else {
+      return 'background-color: yellow; color: black';
+    }
+  }
+
 }
