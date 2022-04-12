@@ -31,9 +31,16 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/purple-green.css",
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/d3.css",
+              "src/assets/css/jquery.dataTables.css"
             ],
-            "scripts": []
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.min.js",
+              "src/assets/js/d3.v3.min.js",
+              "src/assets/js/jquery.dataTables.min.js",
+              "src/assets/js/autocomplete.js"
+            ]
           },
           "configurations": {
             "production": {

@@ -19,6 +19,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { DataPortalDetailsComponent } from './data-portal/data-portal-details/data-portal-details.component';
 import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
 import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
+import {DynamicScriptLoaderService} from "./phylogeny/services/dynamic-script-loader.service";
 
 @NgModule({
   declarations: [
@@ -44,7 +45,7 @@ import { SpecimenDetailsComponent } from './specimen-details/specimen-details.co
     FlexLayoutModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [DynamicScriptLoaderService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -127,6 +127,16 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
       if (this.annotationData.paginator) {
         this.annotationData.paginator.firstPage();
       }
+    } else if (dataSource === 'assemblies') {
+      this.assembliesData.filter = filterValue.trim().toLowerCase();
+      if (this.assembliesData.paginator) {
+        this.assembliesData.paginator.firstPage();
+      }
+    } else if (dataSource === 'files') {
+      this.filesData.filter = filterValue.trim().toLowerCase();
+      if (this.filesData.paginator) {
+        this.filesData.paginator.firstPage();
+      }
     }
   }
 

@@ -13,6 +13,7 @@ import {MatTableDataSource} from "@angular/material/table";
 export class OrganismDetailsComponent implements OnInit, AfterViewInit {
   data: any;
   specimensData: any;
+  specimensDataLength: number;
   specimensDisplayedColumns: string[] = ['accession', 'organism', 'commonName', 'organismPart', 'sex'];
 
   resultsLength = 0;
@@ -37,6 +38,7 @@ export class OrganismDetailsComponent implements OnInit, AfterViewInit {
         this.isRateLimitReached = data === null;
 
         this.specimensData = new MatTableDataSource(data['results'][0]['_source']['specimens']);
+        this.specimensDataLength = data['results'][0]['_source']['specimens'].length;
         this.specimensData.paginator = this.paginator;
         this.specimensData.sort = this.sort;
       }
