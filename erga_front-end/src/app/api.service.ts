@@ -56,8 +56,8 @@ export class ApiService {
     return this.http.get<any>(url);
   }
 
-  getDetailsData(organismName: any) {
-    const url = `https://portal.erga-biodiversity.eu/api/data_portal/${organismName}`;
+  getDetailsData(organismName: any, indexName='data_portal') {
+    const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
     return this.http.get<any>(url);
   }
 

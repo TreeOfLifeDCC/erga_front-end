@@ -17,6 +17,7 @@ import { BannerComponent } from './banner/banner.component';
 import { DataPortalComponent } from './data-portal/data-portal.component';
 import {HttpClientModule} from "@angular/common/http";
 import { DataPortalDetailsComponent } from './data-portal/data-portal-details/data-portal-details.component';
+import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { DataPortalDetailsComponent } from './data-portal/data-portal-details/da
     HelpComponent,
     BannerComponent,
     DataPortalComponent,
-    DataPortalDetailsComponent
+    DataPortalDetailsComponent,
+    OrganismDetailsComponent
   ],
   imports: [
     BrowserModule,

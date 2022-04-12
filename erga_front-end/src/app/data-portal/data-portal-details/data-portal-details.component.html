@@ -41,7 +41,9 @@
             <!-- ID Column -->
             <ng-container matColumnDef="accession">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> Accession </th>
-              <td mat-cell *matCellDef="let row"> {{row.accession}} </td>
+              <td mat-cell *matCellDef="let row">
+                <a mat-button [routerLink]="['/organism', row.accession]">{{row.accession}}</a>
+              </td>
             </ng-container>
 
             <!-- Progress Column -->
