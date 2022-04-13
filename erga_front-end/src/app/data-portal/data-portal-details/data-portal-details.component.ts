@@ -14,6 +14,34 @@ import {keyframes} from "@angular/animations";
   styleUrls: ['./data-portal-details.component.css']
 })
 export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
+  codes = {
+    m: 'mammals',
+    d: 'dicots',
+    i: 'insects',
+    u: 'algae',
+    p: 'protists',
+    x: 'molluscs',
+    t: 'other-animal-phyla',
+    q: 'arthropods',
+    k: 'chordates',
+    f: 'fish',
+    a: 'amphibians',
+    b: 'birds',
+    e: 'echinoderms',
+    w: 'annelids',
+    j: 'jellyfish',
+    h: 'platyhelminths',
+    n: 'nematodes',
+    v: 'vascular-plants',
+    l: 'monocots',
+    c: 'non-vascular-plants',
+    g: 'fungi',
+    o: 'sponges',
+    r: 'reptiles',
+    s: 'sharks',
+    y: 'bacteria',
+    z: 'archea'
+  };
   organismData: any;
   metadataDisplayedColumns: string[] = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
   annotationsDisplayedColumns: string[] = ['species', 'accession', 'annotation_gtf', 'annotation_gff3', 'proteins',
@@ -111,6 +139,9 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
           data.results[0]['_source']['assemblies'].length > 0 || data.results[0]['_source']['experiment'].length > 0) {
           this.showData = true;
         }
+        if (data.results[0]['_source']['genome_notes'] && data.results[0]['_source']['genome_notes'].length !== 0) {
+          this.showGenomeNote = true;
+        }
       }
     );
   }
@@ -167,6 +198,19 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     } else {
       return 'background-color: yellow; color: black';
     }
+  }
+
+  getGenomeNoteData(data: any, key: string) {
+    if (data && data.length !== 0) {
+      return data[0][key];
+    }
+  }
+
+  generateTolidLink(data: any) {
+    const organismName = data.organism.split(' ').join('_');
+    const firstChar: string = data.tolid.charAt(0);
+    const clade = this.codes[firstChar as keyof typeof this.codes];
+    return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
   }
 
 }

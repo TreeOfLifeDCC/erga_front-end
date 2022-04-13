@@ -77,9 +77,17 @@ table {
   width: 100%;
 }
 
-td {
-  text-align: center;
-}
+/*td {*/
+/*  text-align: center;*/
+/*}*/
+
+/*th.mat-header-cell {*/
+/*  text-align: center !important;*/
+/*}*/
+
+/*th.mat-sort-header {*/
+/*  text-align: center !important;*/
+/*}*/
 
 /*a {*/
 /*  color: white;*/

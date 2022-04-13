@@ -285,7 +285,29 @@
             Something went wrong, please try again!
           </div>
         </div>
-        Content 3
+
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>{{getGenomeNoteData(organismData.genome_notes, 'title')}}</mat-card-title>
+            <mat-card-subtitle>{{getGenomeNoteData(organismData.genome_notes, 'caption')}}</mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image src="{{getGenomeNoteData(organismData.genome_notes, 'figureURI')}}" alt="Figure 1">
+          <mat-card-content>
+            <p>
+              {{getGenomeNoteData(organismData.genome_notes, 'abstract')}}
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <a mat-button href="{{getGenomeNoteData(organismData.genome_notes, 'url')}}"
+               style="background-color: limegreen; color: black; margin-bottom: 5px">
+              Read the Genome Note in full here
+            </a>
+            <p>
+              {{getGenomeNoteData(organismData.genome_notes, 'citeURL')}}
+            </p>
+          </mat-card-actions>
+        </mat-card>
+
       </mat-tab>
     </mat-tab-group>
   </div>

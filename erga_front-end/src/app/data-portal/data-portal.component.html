@@ -147,7 +147,7 @@
           </ng-container>
 
           <ng-container matColumnDef="commonNameSource">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Common Name Source</th>
+            <th mat-header-cell *matHeaderCellDef>Common Name Source</th>
             <td mat-cell *matCellDef="let row">
               <mat-chip selected [style]="getCommonNameSourceStyle(row._source.commonNameSource)"
                         *ngIf="row._source.commonNameSource && row._source.commonName">
@@ -176,7 +176,7 @@
                 <a mat-button href="{{row._source.goat_info['url']}}">GoaT Info</a>
               </mat-chip>
               <mat-chip *ngIf="row._source.tolid" style="margin-left: 5px; background-color: limegreen; color: black">
-                <a mat-button href="{{row._source.goat_info['url']}}">ToL QC</a>
+                <a mat-button href="{{generateTolidLink(row._source)}}">ToL QC</a>
               </mat-chip>
             </td>
           </ng-container>

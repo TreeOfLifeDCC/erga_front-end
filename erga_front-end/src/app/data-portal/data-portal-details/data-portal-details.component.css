@@ -62,3 +62,7 @@ h1 {
   max-width: 360px;
   text-align: center;
 }
+
+img {
+  max-width: 800px;
+}
