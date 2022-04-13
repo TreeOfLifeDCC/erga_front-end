@@ -199,4 +199,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
   }
 
+  checkGenomeNotes(data:any) {
+    if (data.genome_notes && data.genome_notes.length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
