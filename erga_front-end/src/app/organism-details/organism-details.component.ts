@@ -38,7 +38,11 @@ export class OrganismDetailsComponent implements OnInit, AfterViewInit {
         this.isRateLimitReached = data === null;
 
         this.specimensData = new MatTableDataSource(data['results'][0]['_source']['specimens']);
-        this.specimensDataLength = data['results'][0]['_source']['specimens'].length;
+        if (data['results'][0]['_source']['specimens']) {
+          this.specimensDataLength = data['results'][0]['_source']['specimens'].length;
+        } else {
+          this.specimensDataLength = 0;
+        }
         this.specimensData.paginator = this.paginator;
         this.specimensData.sort = this.sort;
       }
