@@ -146,12 +146,37 @@
             <td mat-cell *matCellDef="let row">{{row._source.commonName}}</td>
           </ng-container>
 
+          <ng-container matColumnDef="commonNameSource">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Common Name Source</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-chip selected [style]="getCommonNameSourceStyle(row._source.commonNameSource)"
+                        *ngIf="row._source.commonNameSource && row._source.commonName">
+                {{row._source.commonNameSource}}
+              </mat-chip>
+            </td>
+          </ng-container>
+
           <!-- State Column -->
           <ng-container matColumnDef="currentStatus">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Current Status</th>
             <td mat-cell *matCellDef="let row">
               <mat-chip selected [style]="getStyle(row['_source']['currentStatus'])">
                 {{row._source.currentStatus}}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="externalReferences">
+            <th mat-header-cell *matHeaderCellDef>External References</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-chip *ngIf="row._source.genome_notes?.length !== 0">
+                <a mat-button href="#">Genome Note</a>
+              </mat-chip>
+              <mat-chip *ngIf="row._source.goat_info" style="margin-left: 5px; background-color: cornflowerblue; color: white">
+                <a mat-button href="{{row._source.goat_info['url']}}">GoaT Info</a>
+              </mat-chip>
+              <mat-chip *ngIf="row._source.tolid" style="margin-left: 5px; background-color: limegreen; color: black">
+                <a mat-button href="{{row._source.goat_info['url']}}">ToL QC</a>
               </mat-chip>
             </td>
           </ng-container>

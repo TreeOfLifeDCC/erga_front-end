@@ -12,7 +12,35 @@ import {merge, of as observableOf} from "rxjs";
   styleUrls: ['./data-portal.component.css']
 })
 export class DataPortalComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['organism', 'commonName', 'currentStatus'];
+  codes = {
+    m: 'mammals',
+    d: 'dicots',
+    i: 'insects',
+    u: 'algae',
+    p: 'protists',
+    x: 'molluscs',
+    t: 'other-animal-phyla',
+    q: 'arthropods',
+    k: 'chordates',
+    f: 'fish',
+    a: 'amphibians',
+    b: 'birds',
+    e: 'echinoderms',
+    w: 'annelids',
+    j: 'jellyfish',
+    h: 'platyhelminths',
+    n: 'nematodes',
+    v: 'vascular-plants',
+    l: 'monocots',
+    c: 'non-vascular-plants',
+    g: 'fungi',
+    o: 'sponges',
+    r: 'reptiles',
+    s: 'sharks',
+    y: 'bacteria',
+    z: 'archea'
+  };
+  displayedColumns: string[] = ['organism', 'commonName', 'commonNameSource', 'currentStatus', 'externalReferences'];
   data: any;
   searchValue: string;
   searchChanged = new EventEmitter<any>();
@@ -154,6 +182,21 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     } else {
       return 'background-color: yellow; color: black';
     }
+  }
+
+  getCommonNameSourceStyle(source: string) {
+    if (source === 'UKSI') {
+      return 'background-color: yellow; color: black';
+    } else {
+      return 'background-color: cornflowerblue; color: white';
+    }
+  }
+
+  generateTolidLink(data: any) {
+    const organismName = data.organism.split(' ').join('_');
+    const firstChar: string = data.tolid.charAt(0);
+    const clade = this.codes[firstChar as keyof typeof this.codes];
+    return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
   }
 
 }
