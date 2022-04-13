@@ -154,5 +154,13 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
       return 'yellow'
   }
 
+  getStyle(status: string) {
+    if (status === 'Done') {
+      return 'background-color: limegreen; color: black';
+    } else {
+      return 'background-color: yellow; color: black';
+    }
+  }
+
 
 }

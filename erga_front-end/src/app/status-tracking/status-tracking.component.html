@@ -148,7 +148,7 @@
           <ng-container matColumnDef="biosamples">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Metadata submitted to BioSamples</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.biosamples)}}">
+              <mat-chip selected [style]="getStyle(row._source.biosamples)">
                 {{row._source.biosamples}}
               </mat-chip>
             </td>
@@ -157,7 +157,7 @@
           <ng-container matColumnDef="raw_data">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Raw data submitted to ENA</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.raw_data)}}">
+              <mat-chip selected [style]="getStyle(row._source.raw_data)">
                 {{row._source.raw_data}}
               </mat-chip>
             </td>
@@ -166,7 +166,7 @@
           <ng-container matColumnDef="mapped_reads">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Mapped reads submitted to ENA</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.mapped_reads)}}">
+              <mat-chip selected [style]="getStyle(row._source.mapped_reads)">
                 {{row._source.mapped_reads}}
               </mat-chip>
             </td>
@@ -175,7 +175,7 @@
           <ng-container matColumnDef="assemblies_status">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Assemblies submitted to ENA</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.assemblies_status)}}">
+              <mat-chip selected [style]="getStyle(row._source.assemblies_status)">
                 {{row._source.assemblies_status}}
               </mat-chip>
             </td>
@@ -184,7 +184,7 @@
           <ng-container matColumnDef="annotation_complete">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Annotation complete</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.annotation_complete)}}">
+              <mat-chip selected [style]="getStyle(row._source.annotation_complete)">
                 {{row._source.annotation_complete}}
               </mat-chip>
             </td>
@@ -193,7 +193,7 @@
           <ng-container matColumnDef="annotation_status">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Annotation submitted to ENA</th>
             <td mat-cell *matCellDef="let row">
-              <mat-chip selected color="{{checkColor(row._source.annotation_status)}}">
+              <mat-chip selected [style]="getStyle(checkColor(row._source.annotation_status))">
                 {{row._source.annotation_status}}
               </mat-chip>
             </td>
