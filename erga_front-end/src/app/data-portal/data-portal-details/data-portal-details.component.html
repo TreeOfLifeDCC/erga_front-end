@@ -311,6 +311,51 @@
         </mat-card>
 
       </mat-tab>
+      <mat-tab label="GoaT" *ngIf="goatDataLength !== 0">
+        <table mat-table [dataSource]="goatData">
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Attribue </th>
+            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+          </ng-container>
+
+          <!-- Progress Column -->
+          <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef> Value </th>
+            <td mat-cell *matCellDef="let row"> {{row.value}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="count">
+            <th mat-header-cell *matHeaderCellDef> Count </th>
+            <!--            <td mat-cell *matCellDef="let row"> {{row.annotation.GTF}} </td>-->
+            <td mat-cell *matCellDef="let row">{{row.count}}</td>
+          </ng-container>
+
+          <!-- Fruit Column -->
+          <ng-container matColumnDef="aggregation_method">
+            <th mat-header-cell *matHeaderCellDef> Aggregation Method </th>
+            <td mat-cell *matCellDef="let row">{{row.aggregation_method}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="aggregation_source">
+            <th mat-header-cell *matHeaderCellDef> Aggregation Source </th>
+            <td mat-cell *matCellDef="let row">{{row.aggregation_source}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="goatDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: goatDisplayedColumns;"></tr>
+
+          <!-- Row shown when there is no matching metadataData. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+        <a mat-button href="{{goatDataLink}}"
+           style="background-color: limegreen; color: black; margin-top: 5px">
+          Read the GoaT info in full here</a>
+      </mat-tab>
     </mat-tab-group>
   </div>
   <div class="item3"></div>

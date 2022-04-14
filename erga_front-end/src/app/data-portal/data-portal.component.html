@@ -182,7 +182,7 @@
               <mat-chip *ngIf="checkGenomeNotes(row._source)">
                 <a mat-button href="{{row._source.genome_notes[0]['url']}}">Genome Note</a>
               </mat-chip>
-              <mat-chip *ngIf="row._source.goat_info" style="margin-left: 5px; background-color: cornflowerblue; color: white">
+              <mat-chip *ngIf="row._source.goat_info && row._source.goat_info.length !== 0" style="margin-left: 5px; background-color: cornflowerblue; color: white">
                 <a mat-button href="{{row._source.goat_info['url']}}">GoaT Info</a>
               </mat-chip>
               <mat-chip *ngIf="row._source.tolid" style="margin-left: 5px; background-color: limegreen; color: black">

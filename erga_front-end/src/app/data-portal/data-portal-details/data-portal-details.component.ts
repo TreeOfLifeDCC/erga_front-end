@@ -49,6 +49,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
   assembliesDisplayedColumns: string[] = ['accession', 'version', 'assembly_name', 'description'];
   filesDisplayedColumns: string[] = ['study_accession', 'sample_accession', 'experiment_accession', 'run_accession',
     'tax_id', 'scientific_name', 'fastq_ftp', 'submitted_ftp', 'sra_ftp', 'library_construction_protocol']
+  goatDisplayedColumns: string[] = ['name', 'value', 'count', 'aggregation_method', 'aggregation_source'];
 
   humanReadableColumns = {
     study_accession: 'Study Accession',
@@ -73,6 +74,9 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
   assembliesDataLength: number;
   filesData: any;
   filesDataLength: number;
+  goatData: any;
+  goatDataLength: number;
+  goatDataLink: string;
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -119,6 +123,11 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
         this.filesData = new MatTableDataSource(data.results[0]['_source']['experiment']);
         this.filesDataLength = data.results[0]['_source']['experiment'].length;
+
+        this.goatData = new MatTableDataSource(data.results[0]['_source']['goat_info']['attributes'])
+        this.goatDataLength = data.results[0]['_source']['goat_info']['attributes'].length;
+        this.goatDataLink = data.results[0]['_source']['goat_info']['url'];
+
 
         this.metadataData.paginator = this.metadataPaginator;
         this.metadataData.sort = this.metadataSort;
