@@ -66,3 +66,9 @@ a:active {
   margin: 0;
   width: 85%;
 }
+
+.img-fluid {
+  max-width: 60% !important;
+  margin-right: 67% !important;
+  margin-top: 10px;
+}
