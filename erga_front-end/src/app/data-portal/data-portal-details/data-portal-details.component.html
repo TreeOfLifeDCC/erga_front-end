@@ -32,11 +32,19 @@
             Something went wrong, please try again!
           </div>
         </div>
+
+        <br>
+
+        <button mat-raised-button (click)="exporter.exportTable('csv', {fileName: 'related_organisms'})"
+                color="accent">
+          Download metadata
+        </button>
+
         <mat-form-field appearance="standard">
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilter($event, 'metadata')" placeholder="Ex. Mia" #input>
         </mat-form-field>
-          <table mat-table [dataSource]="metadataData" matSort #metadataSort="matSort">
+          <table mat-table [dataSource]="metadataData" matSort #metadataSort="matSort" matTableExporter #exporter="matTableExporter">
 
             <!-- ID Column -->
             <ng-container matColumnDef="accession">
@@ -102,11 +110,17 @@
         <br>
         <ng-container *ngIf="annotationDataLength !== 0">
           <h1>Annotation</h1>
+
+          <button mat-raised-button
+                  (click)="annotationExporter.exportTable('csv', {fileName: 'related_annotations'})"
+                  color="accent">Download metadata</button>
+
           <mat-form-field appearance="standard">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event, 'annotation')" placeholder="Illumina" #input>
           </mat-form-field>
-          <table mat-table [dataSource]="annotationData" matSort #annotationSort="matSort">
+          <table mat-table [dataSource]="annotationData" matSort #annotationSort="matSort" matTableExporter
+                 #annotationExporter="matTableExporter">
 
             <!-- ID Column -->
             <ng-container matColumnDef="species">
@@ -198,12 +212,17 @@
 
         <ng-container *ngIf="assembliesDataLength !== 0">
           <h1>Related Assemblies</h1>
+          <button mat-raised-button
+                  (click)="assembliesExporter.exportTable('csv', {fileName: 'related_assemblies'})"
+                  color="accent">Download metadata</button>
+
 
           <mat-form-field appearance="standard">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event, 'assemblies')" placeholder="Illumina" #input>
           </mat-form-field>
-          <table mat-table [dataSource]="assembliesData" matSort #assembliesSort="matSort">
+          <table mat-table [dataSource]="assembliesData" matSort #assembliesSort="matSort" matTableExporter
+                 #assembliesExporter="matTableExporter">
 
             <!-- ID Column -->
             <ng-container matColumnDef="accession">
@@ -248,11 +267,16 @@
         <ng-container *ngIf="filesDataLength !== 0">
           <h1>Related Files</h1>
 
+          <button mat-raised-button
+                  (click)="filesExporter.exportTable('csv', {fileName: 'related_files'})"
+                  color="accent">Download metadata</button>
+
           <mat-form-field appearance="standard">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event, 'files')" placeholder="Illumina" #input>
           </mat-form-field>
-          <table mat-table [dataSource]="filesData" matSort #filesSort="matSort">
+          <table mat-table [dataSource]="filesData" matSort #filesSort="matSort" matTableExporter
+                 #filesExporter="matTableExporter">
             <ng-container [matColumnDef]="column" *ngFor="let column of filesDisplayedColumns">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> {{getHumanReadableName(column)}} </th>
               <td mat-cell *matCellDef="let element">
@@ -311,8 +335,15 @@
         </mat-card>
 
       </mat-tab>
+
+
       <mat-tab label="GoaT" *ngIf="goatDataLength !== 0">
-        <table mat-table [dataSource]="goatData">
+        <br>
+        <button mat-raised-button
+                (click)="goatExporter.exportTable('csv', {fileName: 'goat_info'})"
+                color="accent" style="margin-bottom: 10px">Download GoaT information</button>
+
+        <table mat-table [dataSource]="goatData" matTableExporter #goatExporter="matTableExporter">
 
           <!-- ID Column -->
           <ng-container matColumnDef="name">

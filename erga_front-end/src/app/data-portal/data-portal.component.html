@@ -132,6 +132,11 @@
 
         <br>
 
+        <button mat-raised-button (click)="exporter.exportTable('csv', {fileName: 'data_portal'})"
+                color="accent">
+          Download metadata
+        </button>
+
         <mat-form-field appearance="standard" class="search_field">
           <mat-label>Search</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="ex. Salmo trutta" #input>
@@ -139,7 +144,7 @@
 
         <table mat-table [dataSource]="data" class="example-table" matSort matSortActive="currentStatus"
                matSortDisableClear
-               matSortDirection="asc">
+               matSortDirection="asc" matTableExporter #exporter="matTableExporter" [hiddenColumns]="[4]">
           <!-- Number Column -->
           <ng-container matColumnDef="organism">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Organism</th>

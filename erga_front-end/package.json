@@ -24,6 +24,7 @@
     "@types/jquery": "^3.5.4",
     "d3": "^7.4.4",
     "jquery": "^3.5.1",
+    "mat-table-exporter": "^10.2.4",
     "rxjs": "~7.5.0",
     "rxjs-compat": "^6.6.7",
     "tslib": "^2.3.0",

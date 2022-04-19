@@ -20,6 +20,7 @@ import { DataPortalDetailsComponent } from './data-portal/data-portal-details/da
 import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
 import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
 import {DynamicScriptLoaderService} from "./phylogeny/services/dynamic-script-loader.service";
+import {MatTableExporterModule} from "mat-table-exporter";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {DynamicScriptLoaderService} from "./phylogeny/services/dynamic-script-lo
     RoutingModule,
     MaterialModule,
     FlexLayoutModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTableExporterModule
   ],
   providers: [DynamicScriptLoaderService],
   bootstrap: [AppComponent]
