@@ -115,38 +115,51 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         this.metadataData = new MatTableDataSource(data.results[0]['_source']['records']);
         this.metadataDataLength = data.results[0]['_source']['records'].length;
 
-        this.annotationData = new MatTableDataSource(data.results[0]['_source']['annotation']);
-        this.annotationDataLength = data.results[0]['_source']['annotation'].length;
+        if (data.results[0]['_source']['annotation'] && data.results[0]['_source']['annotation'].lenght !== 0) {
+          this.annotationData = new MatTableDataSource(data.results[0]['_source']['annotation']);
+          this.annotationDataLength = data.results[0]['_source']['annotation'].length;
+          this.annotationData.paginator = this.annotationPaginator;
+          this.annotationData.sort = this.annotationSort;
+          this.showData = true;
+        } else {
+          this.annotationDataLength = 0;
+        }
 
-        this.assembliesData = new MatTableDataSource(data.results[0]['_source']['assemblies']);
-        this.assembliesDataLength = data.results[0]['_source']['assemblies'].length;
+        if (data.results[0]['_source']['assemblies'] && data.results[0]['_source']['assemblies'].lenght !== 0) {
+          this.assembliesData = new MatTableDataSource(data.results[0]['_source']['assemblies']);
+          this.assembliesDataLength = data.results[0]['_source']['assemblies'].length;
+          this.assembliesData.paginator = this.assembliesPaginator;
+          this.assembliesData.sort = this.assembliesSort;
+          this.showData = true;
+        } else {
+          this.assembliesDataLength = 0;
+        }
 
-        this.filesData = new MatTableDataSource(data.results[0]['_source']['experiment']);
-        this.filesDataLength = data.results[0]['_source']['experiment'].length;
+        if ( data.results[0]['_source']['experiment'] &&  data.results[0]['_source']['experiment'].lenght !== 0) {
+          this.filesData = new MatTableDataSource(data.results[0]['_source']['experiment']);
+          this.filesDataLength = data.results[0]['_source']['experiment'].length;
+          this.filesData.paginator = this.filesPaginator;
+          this.filesData.sort = this.filesSort;
+          this.showData = true;
+        } else {
+          this.filesDataLength = 0;
+        }
 
-        this.goatData = new MatTableDataSource(data.results[0]['_source']['goat_info']['attributes'])
-        this.goatDataLength = data.results[0]['_source']['goat_info']['attributes'].length;
-        this.goatDataLink = data.results[0]['_source']['goat_info']['url'];
+        if (data.results[0]['_source']['goat_info']) {
+          this.goatData = new MatTableDataSource(data.results[0]['_source']['goat_info']['attributes'])
+          this.goatDataLength = data.results[0]['_source']['goat_info']['attributes'].length;
+          this.goatDataLink = data.results[0]['_source']['goat_info']['url'];
+        } else {
+          this.goatDataLength = 0;
+        }
 
 
         this.metadataData.paginator = this.metadataPaginator;
         this.metadataData.sort = this.metadataSort;
 
-        this.annotationData.paginator = this.annotationPaginator;
-        this.annotationData.sort = this.annotationSort;
-
-        this.assembliesData.paginator = this.assembliesPaginator;
-        this.assembliesData.sort = this.assembliesSort;
-
-        this.filesData.paginator = this.filesPaginator;
-        this.filesData.sort = this.filesSort;
 
         if (data.results[0]['_source']['records'].length > 0) {
           this.showMetadata = true;
-        }
-        if (data.results[0]['_source']['annotation'].length > 0 ||
-          data.results[0]['_source']['assemblies'].length > 0 || data.results[0]['_source']['experiment'].length > 0) {
-          this.showData = true;
         }
         if (data.results[0]['_source']['genome_notes'] && data.results[0]['_source']['genome_notes'].length !== 0) {
           this.showGenomeNote = true;

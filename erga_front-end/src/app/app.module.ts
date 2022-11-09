@@ -21,6 +21,7 @@ import {OrganismDetailsComponent} from "./organism-details/organism-details.comp
 import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
 import {DynamicScriptLoaderService} from "./phylogeny/services/dynamic-script-loader.service";
 import {MatTableExporterModule} from "mat-table-exporter";
+import { CookieLawModule } from "angular2-cookie-law";
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {MatTableExporterModule} from "mat-table-exporter";
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
-    MatTableExporterModule
+    MatTableExporterModule,
+    CookieLawModule
   ],
   providers: [DynamicScriptLoaderService],
   bootstrap: [AppComponent]
