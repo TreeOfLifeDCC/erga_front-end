@@ -66,3 +66,7 @@ h1 {
 img {
   max-width: 800px;
 }
+
+mat-chip {
+  padding: 4px 9px !important;
+}

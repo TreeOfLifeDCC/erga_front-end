@@ -57,4 +57,8 @@ export class OrganismDetailsComponent implements OnInit, AfterViewInit {
     }
   }
 
+  checkNagoyaProtocol(data: any): boolean {
+    return data.hasOwnProperty('nagoya_protocol');
+  }
+
 }

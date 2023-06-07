@@ -147,6 +147,12 @@
           <th mat-header-cell *matHeaderCellDef mat-sort-header> BioSample ID </th>
           <td mat-cell *matCellDef="let row">
             <a mat-button [routerLink]="['/specimen', row.accession]">{{row.accession}}</a>
+            <mat-chip style="margin-bottom: 5px; background-color: yellow; color: black"
+                      *ngIf="checkNagoyaProtocol(row)">
+              <a mat-button
+                 href="https://drive.google.com/file/d/1tkTdo-dI30YFokE2YpwmzP9onhrrEyhD/view?usp=drive_link">
+                Nagoya Protocol</a>
+            </mat-chip>
           </td>
         </ng-container>
 

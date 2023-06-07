@@ -92,3 +92,15 @@ table {
 /*a {*/
 /*  color: white;*/
 /*}*/
+
+.mat-column-organism,
+.mat-column-commonName,
+.mat-column-commonNameSource,
+.mat-column-currentStatus,
+.mat-column-externalReferences{
+  max-width: 80px;
+}
+
+mat-chip {
+  padding: 4px 9px !important;
+}

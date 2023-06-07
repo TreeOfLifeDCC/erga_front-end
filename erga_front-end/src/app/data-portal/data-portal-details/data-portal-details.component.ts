@@ -235,4 +235,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
   }
 
+  checkNagoyaProtocol(data: any): boolean {
+    return data.hasOwnProperty('nagoya_protocol');
+  }
+
 }
