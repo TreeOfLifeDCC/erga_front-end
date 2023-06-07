@@ -197,7 +197,7 @@
                         style="margin-left: 5px; margin-bottom: 5px; background-color: cornflowerblue; color: white">
                 <a mat-button href="{{row._source.goat_info['url']}}">GoaT Info</a>
               </mat-chip>
-              <mat-chip *ngIf="row._source.tolid"
+              <mat-chip *ngIf="row._source.tolid && checkShowTolQc(row._source)"
                         style="margin-left: 5px; margin-bottom: 5px; background-color: limegreen; color: black">
                 <a mat-button href="{{generateTolidLink(row._source)}}">ToL QC</a>
               </mat-chip>

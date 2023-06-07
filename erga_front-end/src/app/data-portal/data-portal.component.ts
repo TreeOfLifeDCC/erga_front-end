@@ -197,8 +197,16 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     const firstChar: string = data.tolid.charAt(0);
     const clade = this.codes[firstChar as keyof typeof this.codes];
     let project_name;
-    data.project_name === 'dtol' ? project_name = 'darwin' : project_name = 'erga';
+    if (data.project_name === 'ERGA') {
+      project_name = 'erga'
+    } else  {
+      project_name = 'darwin'
+    }
     return `https://tolqc.cog.sanger.ac.uk/${project_name}/${clade}/${organismName}`;
+  }
+
+  checkShowTolQc(data: any) {
+    return !data.hasOwnProperty('show_tolqc');
   }
 
   checkGenomeNotes(data:any) {
