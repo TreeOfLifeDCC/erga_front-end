@@ -1,0 +1,38 @@
+.img-fluid {
+  max-width: 80% !important;
+}
+
+.img-fluid2 {
+  max-width: 120%;
+}
+
+.img-fluid3 {
+  max-width: 80% !important;
+  margin-left: 30px;
+  /*margin-right: 87% !important;*/
+  /*margin-top: 10px;*/
+}
+
+.img-fluid4 {
+  max-width: 20% !important;
+  max-height: 20% !important;
+  /*margin-right: 27% !important;*/
+}
+
+mat-toolbar {
+  height: 100px;
+}
+
+.navigation-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.label {
+  display: inline-block;
+  line-height: 30px;
+  margin: 0;
+  width: 85%;
+}

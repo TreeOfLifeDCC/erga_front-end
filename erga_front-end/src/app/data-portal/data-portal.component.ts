@@ -178,17 +178,17 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
   getStyle(status: string) {
     if (status === 'Annotation Complete') {
-      return 'background-color: limegreen; color: black';
+      return 'background-color: #A8BAA8; color: black';
     } else {
-      return 'background-color: yellow; color: black';
+      return 'background-color: #D8BCAA; color: black';
     }
   }
 
   getCommonNameSourceStyle(source: string) {
     if (source === 'UKSI') {
-      return 'background-color: yellow; color: black';
+      return 'background-color: #D8BCAA; color: black';
     } else {
-      return 'background-color: cornflowerblue; color: white';
+      return 'background-color: #A8BAA8; color: white';
     }
   }
 

@@ -21,7 +21,7 @@ import {OrganismDetailsComponent} from "./organism-details/organism-details.comp
 import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
 import {DynamicScriptLoaderService} from "./phylogeny/services/dynamic-script-loader.service";
 import {MatTableExporterModule} from "mat-table-exporter";
-import { CookieLawModule } from "angular2-cookie-law";
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,8 @@ import { CookieLawModule } from "angular2-cookie-law";
     DataPortalComponent,
     DataPortalDetailsComponent,
     OrganismDetailsComponent,
-    SpecimenDetailsComponent
+    SpecimenDetailsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -46,8 +47,7 @@ import { CookieLawModule } from "angular2-cookie-law";
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
-    MatTableExporterModule,
-    CookieLawModule
+    MatTableExporterModule
   ],
   providers: [DynamicScriptLoaderService],
   bootstrap: [AppComponent]
