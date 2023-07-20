@@ -22,6 +22,8 @@ import { SpecimenDetailsComponent } from './specimen-details/specimen-details.co
 import {DynamicScriptLoaderService} from "./phylogeny/services/dynamic-script-loader.service";
 import {MatTableExporterModule} from "mat-table-exporter";
 import { FooterComponent } from './footer/footer.component';
+import { NgcCookieConsentModule } from 'ngx-cookieconsent';
+import { cookieConfig } from './app.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,8 @@ import { FooterComponent } from './footer/footer.component';
     MaterialModule,
     FlexLayoutModule,
     HttpClientModule,
-    MatTableExporterModule
+    MatTableExporterModule,
+    NgcCookieConsentModule.forRoot(cookieConfig)
   ],
   providers: [DynamicScriptLoaderService],
   bootstrap: [AppComponent]
