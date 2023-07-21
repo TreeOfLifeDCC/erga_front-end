@@ -3,12 +3,13 @@
 }
 
 .img-fluid2 {
-  max-width: 120%;
+  max-width: 90%;
+  margin-right: 30px;
 }
 
 .img-fluid3 {
   max-width: 80% !important;
-  margin-left: 30px;
+  /*margin-left: 30px;*/
   /*margin-right: 87% !important;*/
   /*margin-top: 10px;*/
 }
@@ -20,7 +21,8 @@
 }
 
 mat-toolbar {
-  height: 100px;
+  height: 110px;
+  overflow: hidden;
 }
 
 .navigation-items {
