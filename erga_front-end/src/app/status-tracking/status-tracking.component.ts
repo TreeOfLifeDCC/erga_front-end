@@ -113,7 +113,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
 
   checkStyle(filterValue: string) {
     if (this.activeFilters.includes(filterValue)) {
-      return 'background-color: #7b1fa2';
+      return 'background-color: #A8BAA8';
     } else {
       return '';
     }
