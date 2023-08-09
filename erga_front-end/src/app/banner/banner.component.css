@@ -1,27 +1,65 @@
-.example-spacer {
-  flex: 1 1 auto;
+/*.example-spacer {*/
+/*  flex: 1 1 auto;*/
+/*}*/
+
+/*video {*/
+/*  position: inherit;*/
+/*  min-width: 100%;*/
+/*  overflow: hidden;*/
+/*  z-index: -1;*/
+/*}*/
+/*#headerContent {*/
+/*  width: 100%;*/
+/*  height: 40%;*/
+/*  overflow: hidden;*/
+/*  position: relative;*/
+/*}*/
+/*p {*/
+/*  position: absolute;*/
+/*  text-align: center;*/
+/*  font-size: 1.5em;*/
+/*  z-index: 9999;*/
+/*  color: white;*/
+/*  top: 50%;*/
+/*  left: 50%;*/
+/*  transform: translate(-50%,-50%);*/
+/*}*/
+
+/*.banner {*/
+
+/*  !* Position and center the image to scale nicely on all screens *!*/
+/*  background-position: center;*/
+/*  background-repeat: no-repeat;*/
+/*  background-size: cover;*/
+/*  position: relative;*/
+/*}*/
+
+body, html {
+  height: 100%;
 }
 
-video {
-  position: inherit;
-  min-width: 100%;
-  overflow: hidden;
-  z-index: -1;
-}
-#headerContent {
-  width: 100%;
-  height: 40%;
-  overflow: hidden;
+/* The hero image */
+.hero-image {
+  /* Use "linear-gradient" to add a darken background effect to the image (photographer.jpg). This will make the text easier to read */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("../../assets/erga_banner.jpg");
+
+  /* Set a specific height */
+  height: 50%;
+
+  /* Position and center the image to scale nicely on all screens */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   position: relative;
 }
-p {
-  position: absolute;
+
+/* Place text in the middle of the image */
+.hero-text {
   text-align: center;
-  font-size: 1.5em;
-  z-index: 9999;
-  color: white;
+  position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
+  color: white;
 }
 
