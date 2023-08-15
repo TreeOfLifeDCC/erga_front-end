@@ -53,11 +53,14 @@ table {
 .mat-column-commonName,
 .mat-column-biosamples,
 .mat-column-raw_data,
-.mat-column-mapped_reads,
 .mat-column-assemblies_status,
-.mat-column-annotation_complete,
-.mat-column-annotation_status {
-  max-width: 20px;
+.mat-column-annotation_complete {
+  max-width: 60px;
+}
+
+.mat-column-number,
+.mat-column-state {
+  max-width: 64px;
 }
 
 .mat-column-created {

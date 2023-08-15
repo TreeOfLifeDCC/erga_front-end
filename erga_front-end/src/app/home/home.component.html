@@ -96,56 +96,44 @@
         <a mat-button [routerLink]="['/status_tracking']">Status Tracking</a>
       </button>
     </mat-card>
-    <br>
-        <mat-card class="phylogeny">
-          <mat-card-title>Phylogeny</mat-card-title>
-          <mat-card-subtitle>Phylogeny description</mat-card-subtitle>
-          <mat-card-actions>
-            <mat-chip-list aria-label="Statistics">
-              <mat-chip color="primary">
-                Metazoa
-                <button mat-button color="accent">
-                  {{data?.Metazoa}}
-                </button>
-              </mat-chip>
-              <mat-chip>
-                Viridiplantae
-                <button mat-button color="accent">
-                  {{data?.Viridiplantae}}
-                </button>
-              </mat-chip>
-              <mat-chip color="primary">
-                Fungi
-                <button mat-button color="accent">
-                  {{data?.Fungi}}
-                </button>
-              </mat-chip>
-              <mat-chip color="primary">
-                Other
-                <button mat-button color="accent">
-                  {{data?.Other}}
-                </button>
-              </mat-chip>
-            </mat-chip-list>
-          </mat-card-actions>
-          <button mat-flat-button color="primary">
-            <a mat-button [routerLink]="['/phylogeny']">Phylogeny</a>
-          </button>
-        </mat-card>
   </div>
 
   <div class-="item2">
-    <mat-card class="twitter">
-      <mat-card-title>Twitter</mat-card-title>
-      <mat-card-subtitle>Twitter</mat-card-subtitle>
+    <mat-card class="phylogeny">
+      <mat-card-title>Phylogeny</mat-card-title>
+      <mat-card-subtitle>Phylogeny description</mat-card-subtitle>
       <mat-card-actions>
-        <a class="twitter-timeline"
-           data-height="550" data-theme="light" data-width="850"
-           data-chrome="noborders nofooter noscrollbar transparent"
-           href="https://twitter.com/erga_biodiv">Tweets by profile</a>
+        <mat-chip-list aria-label="Statistics">
+          <mat-chip color="primary">
+            Metazoa
+            <button mat-button color="accent">
+              {{data?.Metazoa}}
+            </button>
+          </mat-chip>
+          <mat-chip>
+            Viridiplantae
+            <button mat-button color="accent">
+              {{data?.Viridiplantae}}
+            </button>
+          </mat-chip>
+          <mat-chip color="primary">
+            Fungi
+            <button mat-button color="accent">
+              {{data?.Fungi}}
+            </button>
+          </mat-chip>
+          <mat-chip color="primary">
+            Other
+            <button mat-button color="accent">
+              {{data?.Other}}
+            </button>
+          </mat-chip>
+        </mat-chip-list>
       </mat-card-actions>
+      <button mat-flat-button color="primary">
+        <a mat-button [routerLink]="['/phylogeny']">Phylogeny</a>
+      </button>
     </mat-card>
-
   </div>
 </div>
 <br>

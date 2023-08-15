@@ -27,16 +27,6 @@
               </mat-chip>
             </mat-chip-list>
           </mat-list-item>
-          <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.mapped_reads.buckets)"
-                         [style]="checkStyle('Mapped Reads - Submitted')"
-                         (click)="onFilterClick('Mapped Reads - Submitted')" style="cursor: pointer">
-            <h4 matLine>Mapped Reads - Submitted</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                {{getStatusCount(aggregations?.mapped_reads.buckets)}}
-              </mat-chip>
-            </mat-chip-list>
-          </mat-list-item>
           <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.assemblies_status.buckets)"
                          [style]="checkStyle('Assemblies - Submitted')"
                          (click)="onFilterClick('Assemblies - Submitted')" style="cursor: pointer">

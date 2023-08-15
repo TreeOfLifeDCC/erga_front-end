@@ -11,8 +11,8 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
   styleUrls: ['./status-tracking.component.css']
 })
 export class StatusTrackingComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['organism', 'commonName', 'biosamples', 'raw_data', 'mapped_reads', 'assemblies_status',
-    'annotation_complete', 'annotation_status',];
+  displayedColumns: string[] = ['organism', 'commonName', 'biosamples', 'raw_data', 'assemblies_status',
+    'annotation_complete'];
   data: any;
   searchValue: string;
   searchChanged = new EventEmitter<any>();
