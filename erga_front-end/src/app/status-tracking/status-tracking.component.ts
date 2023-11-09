@@ -1,9 +1,10 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatLegacyPaginator as MatPaginator} from "@angular/material/legacy-paginator";
 import {MatSort} from "@angular/material/sort";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-status-tracking',
@@ -33,15 +34,40 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     "species_group", "species_subgroup", "species", "subspecies", "varietas", "forma"];
   timer: any;
   phylogenyFilters: string[] = [];
-
+  queryParams: any = {};
   preventSimpleClick = false;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _apiService: ApiService) { }
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild('input', { static: true }) searchInput: ElementRef;
+
+  constructor(private _apiService: ApiService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute,) { }
 
   ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.queryParams = {...params};
+    });
+    if ('filter' in this.queryParams){
+      this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+        [...this.queryParams['filter']] : [this.queryParams['filter']];
+    }
+    if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+      this.sort.active = this.queryParams['sortActive'];
+      this.sort.direction = this.queryParams['sortDirection'];
+    }
+    if ('searchValue' in this.queryParams){
+      this.searchValue = this.queryParams['searchValue'];
+      this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+    }
+    if ('pageIndex' in this.queryParams){
+      this.paginator.pageIndex = this.queryParams['pageIndex'];
+    }
+    if ('pageSize' in this.queryParams){
+      this.paginator.pageSize = this.queryParams['pageSize'];
+    }
   }
 
   ngAfterViewInit() {
