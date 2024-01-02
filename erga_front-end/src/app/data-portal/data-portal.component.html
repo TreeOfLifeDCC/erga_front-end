@@ -15,10 +15,11 @@
                 <h4 matLine class="vertical-center">BioSamples - Submitted</h4>
               </div>
               <div style="margin-left: auto">
-                <mat-chip-listbox>
-                  <mat-chip-option
-                    style="font-size: 10px;">{{getStatusCount(aggregations?.biosamples.buckets)}}</mat-chip-option>
-                </mat-chip-listbox>
+                <mat-chip-set>
+                  <mat-chip style="font-size: 10px">
+                    {{getStatusCount(aggregations?.biosamples.buckets)}}
+                  </mat-chip>
+                </mat-chip-set>
               </div>
             </div>
           </mat-list-item>
@@ -30,10 +31,11 @@
                 <h4 matLine class="vertical-center">Raw Data - Submitted</h4>
               </div>
               <div style="margin-left: auto">
-                <mat-chip-listbox>
-                  <mat-chip-option
-                    style="font-size: 10px;">{{getStatusCount(aggregations?.raw_data.buckets)}}</mat-chip-option>
-                </mat-chip-listbox>
+                <mat-chip-set>
+                  <mat-chip style="font-size: 10px">
+                    {{getStatusCount(aggregations?.raw_data.buckets)}}
+                  </mat-chip>
+                </mat-chip-set>
               </div>
             </div>
 
@@ -46,9 +48,12 @@
                 <h4 matLine class="vertical-center">Assemblies - Submitted</h4>
               </div>
               <div style="margin-left: auto">
-                <mat-chip-listbox>
-                  <mat-chip-option style="font-size: 10px;">{{getStatusCount(aggregations?.assemblies_status.buckets)}}</mat-chip-option>
-                </mat-chip-listbox></div>
+                <mat-chip-set>
+                  <mat-chip style="font-size: 10px">
+                    {{getStatusCount(aggregations?.assemblies_status.buckets)}}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
             </div>
           </mat-list-item>
           <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.annotation_complete.buckets)"
@@ -59,9 +64,12 @@
                 <h4 matLine class="vertical-center">Annotation Complete - Done</h4>
               </div>
               <div style="margin-left: auto">
-                <mat-chip-listbox>
-                  <mat-chip-option style="font-size: 10px;">{{getStatusCount(aggregations?.annotation_complete.buckets)}}</mat-chip-option>
-                </mat-chip-listbox></div>
+                <mat-chip-set>
+                  <mat-chip style="font-size: 10px">
+                    {{getStatusCount(aggregations?.annotation_complete.buckets)}}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
             </div>
           </mat-list-item>
         </mat-list>
@@ -80,9 +88,12 @@
                 <h4 matLine class="vertical-center">{{convertProjectName(project.key)}}</h4>
               </div>
               <div style="margin-left: auto">
-                <mat-chip-listbox>
-                  <mat-chip-option style="font-size: 10px;">{{project.doc_count}}</mat-chip-option>
-                </mat-chip-listbox></div>
+                <mat-chip-set>
+                  <mat-chip style="font-size: 10px">
+                    {{project.doc_count}}
+                  </mat-chip>
+                </mat-chip-set>
+              </div>
             </div>
           </mat-list-item>
         </mat-list>
@@ -109,9 +120,11 @@
                 <h4 matLine class="vertical-center">{{phylogeny_name.key}}</h4>
               </div>
               <div style="margin-left: auto">
-                <mat-chip-listbox>
-                  <mat-chip-option style="font-size: 10px;">{{phylogeny_name.doc_count}}</mat-chip-option>
-                </mat-chip-listbox>
+                <mat-chip-set>
+                  <mat-chip style="font-size: 10px">
+                    {{phylogeny_name.doc_count}}
+                  </mat-chip>
+                </mat-chip-set>
               </div>
             </div>
           </mat-list-item>
@@ -134,14 +147,14 @@
       <div class="example-table-container">
 
         <div class="container2">
-          <mat-chip-listbox>
+          <mat-chip-set>
             <div *ngFor="let item of activeFilters" class="item4">
-              <mat-chip-option  selected (click)="onFilterClick(item)" style="cursor: pointer">
+              <mat-chip  selected (click)="onFilterClick(item)" style="cursor: pointer">
                 {{item}}
                 <mat-icon>close</mat-icon>
-              </mat-chip-option>
+              </mat-chip>
             </div>
-          </mat-chip-listbox>
+          </mat-chip-set>
         </div>
 
         <br>
