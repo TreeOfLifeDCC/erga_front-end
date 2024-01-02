@@ -7,46 +7,54 @@
             <mat-card-title>Data Portal</mat-card-title>
             <mat-card-subtitle>Data Portal description</mat-card-subtitle>
             <mat-card-actions>
-<!--              <mat-chip-list aria-label="Statistics">-->
-<!--                <mat-chip>-->
-<!--                  Species-->
-<!--                  <button mat-button color="accent">-->
-<!--                    {{data?.species}}-->
-<!--                  </button>-->
-<!--                </mat-chip>-->
-<!--                <mat-chip>-->
-<!--                  Organisms-->
-<!--                  <button mat-button color="accent">-->
-<!--                    {{data?.organisms}}-->
-<!--                  </button>-->
-<!--                </mat-chip>-->
-<!--                <mat-chip color="primary">-->
-<!--                  Specimens-->
-<!--                  <button mat-button color="accent">-->
-<!--                    {{data?.specimens}}-->
-<!--                  </button>-->
-<!--                </mat-chip>-->
-<!--              </mat-chip-list>-->
-<!--              <mat-chip-list aria-label="Project">-->
-<!--                <mat-chip color="accent">-->
-<!--                  ERGA-->
-<!--                  <button mat-button color="accent">-->
-<!--                    {{data?.ERGA}}-->
-<!--                  </button>-->
-<!--                </mat-chip>-->
-<!--                <mat-chip color="accent">-->
-<!--                  DToL-->
-<!--                  <button mat-button color="accent">-->
-<!--                    {{data?.dtol}}-->
-<!--                  </button>-->
-<!--                </mat-chip>-->
-<!--                <mat-chip color="accent">-->
-<!--                  25 Genomes-->
-<!--                  <button mat-button color="accent">-->
-<!--                    {{getData(data, '25_genomes')}}-->
-<!--                  </button>-->
-<!--                </mat-chip>-->
-<!--              </mat-chip-list>-->
+
+              <mat-chip-listbox aria-label="Statistics">
+                <mat-chip-option>
+                  Species
+                  <button mat-button>
+                    {{data?.species}}
+                  </button>
+                </mat-chip-option>
+
+                <mat-chip-option>
+                  Organisms
+                  <button mat-button>
+                    {{data?.organisms}}
+                  </button>
+                </mat-chip-option>
+
+                <mat-chip-option color="primary">
+                  Specimens
+                  <button mat-button>
+                    {{data?.specimens}}
+                  </button>
+                </mat-chip-option>
+              </mat-chip-listbox>
+
+
+              <mat-chip-listbox aria-label="Project">
+                <mat-chip-option>
+                  ERGA
+                  <button mat-button color="accent">
+                    {{data?.ERGA}}
+                  </button>
+                </mat-chip-option>
+
+                <mat-chip-option>
+                  DToL
+                  <button mat-button color="accent">
+                    {{data?.dtol}}
+                  </button>
+                </mat-chip-option>
+
+                <mat-chip-option>
+                  25 Genomes
+                  <button mat-button color="accent">
+                    {{getData(data, '25_genomes')}}
+                  </button>
+                </mat-chip-option>
+              </mat-chip-listbox>
+
             </mat-card-actions>
             <button mat-flat-button color="primary">
               <a mat-button [routerLink]="['/data_portal']">Data portal</a>
@@ -57,40 +65,46 @@
       <mat-card-title>Status tracking</mat-card-title>
       <mat-card-subtitle>Status Tracking description</mat-card-subtitle>
       <mat-card-actions>
-<!--        <mat-chip-list aria-label="Statistics">-->
-<!--          <mat-chip color="primary">-->
-<!--            BioSamples - Submitted-->
-<!--            <button mat-button color="accent">-->
-<!--              {{getData(data, 'BioSamples - Submitted')}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--          <mat-chip>-->
-<!--            Raw Data - Submitted-->
-<!--            <button mat-button color="accent">-->
-<!--              {{getData(data, 'Raw Data - Submitted')}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--          <mat-chip color="primary">-->
-<!--            Mapped Reads - Submitted-->
-<!--            <button mat-button color="accent">-->
-<!--              {{getData(data, 'Mapped Reads - Submitted')}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--        </mat-chip-list>-->
-<!--        <mat-chip-list aria-label="Statistics">-->
-<!--          <mat-chip>-->
-<!--            Assebmlies - Submitted-->
-<!--            <button mat-button color="accent">-->
-<!--              {{getData(data, 'Assebmlies - Submitted')}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--          <mat-chip>-->
-<!--            Annotation completed-->
-<!--            <button mat-button color="accent">-->
-<!--              {{getData(data, 'Annotation Complete')}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--        </mat-chip-list>-->
+        <mat-chip-listbox aria-label="Statistics">
+          <mat-chip-option color="primary">
+            BioSamples - Submitted
+            <button mat-button color="accent">
+              {{getData(data, 'BioSamples - Submitted')}}
+            </button>
+          </mat-chip-option>
+
+          <mat-chip-option>
+            Raw Data - Submitted
+            <button mat-button color="accent">
+              {{getData(data, 'Raw Data - Submitted')}}
+            </button>
+          </mat-chip-option>
+
+          <mat-chip-option color="primary">
+            Mapped Reads - Submitted
+            <button mat-button color="accent">
+              {{getData(data, 'Mapped Reads - Submitted')}}
+            </button>
+          </mat-chip-option>
+        </mat-chip-listbox>
+
+
+        <mat-chip-listbox aria-label="Statistics">
+          <mat-chip-option>
+            Assemblies - Submitted
+            <button mat-button color="accent">
+              {{getData(data, 'Assebmlies - Submitted')}}
+            </button>
+          </mat-chip-option>
+
+          <mat-chip-option>
+            Annotation completed
+            <button mat-button color="accent">
+              {{getData(data, 'Annotation Complete')}}
+            </button>
+          </mat-chip-option>
+        </mat-chip-listbox>
+
       </mat-card-actions>
       <button mat-flat-button color="primary">
         <a mat-button [routerLink]="['/status_tracking']">Status Tracking</a>
@@ -103,32 +117,36 @@
       <mat-card-title>Phylogeny</mat-card-title>
       <mat-card-subtitle>Phylogeny description</mat-card-subtitle>
       <mat-card-actions>
-<!--        <mat-chip-list aria-label="Statistics">-->
-<!--          <mat-chip color="primary">-->
-<!--            Metazoa-->
-<!--            <button mat-button color="accent">-->
-<!--              {{data?.Metazoa}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--          <mat-chip>-->
-<!--            Viridiplantae-->
-<!--            <button mat-button color="accent">-->
-<!--              {{data?.Viridiplantae}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--          <mat-chip color="primary">-->
-<!--            Fungi-->
-<!--            <button mat-button color="accent">-->
-<!--              {{data?.Fungi}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--          <mat-chip color="primary">-->
-<!--            Other-->
-<!--            <button mat-button color="accent">-->
-<!--              {{data?.Other}}-->
-<!--            </button>-->
-<!--          </mat-chip>-->
-<!--        </mat-chip-list>-->
+
+        <mat-chip-listbox aria-label="Statistics">
+          <mat-chip-option color="primary">Metazoa
+            <button mat-button color="accent">
+              {{data?.Metazoa}}
+            </button>
+          </mat-chip-option>
+
+          <mat-chip-option>
+            Viridiplantae
+            <button mat-button color="accent">
+              {{data?.Viridiplantae}}
+            </button>
+          </mat-chip-option>
+
+          <mat-chip-option color="primary">
+            Fungi
+            <button mat-button color="accent">
+              {{data?.Fungi}}
+            </button>
+          </mat-chip-option>
+
+          <mat-chip-option color="primary">
+            Other
+            <button mat-button color="accent">
+              {{data?.Other}}
+            </button>
+          </mat-chip-option>
+        </mat-chip-listbox>
+
       </mat-card-actions>
       <button mat-flat-button color="primary">
         <a mat-button [routerLink]="['/phylogeny']">Phylogeny</a>
