@@ -3,73 +3,92 @@
   <div class="item0">
   </div>
   <div class="item1">
-    <mat-card>
+    <mat-card style="min-width: 300px">
       <mat-card-title>Data status</mat-card-title>
-      <mat-card-actions fxFlexAlign="center">
-        <mat-list role="list">
+      <mat-card-actions fxFlexAlign="center" style="width: 100%">
+        <mat-list role="list" style="width: 100%">
           <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.biosamples.buckets)"
                          [style]="checkStyle('BioSamples - Submitted')"
                          (click)="onFilterClick('BioSamples - Submitted')" style="cursor: pointer">
-            <h4 matLine>BioSamples - Submitted</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                {{getStatusCount(aggregations?.biosamples.buckets)}}
-              </mat-chip>
-            </mat-chip-list>
+            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+              <div>
+                <h4 matLine class="vertical-center">BioSamples - Submitted</h4>
+              </div>
+              <div style="margin-left: auto">
+                <mat-chip-listbox>
+                  <mat-chip-option
+                    style="font-size: 10px;">{{getStatusCount(aggregations?.biosamples.buckets)}}</mat-chip-option>
+                </mat-chip-listbox>
+              </div>
+            </div>
           </mat-list-item>
           <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.raw_data.buckets)"
                          [style]="checkStyle('Raw Data - Submitted')"
                          (click)="onFilterClick('Raw Data - Submitted')" style="cursor: pointer">
-            <h4 matLine>Raw Data - Submitted</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                {{getStatusCount(aggregations?.raw_data.buckets)}}
-              </mat-chip>
-            </mat-chip-list>
+            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+              <div>
+                <h4 matLine class="vertical-center">Raw Data - Submitted</h4>
+              </div>
+              <div style="margin-left: auto">
+                <mat-chip-listbox>
+                  <mat-chip-option
+                    style="font-size: 10px;">{{getStatusCount(aggregations?.raw_data.buckets)}}</mat-chip-option>
+                </mat-chip-listbox>
+              </div>
+            </div>
           </mat-list-item>
           <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.assemblies_status.buckets)"
                          [style]="checkStyle('Assemblies - Submitted')"
                          (click)="onFilterClick('Assemblies - Submitted')" style="cursor: pointer">
-            <h4 matLine>Assemblies - Submitted</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                {{getStatusCount(aggregations?.assemblies_status.buckets)}}
-              </mat-chip>
-            </mat-chip-list>
+            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+              <div>
+                <h4 matLine class="vertical-center">Assemblies - Submitted</h4>
+              </div>
+              <div style="margin-left: auto">
+                <mat-chip-listbox>
+                  <mat-chip-option style="font-size: 10px;">{{getStatusCount(aggregations?.assemblies_status.buckets)}}</mat-chip-option>
+                </mat-chip-listbox></div>
+            </div>
           </mat-list-item>
           <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.annotation_complete.buckets)"
                          [style]="checkStyle('Annotation Complete - Done')"
                          (click)="onFilterClick('Annotation Complete - Done')" style="cursor: pointer">
-            <h4 matLine>Annotation Complete - Done</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                {{getStatusCount(aggregations?.annotation_complete.buckets)}}
-              </mat-chip>
-            </mat-chip-list>
+            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+              <div>
+                <h4 matLine class="vertical-center">Annotation Complete - Done</h4>
+              </div>
+              <div style="margin-left: auto">
+                <mat-chip-listbox>
+                  <mat-chip-option style="font-size: 10px;">{{getStatusCount(aggregations?.annotation_complete.buckets)}}</mat-chip-option>
+                </mat-chip-listbox></div>
+            </div>
           </mat-list-item>
         </mat-list>
       </mat-card-actions>
     </mat-card>
     <br>
-    <mat-card>
+    <mat-card style="min-width: 300px">
       <mat-card-title>Projects</mat-card-title>
-      <mat-card-actions>
-        <mat-list role="list">
+      <mat-card-actions fxFlexAlign="center" style="width: 100%">
+        <mat-list role="list" style="width: 100%">
           <mat-list-item role="listitem" *ngFor="let project of aggregations?.project_name.buckets"
                          style="cursor: pointer" [style]="checkStyle(convertProjectName(project.key))"
                          (click)="onFilterClick(convertProjectName(project.key))">
-            <h4 matLine>{{convertProjectName(project.key)}}</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                {{project.doc_count}}
-              </mat-chip>
-            </mat-chip-list>
+            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+              <div>
+                <h4 matLine class="vertical-center">{{convertProjectName(project.key)}}</h4>
+              </div>
+              <div style="margin-left: auto">
+                <mat-chip-listbox>
+                  <mat-chip-option style="font-size: 10px;">{{project.doc_count}}</mat-chip-option>
+                </mat-chip-listbox></div>
+            </div>
           </mat-list-item>
         </mat-list>
       </mat-card-actions>
     </mat-card>
     <br>
-    <mat-card>
+    <mat-card style="min-width: 300px">
       <mat-card-title>
         Phylogeny/{{currentClass}}
         <mat-icon *ngIf="phylogenyFilters.length !== 0" (click)="onRefreshClick()" style="cursor: pointer">
@@ -79,17 +98,23 @@
           arrow_circle_left
         </mat-icon>
       </mat-card-title>
-      <mat-card-actions>
-        <mat-list role="list">
+
+      <mat-card-actions fxFlexAlign="center" style="width: 100%">
+        <mat-list role="list" style="width: 100%">
           <mat-list-item role="listbox" *ngFor="let phylogeny_name of aggregations?.taxonomies[currentClass]?.buckets"
                          style="cursor: pointer" [style]="checkStyle(phylogeny_name.key)"
-                         (dblclick)="onFilterClick(phylogeny_name.key)" (click)="changeCurrentClass(phylogeny_name.key)">
-            <h4 matLine>{{phylogeny_name.key}}</h4>
-            <mat-chip-list>
-              <mat-chip style="font-size: 10px">
-                {{phylogeny_name.doc_count}}
-              </mat-chip>
-            </mat-chip-list>
+                         (dblclick)="onFilterClick(phylogeny_name.key)"
+                         (click)="changeCurrentClass(phylogeny_name.key)">
+            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+              <div>
+                <h4 matLine class="vertical-center">{{phylogeny_name.key}}</h4>
+              </div>
+              <div style="margin-left: auto">
+                <mat-chip-listbox>
+                  <mat-chip-option style="font-size: 10px;">{{phylogeny_name.doc_count}}</mat-chip-option>
+                </mat-chip-listbox>
+              </div>
+            </div>
           </mat-list-item>
         </mat-list>
       </mat-card-actions>
@@ -110,19 +135,19 @@
       <div class="example-table-container">
 
         <div class="container2">
-          <mat-chip-list>
+          <mat-chip-listbox>
             <div *ngFor="let item of activeFilters" class="item4">
-              <mat-chip  selected (click)="onFilterClick(item)" style="cursor: pointer">
+              <mat-chip-option  selected (click)="onFilterClick(item)" style="cursor: pointer">
                 {{item}}
                 <mat-icon>close</mat-icon>
-              </mat-chip>
+              </mat-chip-option>
             </div>
-          </mat-chip-list>
+          </mat-chip-listbox>
         </div>
 
         <br>
 
-        <mat-form-field appearance="standard" class="search_field">
+        <mat-form-field class="search_field">
           <mat-label>Search</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="ex. Salmo trutta" #input>
         </mat-form-field>
@@ -188,7 +213,7 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
           <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+            <td class="mat-cell" colspan="4">No data matching the filter</td>
           </tr>
         </table>
       </div>
