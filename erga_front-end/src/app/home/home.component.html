@@ -7,7 +7,7 @@
             <mat-card-title>Data Portal</mat-card-title>
             <mat-card-subtitle>Data Portal description</mat-card-subtitle>
             <mat-card-actions>
-              <mat-chip-list aria-label="Statistics">
+              <mat-chip-set aria-label="Statistics">
                 <mat-chip>
                   Species
                   <button mat-button color="accent">
@@ -26,8 +26,8 @@
                     {{data?.specimens}}
                   </button>
                 </mat-chip>
-              </mat-chip-list>
-              <mat-chip-list aria-label="Project">
+              </mat-chip-set>
+              <mat-chip-set aria-label="Project">
                 <mat-chip color="accent">
                   ERGA
                   <button mat-button color="accent">
@@ -46,7 +46,7 @@
                     {{getData(data, '25_genomes')}}
                   </button>
                 </mat-chip>
-              </mat-chip-list>
+              </mat-chip-set>
             </mat-card-actions>
             <button mat-flat-button color="primary">
               <a mat-button [routerLink]="['/data_portal']">Data portal</a>
@@ -57,7 +57,7 @@
       <mat-card-title>Status tracking</mat-card-title>
       <mat-card-subtitle>Status Tracking description</mat-card-subtitle>
       <mat-card-actions>
-        <mat-chip-list aria-label="Statistics">
+        <mat-chip-set aria-label="Statistics">
           <mat-chip color="primary">
             BioSamples - Submitted
             <button mat-button color="accent">
@@ -76,8 +76,8 @@
               {{getData(data, 'Mapped Reads - Submitted')}}
             </button>
           </mat-chip>
-        </mat-chip-list>
-        <mat-chip-list aria-label="Statistics">
+        </mat-chip-set>
+        <mat-chip-set aria-label="Statistics">
           <mat-chip>
             Assebmlies - Submitted
             <button mat-button color="accent">
@@ -90,7 +90,7 @@
               {{getData(data, 'Annotation Complete')}}
             </button>
           </mat-chip>
-        </mat-chip-list>
+        </mat-chip-set>
       </mat-card-actions>
       <button mat-flat-button color="primary">
         <a mat-button [routerLink]="['/status_tracking']">Status Tracking</a>
@@ -103,7 +103,7 @@
       <mat-card-title>Phylogeny</mat-card-title>
       <mat-card-subtitle>Phylogeny description</mat-card-subtitle>
       <mat-card-actions>
-        <mat-chip-list aria-label="Statistics">
+        <mat-chip-set aria-label="Statistics">
           <mat-chip color="primary">
             Metazoa
             <button mat-button color="accent">
@@ -128,7 +128,7 @@
               {{data?.Other}}
             </button>
           </mat-chip>
-        </mat-chip-list>
+        </mat-chip-set>
       </mat-card-actions>
       <button mat-flat-button color="primary">
         <a mat-button [routerLink]="['/phylogeny']">Phylogeny</a>
