@@ -3,8 +3,8 @@
   <div class="item0">
   </div>
   <div class="item1">
-    <mat-card style="min-width: 300px">
-      <mat-card-title>Data status</mat-card-title>
+    <mat-card class="main-card">
+      <mat-card-title class="card-title">Data status</mat-card-title>
       <mat-card-actions fxFlexAlign="center" style="width: 100%">
         <mat-list role="list" style="width: 100%">
           <mat-list-item role="listitem" *ngIf="getStatusCount(aggregations?.biosamples.buckets)"
@@ -75,8 +75,8 @@
       </mat-card-actions>
     </mat-card>
     <br>
-    <mat-card style="min-width: 300px">
-      <mat-card-title>Projects</mat-card-title>
+    <mat-card class="main-card">
+      <mat-card-title class="card-title">Projects</mat-card-title>
       <mat-card-actions fxFlexAlign="center" style="width: 100%">
         <mat-list role="list" style="width: 100%">
           <mat-list-item role="listitem" *ngFor="let project of aggregations?.project_name.buckets"
@@ -99,8 +99,8 @@
       </mat-card-actions>
     </mat-card>
     <br>
-    <mat-card style="min-width: 300px">
-      <mat-card-title>
+    <mat-card class="main-card">
+      <mat-card-title class="card-title">
         Phylogeny/{{currentClass}}
         <mat-icon *ngIf="phylogenyFilters.length !== 0" (click)="onRefreshClick()" style="cursor: pointer">
           refresh
@@ -150,9 +150,11 @@
         <div class="container2">
           <mat-chip-set>
             <div *ngFor="let item of activeFilters" class="item4">
-              <mat-chip  selected (click)="onFilterClick(item)" style="cursor: pointer">
-                {{item}}
-                <mat-icon>close</mat-icon>
+              <mat-chip  selected (click)="onFilterClick(item)" style="cursor: pointer; padding: 0px; background-color: #e0efea;">
+                <div style="display: flex; align-items: center;">
+                  <div style="margin-right: 3px">{{item}}</div>
+                  <mat-icon>close</mat-icon>
+                </div>
               </mat-chip>
             </div>
           </mat-chip-set>
@@ -165,7 +167,8 @@
           <input matInput (keyup)="applyFilter($event)" placeholder="ex. Salmo trutta" #input>
         </mat-form-field>
 
-        <table mat-table [dataSource]="data" class="example-table" matSort matSortActive="annotation_complete"
+        <div class="data-table-div">
+          <table mat-table [dataSource]="data" class="data-table" matSort matSortActive="annotation_complete"
                matSortDisableClear
                matSortDirection="asc">
           <!-- Number Column -->
@@ -229,6 +232,7 @@
             <td class="mat-cell" colspan="4">No data matching the filter</td>
           </tr>
         </table>
+        </div>
       </div>
 
 

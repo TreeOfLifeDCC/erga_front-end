@@ -84,6 +84,7 @@ table {
 }
 .search_field {
   width: 100%;
+  margin-top: 10px;
 }
 
 .vertical-center {
@@ -92,6 +93,26 @@ table {
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.data-table-div{
+  margin-left: 15px;
+}
+.data-table td {
+  padding: 0px;
+}
+
+.data-table th {
+  padding: 0px;
+}
+
+
+.card-title {
+  margin-left: 5px;
+}
+
+.main-card {
+  min-width: 300px;
 }
 
 /*ng-container {*/
