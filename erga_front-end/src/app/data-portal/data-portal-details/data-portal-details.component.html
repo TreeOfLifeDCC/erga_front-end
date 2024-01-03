@@ -5,8 +5,8 @@
   <div class="item2">
     <mat-card>
       <mat-card-title style="text-align: center">{{organismData?.organism}}</mat-card-title>
-      <mat-card-actions>
-        <dl>
+      <mat-card-actions style="width: 100%">
+        <dl class="card-contents">
           <ng-container *ngIf="organismData?.commonName">
             <dt><b>Common name:</b></dt>
             <dd>{{organismData?.commonName}}</dd>
@@ -40,7 +40,7 @@
           Download metadata
         </button>
 
-        <mat-form-field appearance="standard">
+        <mat-form-field class="searchField">
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilter($event, 'metadata')" placeholder="Ex. Mia" #input>
         </mat-form-field>
@@ -121,7 +121,7 @@
                   (click)="annotationExporter.exportTable('csv', {fileName: 'related_annotations'})"
                   color="accent">Download metadata</button>
 
-          <mat-form-field appearance="standard">
+          <mat-form-field class="searchField">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event, 'annotation')" placeholder="Illumina" #input>
           </mat-form-field>
@@ -223,7 +223,7 @@
                   color="accent">Download metadata</button>
 
 
-          <mat-form-field appearance="standard">
+          <mat-form-field class="searchField">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event, 'assemblies')" placeholder="Illumina" #input>
           </mat-form-field>
@@ -280,7 +280,7 @@
                   (click)="filesExporter.exportTable('csv', {fileName: 'related_files'})"
                   color="accent">Download metadata</button>
 
-          <mat-form-field appearance="standard">
+          <mat-form-field class="searchField">
             <mat-label>Filter</mat-label>
             <input matInput (keyup)="applyFilter($event, 'files')" placeholder="Illumina" #input>
           </mat-form-field>
@@ -333,13 +333,18 @@
             </p>
           </mat-card-content>
           <mat-card-actions>
-            <a mat-button href="{{getGenomeNoteData(organismData.genome_notes, 'url')}}"
-               style="background-color: limegreen; color: black; margin-bottom: 5px">
-              Read the Genome Note in full here
-            </a>
-            <p>
-              {{getGenomeNoteData(organismData.genome_notes, 'citeURL')}}
-            </p>
+            <div fxLayout="column">
+              <div>
+                <a mat-button href="{{getGenomeNoteData(organismData.genome_notes, 'url')}}"
+                   style="background-color: limegreen; color: black; margin-bottom: 5px">
+                  Read the Genome Note in full here
+                </a>
+              </div>
+              <div>
+                {{getGenomeNoteData(organismData.genome_notes, 'citeURL')}}
+              </div>
+            </div>
+
           </mat-card-actions>
         </mat-card>
 

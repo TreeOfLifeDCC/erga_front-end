@@ -16,9 +16,9 @@ import { HelpComponent } from './help/help.component';
 import { BannerComponent } from './banner/banner.component';
 import { DataPortalComponent } from './data-portal/data-portal.component';
 import {HttpClientModule} from "@angular/common/http";
-// import { DataPortalDetailsComponent } from './data-portal/data-portal-details/data-portal-details.component';
-// import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
-// import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
+import { DataPortalDetailsComponent } from './data-portal/data-portal-details/data-portal-details.component';
+import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
+import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
 import {DynamicScriptLoaderService} from "./phylogeny/services/dynamic-script-loader.service";
 import {MatTableExporterModule} from "mat-table-exporter";
 import { FooterComponent } from './footer/footer.component';
@@ -37,9 +37,9 @@ import { cookieConfig } from './app.component';
     HelpComponent,
     BannerComponent,
     DataPortalComponent,
-    // DataPortalDetailsComponent,
-    // OrganismDetailsComponent,
-    // SpecimenDetailsComponent,
+    DataPortalDetailsComponent,
+    OrganismDetailsComponent,
+    SpecimenDetailsComponent,
     FooterComponent
   ],
   imports: [
