@@ -2,9 +2,10 @@
 <div class="container">
   <div class="item0"></div>
   <div class="item2">
-    <mat-card>
+    <mat-card class="main-card">
       <mat-card-title style="text-align: center">{{data?.accession}}</mat-card-title>
       <mat-card-actions>
+        <div fxLayout="column">
         <dl>
           <ng-container *ngIf="data?.commonName">
             <dt><b>Common Name:</b></dt>
@@ -117,7 +118,7 @@
           </ng-container>
         </dl>
 
-        <hr>
+        <mat-divider></mat-divider>
 
         <dl>
           <ng-container *ngFor="let item of data?.customFields">
@@ -125,6 +126,7 @@
             <dd>{{item.value}}</dd>
           </ng-container>
         </dl>
+        </div>
       </mat-card-actions>
     </mat-card>
   </div>

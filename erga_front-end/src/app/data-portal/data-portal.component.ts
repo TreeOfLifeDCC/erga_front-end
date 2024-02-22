@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewChild, EventEmitter} from '@angular/core';
 import {ApiService} from "../api.service";
-import {MatLegacyPaginator as MatPaginator} from "@angular/material/legacy-paginator";
+import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {merge, of as observableOf} from "rxjs";
