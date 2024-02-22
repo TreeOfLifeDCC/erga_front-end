@@ -11,6 +11,7 @@ import {DataPortalComponent} from "./data-portal/data-portal.component";
 import {DataPortalDetailsComponent} from "./data-portal/data-portal-details/data-portal-details.component";
 import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
 import {SpecimenDetailsComponent} from "./specimen-details/specimen-details.component";
+import {SamplingMapComponent} from "./sampling-map/sampling-map.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -23,7 +24,8 @@ const routes: Routes = [
   { path: 'phylogeny', component: PhylogenyComponent },
   { path: 'about', component: AboutComponent },
   { path: 'api_documentation', component: ApiDocumentationComponent },
-  { path: 'help', component: HelpComponent }
+  { path: 'help', component: HelpComponent },
+  { path: 'gis', component: SamplingMapComponent }
 ]
 
 @NgModule({

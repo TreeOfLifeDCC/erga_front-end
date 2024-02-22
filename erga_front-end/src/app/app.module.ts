@@ -24,6 +24,7 @@ import {MatTableExporterModule} from "mat-table-exporter";
 import { FooterComponent } from './footer/footer.component';
 import { NgcCookieConsentModule } from 'ngx-cookieconsent';
 import { cookieConfig } from './app.component';
+import { SamplingMapComponent } from './sampling-map/sampling-map.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { cookieConfig } from './app.component';
     DataPortalDetailsComponent,
     OrganismDetailsComponent,
     SpecimenDetailsComponent,
-    FooterComponent
+    FooterComponent,
+    SamplingMapComponent
   ],
   imports: [
     BrowserModule,
