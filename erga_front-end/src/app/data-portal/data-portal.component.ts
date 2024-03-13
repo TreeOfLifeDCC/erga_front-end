@@ -124,7 +124,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
               'symbionts_assemblies_status',
               'symbiontsAssembliesStatus');
           }
-console.log(this.symbiontsFilters)
           return data.results;
         }),
       )
