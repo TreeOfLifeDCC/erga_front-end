@@ -33,7 +33,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     "species_group", "species_subgroup", "species", "subspecies", "varietas", "forma"];
   timer: any;
   phylogenyFilters: string[] = [];
-
+  symbiontsFilters : any[] = [];
   preventSimpleClick = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -73,10 +73,41 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
           // would prevent users from re-triggering requests.
           this.resultsLength = data.count;
           this.aggregations = data.aggregations;
+
+          // symbionts
+          this.symbiontsFilters = [];
+          if (this.aggregations.symbionts_biosamples_status.buckets.length > 0) {
+            this.symbiontsFilters = this.merge(this.symbiontsFilters,
+              this.aggregations.symbionts_biosamples_status.buckets,
+              'symbionts_biosamples_status',
+              'symbiontsBioSamplesStatus');
+          }
+          if (this.aggregations.symbionts_raw_data_status.buckets.length > 0) {
+            this.symbiontsFilters = this.merge(this.symbiontsFilters,
+              this.aggregations.symbionts_raw_data_status.buckets,
+              'symbionts_raw_data_status',
+              'symbiontsRawDataStatus');
+          }
+          if (this.aggregations.symbionts_assemblies_status.buckets.length > 0) {
+            this.symbiontsFilters = this.merge(this.symbiontsFilters,
+              this.aggregations.symbionts_assemblies_status.buckets,
+              'symbionts_assemblies_status',
+              'symbiontsAssembliesStatus');
+          }
+
           return data.results;
         }),
       )
       .subscribe(data => (this.data = data));
+  }
+
+  merge = (first: any[], second: any[], filterLabel: string, filterPrefix: string) => {
+    for (let i = 0; i < second.length; i++) {
+      second[i].label = filterLabel;
+      second[i].filterPrefix = filterPrefix;
+      first.push(second[i]);
+    }
+    return first;
   }
 
   getStatusCount(data: any) {
@@ -117,6 +148,13 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     } else {
       return '';
     }
+  }
+
+  displayActiveFilterName(filterName: string){
+    if (filterName.startsWith('symbionts_')){
+      return 'Symbionts-' + filterName.split('-')[1]
+    }
+    return filterName;
   }
 
   changeCurrentClass(filterValue: string) {
