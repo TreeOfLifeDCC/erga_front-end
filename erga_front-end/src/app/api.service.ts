@@ -29,14 +29,16 @@ export class ApiService {
       for (let i = 0; i < filterValue.length; i++) {
         if (project_names.indexOf(filterValue[i]) !== -1) {
           filterValue[i] === 'DToL' ? filterItem = 'project_name:dtol' : filterItem = `project_name:${filterValue[i]}`;
-        } else if (filterValue[i].includes('-') && !filterValue[i].startsWith('symbionts')) {
-          filterItem = filterValue[i].split(' - ')[0].toLowerCase().split(' ').join('_');
-          if (filterItem === 'assemblies') {
-            filterItem = 'assemblies_status:Done';
-          } else
-            filterItem = `${filterItem}:Done`;
-        } else if (filterValue[i].includes('-') && filterValue[i].startsWith('symbionts')) {
-          filterItem = filterValue[i].replace('-', ':');
+        } else if (filterValue[i].includes('-')) {
+          if (filterValue[i].startsWith('symbionts')){
+            filterItem = filterValue[i].replace('-', ':');
+          } else {
+            filterItem = filterValue[i].split(' - ')[0].toLowerCase().split(' ').join('_');
+            if (filterItem === 'assemblies') {
+              filterItem = 'assemblies_status:Done';
+            } else
+              filterItem = `${filterItem}:Done`;
+          }
         }
         else {
           filterItem = `${currentClass}:${filterValue[i]}`;
