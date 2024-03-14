@@ -79,20 +79,17 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
           if (this.aggregations.symbionts_biosamples_status.buckets.length > 0) {
             this.symbiontsFilters = this.merge(this.symbiontsFilters,
               this.aggregations.symbionts_biosamples_status.buckets,
-              'symbionts_biosamples_status',
-              'symbiontsBioSamplesStatus');
+              'symbionts_biosamples_status');
           }
           if (this.aggregations.symbionts_raw_data_status.buckets.length > 0) {
             this.symbiontsFilters = this.merge(this.symbiontsFilters,
               this.aggregations.symbionts_raw_data_status.buckets,
-              'symbionts_raw_data_status',
-              'symbiontsRawDataStatus');
+              'symbionts_raw_data_status');
           }
           if (this.aggregations.symbionts_assemblies_status.buckets.length > 0) {
             this.symbiontsFilters = this.merge(this.symbiontsFilters,
               this.aggregations.symbionts_assemblies_status.buckets,
-              'symbionts_assemblies_status',
-              'symbiontsAssembliesStatus');
+              'symbionts_assemblies_status');
           }
 
           return data.results;
@@ -101,10 +98,9 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
       .subscribe(data => (this.data = data));
   }
 
-  merge = (first: any[], second: any[], filterLabel: string, filterPrefix: string) => {
+  merge = (first: any[], second: any[], filterLabel: string) => {
     for (let i = 0; i < second.length; i++) {
       second[i].label = filterLabel;
-      second[i].filterPrefix = filterPrefix;
       first.push(second[i]);
     }
     return first;
