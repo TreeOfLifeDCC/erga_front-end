@@ -4,6 +4,7 @@ WORKDIR /source
 
 # Copy the package lock file into the container
 COPY package*.json ./
+
 # Run ci only for the production dependencies
 RUN npm cache clean --force
 RUN npm install --legacy-peer-deps
