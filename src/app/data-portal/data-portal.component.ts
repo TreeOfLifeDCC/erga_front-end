@@ -4,6 +4,8 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {merge, of as observableOf} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {GenomeNoteListComponent} from "./genome-note-list-component/genome-note-list.component";
 
 
 @Component({
@@ -63,11 +65,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
   phylogenyFilters: string[] = [];
 
   preventSimpleClick = false;
+  genomelength = 0;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _apiService: ApiService) { }
+  constructor(private _apiService: ApiService,private dialog: MatDialog) { }
 
   ngOnInit(): void {
   }
@@ -211,6 +214,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
   checkGenomeNotes(data:any) {
     if (data.genome_notes && data.genome_notes.length !== 0) {
+      this.genomelength = data.genome_notes.length;
       return true;
     } else {
       return false;
@@ -219,6 +223,17 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
   checkNagoyaProtocol(data: any): boolean {
     return data.hasOwnProperty('nagoya_protocol');
+  }
+
+
+  openGenomeNoteDialog(data:any) {
+    const dialogRef = this.dialog.open(GenomeNoteListComponent, {
+      width: '550px',
+      autoFocus: false,
+      data: {
+        genomNotes: data.genome_notes,
+      }
+    });
   }
 
 }
