@@ -12,6 +12,7 @@ import {DataPortalDetailsComponent} from "./data-portal/data-portal-details/data
 import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
 import {SpecimenDetailsComponent} from "./specimen-details/specimen-details.component";
 import {SamplingMapComponent} from "./sampling-map/sampling-map.component";
+import {LookerDashboardsComponent} from "./looker-dashboards/looker-dashboards.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -25,7 +26,8 @@ const routes: Routes = [
   { path: 'about', component: AboutComponent },
   { path: 'api_documentation', component: ApiDocumentationComponent },
   { path: 'help', component: HelpComponent },
-  { path: 'gis', component: SamplingMapComponent }
+  { path: 'gis', component: SamplingMapComponent },
+  { path: 'dashboards', component: LookerDashboardsComponent }
 ]
 
 @NgModule({
