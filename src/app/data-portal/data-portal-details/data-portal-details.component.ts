@@ -78,6 +78,20 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
   goatDataLength: number;
   goatDataLink: string;
 
+  dataSourceSymbiontsRecords: any;
+  specSymbiontsTotalCount:number;
+  dataSourceSymbiontsAssemblies:any;
+  dataSourceSymbiontsAssembliesCount:number;
+  displayedColumnsAssemblies = ['accession', 'assembly_name', 'description', 'version'];
+
+
+  specDisplayedColumns = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
+
+
+  @ViewChild('relatedSymbiontsPaginator') symPaginator: MatPaginator  | undefined;
+
+  @ViewChild('assembliesSymbiontsPaginator') asSymPaginator: MatPaginator  | undefined;
+
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
@@ -163,6 +177,23 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         }
         if (data.results[0]['_source']['genome_notes'] && data.results[0]['_source']['genome_notes'].length !== 0) {
           this.showGenomeNote = true;
+        }
+
+        if (data.results[0]['_source']['symbionts_records']!== undefined && data.results[0]['_source']['symbionts_records'].length) {
+          this.dataSourceSymbiontsRecords = new MatTableDataSource<any>(data.results[0]['_source']['symbionts_records']);
+          this.specSymbiontsTotalCount = data.results[0]['_source']['symbionts_records'] ? data.results[0]['_source']['symbionts_records'].length : 0;
+        } else {
+          this.dataSourceSymbiontsRecords = new MatTableDataSource();
+          this.specSymbiontsTotalCount = 0;
+        }
+
+
+        if (data.results[0]['_source']['symbionts_assemblies']!== undefined && data.results[0]['_source']['symbionts_assemblies'].length) {
+          this.dataSourceSymbiontsAssemblies = new MatTableDataSource<any>(data.results[0]['_source']['symbionts_assemblies']);
+          this.dataSourceSymbiontsAssembliesCount = data.results[0]['_source']['symbionts_assemblies'] ? data.results[0]['_source']['symbionts_assemblies'].length : 0;
+        } else {
+          this.dataSourceSymbiontsAssemblies = new MatTableDataSource();
+          this.dataSourceSymbiontsAssembliesCount = 0;
         }
       }
     );
