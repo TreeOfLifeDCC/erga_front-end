@@ -16,18 +16,18 @@ import {LookerDashboardsComponent} from "./looker-dashboards/looker-dashboards.c
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
-  { path: 'home', component: HomeComponent },
-  { path: 'data_portal', component: DataPortalComponent },
-  { path: 'data_portal/:organismId', component: DataPortalDetailsComponent },
-  { path: 'organism/:organismId', component: OrganismDetailsComponent },
-  { path: 'specimen/:specimenId', component: SpecimenDetailsComponent },
-  { path: 'status_tracking', component: StatusTrackingComponent },
-  { path: 'phylogeny', component: PhylogenyComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'api_documentation', component: ApiDocumentationComponent },
-  { path: 'help', component: HelpComponent },
-  { path: 'gis', component: SamplingMapComponent },
-  { path: 'dashboards', component: LookerDashboardsComponent }
+  { path: 'home', component: HomeComponent , title: "Home"},
+  { path: 'data_portal', component: DataPortalComponent, title: "Data Portal" },
+  { path: 'data_portal/:organismId', component: DataPortalDetailsComponent  },
+  { path: 'organism/:organismId', component: OrganismDetailsComponent, title: "Organism" },
+  { path: 'specimen/:specimenId', component: SpecimenDetailsComponent, title: "Specimen" },
+  { path: 'status_tracking', component: StatusTrackingComponent , title: "Status Tracking"},
+  { path: 'phylogeny', component: PhylogenyComponent , title: "Phylogeny" },
+  { path: 'about', component: AboutComponent, title: "About" },
+  { path: 'api_documentation', component: ApiDocumentationComponent ,title: "Api Documentation"},
+  { path: 'help', component: HelpComponent , title: "Help"},
+  { path: 'gis', component: SamplingMapComponent ,title: "Sampling Map"},
+  { path: 'dashboards', component: LookerDashboardsComponent, title: "Dashboards" }
 ]
 
 @NgModule({

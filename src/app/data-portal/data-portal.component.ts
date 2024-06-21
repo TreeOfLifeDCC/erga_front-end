@@ -6,6 +6,7 @@ import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {merge, of as observableOf} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {GenomeNoteListComponent} from "./genome-note-list-component/genome-note-list.component";
+import {Title} from "@angular/platform-browser";
 
 
 @Component({
@@ -71,9 +72,10 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _apiService: ApiService,private dialog: MatDialog) { }
+  constructor(private _apiService: ApiService,private dialog: MatDialog, private titleService: Title) { }
 
   ngOnInit(): void {
+    this.titleService.setTitle('Data Portal');
   }
 
   ngAfterViewInit() {

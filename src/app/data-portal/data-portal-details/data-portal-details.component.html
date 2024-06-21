@@ -32,7 +32,7 @@
             Something went wrong, please try again!
           </div>
         </div>
-
+<h1>Related Organism</h1>
         <br>
 
         <button mat-raised-button (click)="exporter.exportTable('csv', {fileName: 'related_organisms'})"
@@ -311,6 +311,7 @@
 
       </mat-tab>
       <mat-tab label="Genome Note" *ngIf="showGenomeNote">
+          <h1>Published Genome Note</h1>
         <div class="example-loading-shade"
              *ngIf="isLoadingResults || isRateLimitReached">
           <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
@@ -318,6 +319,7 @@
             Something went wrong, please try again!
           </div>
         </div>
+<br>
 
         <mat-card class="example-card">
           <mat-card-header>
@@ -352,7 +354,7 @@
         <mat-tab label="Symbionts"  *ngIf="organismData?.symbionts_records && organismData?.symbionts_records.length"
                  class=tab-width>
             <div *ngIf="organismData?.symbionts_records.length">
-                <hr>
+
                 <h1  class="page-header">Related Symbionts</h1>
 
                 <div class="table-container">
@@ -360,7 +362,7 @@
 
                         <ng-container matColumnDef="accession">
                             <th mat-header-cell *matHeaderCellDef> BioSample ID </th>
-                            <td mat-cell *matCellDef="let row">  <a href="https://www.ebi.ac.uk/biosamples/samples/{{row.accession}}">
+                            <td mat-cell *matCellDef="let row">   <a mat-button href="https://www.ebi.ac.uk/biosamples/samples/{{row.accession}}">
                                 {{row.accession}}</a> </td>
                         </ng-container>
 
@@ -398,9 +400,9 @@
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of symbionts"
                                #relatedSymbiontsPaginator [length]="specSymbiontsTotalCount"></mat-paginator>
             </div>
-
+<br>
+            <br>
             <div  *ngIf="dataSourceSymbiontsAssembliesCount != 0">
-                <hr>
                 <h1 class="page-header">Related assemblies</h1>
 
                 <div class="table-container">
@@ -408,7 +410,7 @@
                         <ng-container matColumnDef="accession">
                             <th mat-header-cell *matHeaderCellDef> Accession </th>
                             <td mat-cell *matCellDef="let row">
-                                <a class="no-underline" target="_blank" href="https://www.ebi.ac.uk/ena/browser/view/{{row.accession}}">{{row.accession}}</a>
+                                <a mat-button target="_blank" href="https://www.ebi.ac.uk/ena/browser/view/{{row.accession}}">{{row.accession}}</a>
                             </td>
                         </ng-container>
 
@@ -443,10 +445,11 @@
                 <mat-paginator #assembliesSymbiontsPaginator [pageSizeOptions]="[5,10, 20, 30]"
                                showFirstLastButtons [length]="dataSourceSymbiontsAssembliesCount" style="width: 100%;" ></mat-paginator>
             </div>
-            <hr>
+
         </mat-tab>
 
       <mat-tab label="GoaT" *ngIf="goatDataLength !== 0">
+          <h1>Goat Info</h1>
         <br>
         <button mat-raised-button
                 (click)="goatExporter.exportTable('csv', {fileName: 'goat_info'})"
