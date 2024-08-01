@@ -26,6 +26,7 @@ import { NgcCookieConsentModule } from 'ngx-cookieconsent';
 import { cookieConfig } from './app.component';
 import { SamplingMapComponent } from './sampling-map/sampling-map.component';
 import {GenomeNoteListComponent} from "./data-portal/genome-note-list-component/genome-note-list.component";
+import {BulkDownloadsComponent} from "./bulk-downloads/bulk-downloads.component";
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {GenomeNoteListComponent} from "./data-portal/genome-note-list-component/
     SpecimenDetailsComponent,
     FooterComponent,
     SamplingMapComponent,
-    GenomeNoteListComponent
+    GenomeNoteListComponent,
+    BulkDownloadsComponent
   ],
   imports: [
     BrowserModule,

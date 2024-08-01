@@ -13,6 +13,7 @@ import {OrganismDetailsComponent} from "./organism-details/organism-details.comp
 import {SpecimenDetailsComponent} from "./specimen-details/specimen-details.component";
 import {SamplingMapComponent} from "./sampling-map/sampling-map.component";
 import {LookerDashboardsComponent} from "./looker-dashboards/looker-dashboards.component";
+import {BulkDownloadsComponent} from "./bulk-downloads/bulk-downloads.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -27,6 +28,9 @@ const routes: Routes = [
   { path: 'api_documentation', component: ApiDocumentationComponent ,title: "Api Documentation"},
   { path: 'help', component: HelpComponent , title: "Help"},
   { path: 'gis', component: SamplingMapComponent ,title: "Sampling Map"},
+  {
+    path: 'bulk-downloads' , component: BulkDownloadsComponent
+  },
   { path: 'dashboards', component: LookerDashboardsComponent, title: "Dashboards" }
 ]
 

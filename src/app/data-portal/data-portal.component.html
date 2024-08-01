@@ -195,6 +195,10 @@
           Download metadata
         </button>
 
+          <button mat-raised-button
+                  color="accent" [routerLink]="['/bulk-downloads/']">Downloads Data
+          </button>
+
         <mat-form-field class="search_field">
           <mat-label>Search</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="ex. Salmo trutta" #input>
