@@ -15,7 +15,7 @@ import { ApiDocumentationComponent } from './api-documentation/api-documentation
 import { HelpComponent } from './help/help.component';
 import { BannerComponent } from './banner/banner.component';
 import { DataPortalComponent } from './data-portal/data-portal.component';
-import {HttpClientModule} from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { DataPortalDetailsComponent } from './data-portal/data-portal-details/data-portal-details.component';
 import {OrganismDetailsComponent} from "./organism-details/organism-details.component";
 import { SpecimenDetailsComponent } from './specimen-details/specimen-details.component';
@@ -28,37 +28,30 @@ import { SamplingMapComponent } from './sampling-map/sampling-map.component';
 import {GenomeNoteListComponent} from "./data-portal/genome-note-list-component/genome-note-list.component";
 import {BulkDownloadsComponent} from "./bulk-downloads/bulk-downloads.component";
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    HomeComponent,
-    StatusTrackingComponent,
-    PhylogenyComponent,
-    AboutComponent,
-    ApiDocumentationComponent,
-    HelpComponent,
-    BannerComponent,
-    DataPortalComponent,
-    DataPortalDetailsComponent,
-    OrganismDetailsComponent,
-    SpecimenDetailsComponent,
-    FooterComponent,
-    SamplingMapComponent,
-    GenomeNoteListComponent,
-    BulkDownloadsComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    RoutingModule,
-    MaterialModule,
-    FlexLayoutModule,
-    HttpClientModule,
-    MatTableExporterModule,
-    NgcCookieConsentModule.forRoot(cookieConfig)
-  ],
-  providers: [DynamicScriptLoaderService],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HeaderComponent,
+        HomeComponent,
+        StatusTrackingComponent,
+        PhylogenyComponent,
+        AboutComponent,
+        ApiDocumentationComponent,
+        HelpComponent,
+        BannerComponent,
+        DataPortalComponent,
+        DataPortalDetailsComponent,
+        OrganismDetailsComponent,
+        SpecimenDetailsComponent,
+        FooterComponent,
+        SamplingMapComponent,
+        GenomeNoteListComponent,
+        BulkDownloadsComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        RoutingModule,
+        MaterialModule,
+        FlexLayoutModule,
+        MatTableExporterModule,
+        NgcCookieConsentModule.forRoot(cookieConfig)], providers: [DynamicScriptLoaderService, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }
