@@ -1,11 +1,28 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router, NavigationEnd} from "@angular/router";
+import {Router, NavigationEnd, RouterLink} from "@angular/router";
 import {ApiService} from "../api.service";
+import {MatChip, MatChipSet} from "@angular/material/chips";
+import {MatCard, MatCardActions, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
+import {BannerComponent} from "../banner/banner.component";
+import {MatAnchor, MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  imports: [
+    MatChip,
+    MatChipSet,
+    RouterLink,
+    MatCard,
+    MatCardTitle,
+    MatCardActions,
+    MatCardSubtitle,
+    BannerComponent,
+    MatButton,
+    MatAnchor
+  ],
+  standalone: true
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private twitter: any;

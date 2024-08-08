@@ -1,14 +1,72 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
+import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
+import {MatList, MatListItem} from "@angular/material/list";
+import {FlexModule} from "@angular/flex-layout";
+import {MatLine} from "@angular/material/core";
+import {MatChip, MatChipSet} from "@angular/material/chips";
+import {NgForOf} from "@angular/common";
+import {MatIcon} from "@angular/material/icon";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef,
+  MatNoDataRow, MatRow, MatRowDef,
+  MatTable
+} from "@angular/material/table";
+import {RouterLink} from "@angular/router";
+import {MatAnchor} from "@angular/material/button";
+import {MatInput} from "@angular/material/input";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-status-tracking',
   templateUrl: './status-tracking.component.html',
-  styleUrls: ['./status-tracking.component.css']
+  styleUrls: ['./status-tracking.component.css'],
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardActions,
+    MatListItem,
+    MatList,
+    FlexModule,
+    MatLine,
+    MatChipSet,
+    MatChip,
+    NgForOf,
+    MatIcon,
+    MatProgressSpinner,
+
+    MatTable,
+    RouterLink,
+    MatHeaderCell,
+    MatColumnDef,
+    MatSortHeader,
+    MatCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatPaginator,
+    MatNoDataRow,
+    MatSort,
+    MatAnchor,
+    MatHeaderRow,
+    MatRow,
+    MatInput,
+    MatLabel,
+    MatFormField,
+    MatHeaderRowDef,
+    MatRowDef
+  ],
+  providers:[HttpClient],
+  standalone: true
 })
 export class StatusTrackingComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['organism', 'commonName', 'biosamples', 'raw_data', 'assemblies_status',
@@ -181,12 +239,8 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     this.filterChanged.emit();
   }
 
-  checkColor(status: string) {
-    if (status === 'Done')
-      return 'accent'
-    else
-      return 'yellow'
-  }
+
+
 
   getStyle(status: string) {
     if (status === 'Done') {

@@ -1,10 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ApiService} from "../api.service";
+import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatDivider} from "@angular/material/divider";
 
 @Component({
   selector: 'app-specimen-details',
   templateUrl: './specimen-details.component.html',
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardActions,
+    FlexLayoutModule,
+    MatDivider
+  ],
   styleUrls: ['./specimen-details.component.css']
 })
 export class SpecimenDetailsComponent implements OnInit {

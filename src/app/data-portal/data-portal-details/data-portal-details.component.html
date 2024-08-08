@@ -44,11 +44,12 @@
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilter($event, 'metadata')" placeholder="Ex. Mia" #input>
         </mat-form-field>
-          <table mat-table [dataSource]="metadataData" matSort #metadataSort="matSort" matTableExporter #exporter="matTableExporter">
+          <table #exporter="matTableExporter" #metadataSort="matSort" [dataSource]="metadataData" mat-table matSort
+                 matTableExporter>
 
             <!-- ID Column -->
             <ng-container matColumnDef="accession">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Accession </th>
+              <th mat-header-cell *matHeaderCellDef > Accession </th>
               <td mat-cell *matCellDef="let row">
                 <a mat-button [routerLink]="['/organism', row.accession]">{{row.accession}}</a>
                 <mat-chip style="margin-bottom: 5px; background-color: yellow; color: black"

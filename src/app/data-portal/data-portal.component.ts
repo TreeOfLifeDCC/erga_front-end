@@ -1,17 +1,76 @@
 import {AfterViewInit, Component, OnInit, ViewChild, EventEmitter} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import {MatSort, MatSortHeader} from "@angular/material/sort";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {merge, of as observableOf} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {GenomeNoteListComponent} from "./genome-note-list-component/genome-note-list.component";
 import {Title} from "@angular/platform-browser";
+import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
+import {MatList, MatListItem} from "@angular/material/list";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatChip, MatChipSet} from "@angular/material/chips";
+import {MatLine} from "@angular/material/core";
+import {MatIcon} from "@angular/material/icon";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {
+  MatCell, MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef, MatNoDataRow,
+  MatRow, MatRowDef,
+  MatTable, MatTableDataSource
+} from "@angular/material/table";
+import {RouterLink} from "@angular/router";
+import {MatAnchor, MatButton} from "@angular/material/button";
+import {MatInput} from "@angular/material/input";
+import {NgForOf, NgIf} from "@angular/common";
+import {MatTableExporterModule} from "mat-table-exporter";
 
 
 @Component({
   selector: 'app-data-portal',
   templateUrl: './data-portal.component.html',
+  standalone: true,
+  imports: [
+    MatCard,
+    MatCardTitle,
+    MatCardActions,
+    MatList,
+    MatListItem,
+    FlexLayoutModule,
+    MatChipSet,
+    MatLine,
+    MatChip,
+    MatIcon,
+    MatProgressSpinner,
+    MatLabel,
+    MatFormField,
+    MatTable,
+    MatSort,
+    MatHeaderCellDef,
+    RouterLink,
+    MatHeaderCell,
+    MatCell,
+    MatAnchor,
+    MatColumnDef,
+    MatPaginator,
+    MatHeaderRow,
+    MatRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatNoDataRow,
+    MatCellDef,
+    MatButton,
+    MatInput,
+    NgIf,
+    NgForOf,
+    MatSortHeader,
+    MatTableExporterModule
+  ],
   styleUrls: ['./data-portal.component.css']
 })
 export class DataPortalComponent implements OnInit, AfterViewInit {
@@ -68,6 +127,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
   preventSimpleClick = false;
   genomelength = 0;
+  result:any;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -126,6 +186,9 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
               this.aggregations.symbionts_assemblies_status.buckets,
               'symbionts_assemblies_status');
           }
+          // this.result = new MatTableDataSource(data.result);
+          // this.result.paginator= this.paginator;
+          // this.data=this.result
           return data.results;
         }),
       )
@@ -165,7 +228,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
 
   onFilterClick(filterValue: string) {
-    console.log('double click');
     this.preventSimpleClick = true;
     clearTimeout(this.timer);
     const index = this.activeFilters.indexOf(filterValue);

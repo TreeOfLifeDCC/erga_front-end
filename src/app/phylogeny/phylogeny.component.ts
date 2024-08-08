@@ -5,11 +5,13 @@ import {ActivatedRoute} from "@angular/router";
 @Component({
   selector: 'app-phylogeny',
   templateUrl: './phylogeny.component.html',
-  styleUrls: ['./phylogeny.component.css']
+  styleUrls: ['./phylogeny.component.css'],
+  standalone: true,
+  providers: [DynamicScriptLoaderService]
 })
 export class PhylogenyComponent implements OnInit {
 
-  constructor(private dynamicScriptLoader: DynamicScriptLoaderService, route: ActivatedRoute) {
+  constructor(private dynamicScriptLoader: DynamicScriptLoaderService,) {
     this.loadScripts();
   }
 

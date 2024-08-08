@@ -7,124 +7,104 @@
       <mat-card-actions>
         <div fxLayout="column">
           <dl>
-            <ng-container *ngIf="data?.commonName">
-              <dt><b>Common Name:</b></dt>
-              <dd>{{data?.commonName}}</dd>
-            </ng-container>
+              @if(data?.commonName){
+                  <dt><b>Common Name:</b></dt>
+                  <dd>{{data?.commonName}}</dd>
+              }
+              @if(data?.accession){
+                  <dt><b>BioSamples ID:</b></dt>
+                  <dd>{{data?.accession}}</dd>
+              }
+              @if(data?.organism){
+                  <dt><b>Scientific Name:</b></dt>
+                  <dd>{{data?.organism.text}}</dd>
+              }
+              @if(data?.organismPart){
+                  <dt><b>Organism Part:</b></dt>
+                  <dd>{{data?.organismPart}}</dd>
+              }
+              @if(data?.sex){
+                  <dt><b>Sex:</b></dt>
+                  <dd>{{data?.sex}}</dd>
+              }
+              @if(data?.taxonId){
+                  <dt><b>Tax ID:</b></dt>
+                  <dd>{{data?.taxonId}}</dd>
+              }
+              @if(data?.specimenId){
+                  <dt><b>Specimen ID:</b></dt>
+                  <dd>{{data?.specimenId}}</dd>
+              }
+              @if(data?.lifestage){
+                  <dt><b>Lifestage:</b></dt>
+                  <dd>{{data?.lifestage}}</dd>
+              }
+              @if(data?.gal){
+                  <dt><b>Gal:</b></dt>
+                  <dd>{{data?.gal}}</dd>
+              }
+              @if(data?.galSampleId){
+                  <dt><b>Gal Sample ID:</b></dt>
+                  <dd>{{data?.galSampleId}}</dd>
+              }
+              @if(data?.collectedBy){
+                  <dt><b>Collected by:</b></dt>
+                  <dd>{{data?.collectedBy}}</dd>
+              }
+              @if(data?.collectingInstitution){
+                  <dt><b>Collecting Institution:</b></dt>
+                  <dd>{{data?.collectingInstitution}}</dd>
+              }
+              @if(data?.collectionDate){
+                  <dt><b>Collection Date:</b></dt>
+                  <dd>{{data?.collectionDate}}</dd>
+              }
+              @if(data?.geographicLocationCountryAndOrSea){
+                  <dt><b>Geographic Location (Country and/or Sea):</b></dt>
+                  <dd>{{data?.geographicLocationCountryAndOrSea}}</dd>
+                }
+              @if(data?.geographicLocationRegionAndLocality){
+                  <dt><b>Geographic Location (Region and Locality):</b></dt>
+                  <dd>{{data?.geographicLocationRegionAndLocality}}</dd>
+              }
+              @if(data?.geographicLocationLatitude){
+                  <dt><b>Geographic Location (Latitude):</b></dt>
+                  <dd>{{data?.geographicLocationLatitude.text}}</dd>
+                }
+              @if(data?.geographicLocationLongitude){
+                  <dt><b>Geographic Location (Longitude):</b></dt>
+                  <dd>{{data?.geographicLocationLongitude.text}}</dd>
+              }
+              @if(data?.habitat){
+                  <dt><b>Habitat:</b></dt>
+                  <dd>{{data?.habitat}}</dd>
+                }
+              @if(data?.habitat){
+                  <dt><b>Identified by:</b></dt>
+                  <dd>{{data?.identifiedBy}}</dd>
+                }
+              @if(data?.identifierAffiliation){
+                  <dt><b>Identifier Affiliation:</b></dt>
+                  <dd>{{data?.identifierAffiliation}}</dd>
+              }
+              @if(data?.specimenVoucher){
+                  <dt><b>Specimen Voucher:</b></dt>
+                  <dd>{{data?.specimenVoucher}}</dd>
+                }
+              @if(data?.specimenVoucher){
+                  <dt><b>Project Name:</b></dt>
+                  <dd>{{data?.projectName}}</dd>
+              }
 
-            <ng-container *ngIf="data?.accession">
-              <dt><b>BioSamples ID:</b></dt>
-              <dd>{{data?.accession}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.organism">
-              <dt><b>Scientific Name:</b></dt>
-              <dd>{{data?.organism.text}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.organismPart">
-              <dt><b>Organism Part:</b></dt>
-              <dd>{{data?.organismPart}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.sex">
-              <dt><b>Sex:</b></dt>
-              <dd>{{data?.sex}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.taxonId">
-              <dt><b>Tax ID:</b></dt>
-              <dd>{{data?.taxonId}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.specimenId">
-              <dt><b>Specimen ID:</b></dt>
-              <dd>{{data?.specimenId}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.lifestage">
-              <dt><b>Lifestage:</b></dt>
-              <dd>{{data?.lifestage}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.gal">
-              <dt><b>Gal:</b></dt>
-              <dd>{{data?.gal}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.galSampleId">
-              <dt><b>Gal Sample ID:</b></dt>
-              <dd>{{data?.galSampleId}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.collectedBy">
-              <dt><b>Collected by:</b></dt>
-              <dd>{{data?.collectedBy}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.collectingInstitution">
-              <dt><b>Collecting Institution:</b></dt>
-              <dd>{{data?.collectingInstitution}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.collectionDate">
-              <dt><b>Collection Date:</b></dt>
-              <dd>{{data?.collectionDate}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.geographicLocationCountryAndOrSea">
-              <dt><b>Geographic Location (Country and/or Sea):</b></dt>
-              <dd>{{data?.geographicLocationCountryAndOrSea}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.geographicLocationRegionAndLocality">
-              <dt><b>Geographic Location (Region and Locality):</b></dt>
-              <dd>{{data?.geographicLocationRegionAndLocality}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.geographicLocationLatitude">
-              <dt><b>Geographic Location (Latitude):</b></dt>
-              <dd>{{data?.geographicLocationLatitude.text}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.geographicLocationLongitude">
-              <dt><b>Geographic Location (Longitude):</b></dt>
-              <dd>{{data?.geographicLocationLongitude.text}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.habitat">
-              <dt><b>Habitat:</b></dt>
-              <dd>{{data?.habitat}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.identifiedBy">
-              <dt><b>Identified by:</b></dt>
-              <dd>{{data?.identifiedBy}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.identifierAffiliation">
-              <dt><b>Identifier Affiliation:</b></dt>
-              <dd>{{data?.identifierAffiliation}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.specimenVoucher">
-              <dt><b>Specimen Voucher:</b></dt>
-              <dd>{{data?.specimenVoucher}}</dd>
-            </ng-container>
-
-            <ng-container *ngIf="data?.projectName">
-              <dt><b>Project Name:</b></dt>
-              <dd>{{data?.projectName}}</dd>
-            </ng-container>
           </dl>
 
           <mat-divider></mat-divider>
 
           <dl>
-            <ng-container *ngFor="let item of data?.customFields">
-              <dt><b>{{item.name}}:</b></dt>
-              <dd>{{item.value}}</dd>
-            </ng-container>
+              @for(item of data?.customFields; track $index){
+                  <dt><b>{{item.name}}:</b></dt>
+                  <dd>{{item.value}}</dd>
+              }
           </dl>
         </div>
 
@@ -132,59 +112,66 @@
     </mat-card>
 
     <br>
-    <ng-container *ngIf="specimensDataLength !== 0">
-      <h1>Related Specimens</h1>
-      <div class="example-loading-shade"
-           *ngIf="isLoadingResults || isRateLimitReached">
-        <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-        <div class="example-rate-limit-reached" *ngIf="isRateLimitReached">
-          Something went wrong, please try again!
-        </div>
-      </div>
-      <mat-form-field class="searchField">
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
-      </mat-form-field>
-      <table mat-table [dataSource]="specimensData" matSort>
-        <ng-container matColumnDef="accession">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> BioSample ID </th>
-          <td mat-cell *matCellDef="let row">
-            <a mat-button [routerLink]="['/specimen', row.accession]">{{row.accession}}</a>
-            <mat-chip style="margin-bottom: 5px; background-color: yellow; color: black"
-                      *ngIf="checkNagoyaProtocol(row)">
-              <a mat-button
-                 href="https://drive.google.com/file/d/1tkTdo-dI30YFokE2YpwmzP9onhrrEyhD/view?usp=drive_link">
-                Nagoya Protocol</a>
-            </mat-chip>
-          </td>
-        </ng-container>
+      @if(specimensDataLength !== 0){
+          <h1>Related Specimens</h1>
+          @if(isLoadingResults || isRateLimitReached){
+              <div class="example-loading-shade">
+                  @if(isLoadingResults){
+                      <mat-spinner ></mat-spinner>
+                  }
+                  @if(isRateLimitReached){
+                      <div class="example-rate-limit-reached">
+                          Something went wrong, please try again!
+                      </div>
+                  }
+              </div>}
+              <mat-form-field class="searchField">
+                  <mat-label>Filter</mat-label>
+                  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+              </mat-form-field>
+              <table mat-table [dataSource]="specimensData" matSort>
+                  <ng-container matColumnDef="accession">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> BioSample ID </th>
+                      <td mat-cell *matCellDef="let row">
+                          <a mat-button [routerLink]="['/specimen', row.accession]">{{row.accession}}</a>
+                          @if(checkNagoyaProtocol(row)){
+                          <mat-chip style="margin-bottom: 5px; background-color: yellow; color: black">
+                              <a mat-button
+                                 href="https://drive.google.com/file/d/1tkTdo-dI30YFokE2YpwmzP9onhrrEyhD/view?usp=drive_link">
+                                  Nagoya Protocol</a>
+                          </mat-chip>
+                          }
+                      </td>
+                  </ng-container>
 
-        <ng-container matColumnDef="organism">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism </th>
-          <td mat-cell *matCellDef="let row"> {{row.organism}} </td>
-        </ng-container>
+                  <ng-container matColumnDef="organism">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism </th>
+                      <td mat-cell *matCellDef="let row"> {{row.organism}} </td>
+                  </ng-container>
 
-        <ng-container matColumnDef="commonName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Common Name </th>
-          <td mat-cell *matCellDef="let row"> {{row.commonName}} </td>
-        </ng-container>
+                  <ng-container matColumnDef="commonName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Common Name </th>
+                      <td mat-cell *matCellDef="let row"> {{row.commonName}} </td>
+                  </ng-container>
 
-        <ng-container matColumnDef="organismPart">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism Part </th>
-          <td mat-cell *matCellDef="let row"> {{row.organismPart}} </td>
-        </ng-container>
+                  <ng-container matColumnDef="organismPart">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism Part </th>
+                      <td mat-cell *matCellDef="let row"> {{row.organismPart}} </td>
+                  </ng-container>
 
-        <ng-container matColumnDef="sex">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Sex </th>
-          <td mat-cell *matCellDef="let row"> {{row.sex}} </td>
-        </ng-container>
+                  <ng-container matColumnDef="sex">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Sex </th>
+                      <td mat-cell *matCellDef="let row"> {{row.sex}} </td>
+                  </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="specimensDisplayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: specimensDisplayedColumns;"></tr>
-      </table>
-      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
-                     #metadataPaginator [length]="resultsLength"></mat-paginator>
-    </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="specimensDisplayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: specimensDisplayedColumns;"></tr>
+              </table>
+              <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+                             #metadataPaginator [length]="resultsLength"></mat-paginator>
+
+      }
+
   </div>
   <div class="item3"></div>
 </div>

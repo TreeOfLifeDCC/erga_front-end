@@ -4,7 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
+
 })
 export class ApiService {
 
@@ -13,7 +14,7 @@ export class ApiService {
 
   getData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
           filterValue: string[], currentClass: string, phylogeny_filters: string[], index_name: string) {
-    console.log(filterValue);
+
     const project_names = ['DToL', '25 genomes', 'ERGA', 'CBP' , 'ASG'];
     const offset = pageIndex * pageSize;
     let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
@@ -44,7 +45,7 @@ export class ApiService {
           filterItem = `${currentClass}:${filterValue[i]}`;
         }
         filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
-        console.log(filterStr);
+
       }
       url += filterStr;
     }
@@ -53,11 +54,11 @@ export class ApiService {
       for (let i = 0; i<phylogeny_filters.length; i++) {
         filterStr === '&phylogeny_filters=' ? filterStr += `${phylogeny_filters[i]}` : filterStr += `-${phylogeny_filters[i]}`;
       }
-      console.log(filterStr);
+
       url += filterStr;
     }
     url += `&current_class=${currentClass}`;
-    console.log(url);
+
     return this.http.get<any>(url);
   }
 

@@ -1,14 +1,59 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {MatTableDataSource} from "@angular/material/table";
+import {
+    MatCell, MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+    MatTable,
+    MatTableDataSource
+} from "@angular/material/table";
+import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
+import {NgIf} from "@angular/common";
+import {MatDivider} from "@angular/material/divider";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatChip} from "@angular/material/chips";
+import {MatAnchor} from "@angular/material/button";
+import {MatInput} from "@angular/material/input";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 @Component({
-  selector: 'app-organism-details',
-  templateUrl: './organism-details.component.html',
-  styleUrls: ['./organism-details.component.css']
+    selector: 'app-organism-details',
+    templateUrl: './organism-details.component.html',
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardTitle,
+        MatCardActions,
+        NgIf,
+        MatDivider,
+        MatProgressSpinner,
+
+        MatTable,
+        MatSort,
+        MatColumnDef,
+        MatChip,
+        MatHeaderCell,
+        MatHeaderCellDef,
+        MatCell,
+        MatCellDef,
+        RouterLink,
+        MatAnchor,
+        MatInput,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRow,
+        MatRowDef,
+        MatPaginator,
+        MatLabel,
+        MatFormField,
+        FlexLayoutModule
+    ],
+    styleUrls: ['./organism-details.component.css']
 })
 export class OrganismDetailsComponent implements OnInit, AfterViewInit {
   data: any;

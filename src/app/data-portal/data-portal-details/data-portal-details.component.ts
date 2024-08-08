@@ -1,16 +1,78 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ApiService} from "../../api.service";
 import {MatSort} from "@angular/material/sort";
 import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {keyframes} from "@angular/animations";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef,
+  MatTable,
+  MatTableDataSource
+} from "@angular/material/table";
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardHeader,
+  MatCardImage,
+  MatCardTitle
+} from "@angular/material/card";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {MatAnchor, MatButton} from "@angular/material/button";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatChip} from "@angular/material/chips";
+import {NgForOf, NgIf} from "@angular/common";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MatTableExporterModule} from "mat-table-exporter";
 
 @Component({
   selector: 'app-data-portal-details',
   templateUrl: './data-portal-details.component.html',
+  standalone: true,
+  imports: [
+    MatCardTitle,
+    MatCard,
+    MatCardActions,
+    MatTabGroup,
+    MatTab,
+    MatProgressSpinner,
+    MatButton,
+
+    MatInput,
+    MatTable,
+    MatSort,
+    RouterLink,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatCell,
+    MatAnchor,
+    MatChip,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatRow,
+    MatNoDataRow,
+    MatPaginator,
+    NgIf,
+    MatCardHeader,
+    MatCardContent,
+    MatCardImage,
+    FlexLayoutModule,
+    NgForOf,
+    MatLabel,
+    MatFormField,
+    MatTableExporterModule
+  ],
   styleUrls: ['./data-portal-details.component.css']
 })
 export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
