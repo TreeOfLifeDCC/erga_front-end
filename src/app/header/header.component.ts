@@ -9,41 +9,41 @@ import {MatIconButton} from "@angular/material/button";
 import {ExtendedModule, FlexModule} from "@angular/flex-layout";
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css'],
-  standalone: true,
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.css'],
+    standalone: true,
 
-  imports: [
+    imports: [
 
-    MatNavList,
-    MatIcon,
-    MatToolbar,
-    MatSidenav,
-    RouterLink,
-    MatIconButton,
-    ExtendedModule,
-    FlexModule,
-    MatListItem,
-    MatSidenavContent,
-    MatSidenavContainer
-  ]
+        MatNavList,
+        MatIcon,
+        MatToolbar,
+        MatSidenav,
+        RouterLink,
+        MatIconButton,
+        ExtendedModule,
+        FlexModule,
+        MatListItem,
+        MatSidenavContent,
+        MatSidenavContainer
+    ]
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  mobileQuery: MediaQueryList;
-  private _mobileQueryListener: () => void;
+    mobileQuery: MediaQueryList;
+    private _mobileQueryListener: () => void;
 
-  constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
-  }
+    constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
+        this.mobileQuery = media.matchMedia('(max-width: 600px)');
+        this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+        this.mobileQuery.addListener(this._mobileQueryListener);
+    }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
 
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
-  }
+    ngOnDestroy(): void {
+        this.mobileQuery.removeListener(this._mobileQueryListener);
+    }
 
 }

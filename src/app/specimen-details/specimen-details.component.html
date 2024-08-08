@@ -1,114 +1,114 @@
 <br>
 <div class="container">
-  <div class="item0"></div>
-  <div class="item2">
-    <mat-card class="main-card">
-      <mat-card-title style="text-align: center">{{data?.accession}}</mat-card-title>
-      <mat-card-actions>
-        <div fxLayout="column">
-        <dl>
-            @if(data?.commonName){
-                <dt><b>Common Name:</b></dt>
-                <dd>{{data?.commonName}}</dd>
-            }
-            @if(data?.accession){
-                <dt><b>BioSamples ID:</b></dt>
-                <dd>{{data?.accession}}</dd>
-            }
-            @if(data?.organism){
-                <dt><b>Scientific Name:</b></dt>
-                <dd>{{data?.organism.text}}</dd>
-            }
-            @if(data?.organismPart){
-                <dt><b>Organism Part:</b></dt>
-                <dd>{{data?.organismPart}}</dd>
-            }
-            @if(data?.sex){
-                <dt><b>Sex:</b></dt>
-                <dd>{{data?.sex}}</dd>
-            }
-            @if(data?.taxonId){
-                <dt><b>Tax ID:</b></dt>
-                <dd>{{data?.taxonId}}</dd>
-            }
-            @if(data?.specimenId){
-                <dt><b>Specimen ID:</b></dt>
-                <dd>{{data?.specimenId}}</dd>
-            }
-            @if(data?.lifestage){
-                <dt><b>Lifestage:</b></dt>
-                <dd>{{data?.lifestage}}</dd>
-            }
-            @if(data?.gal){
-                <dt><b>Gal:</b></dt>
-                <dd>{{data?.gal}}</dd>
-            }
-            @if(data?.galSampleId){
-                <dt><b>Gal Sample ID:</b></dt>
-                <dd>{{data?.galSampleId}}</dd>
-            }
-            @if(data?.collectedBy){
-                <dt><b>Collected by:</b></dt>
-                <dd>{{data?.collectedBy}}</dd>
-            }
-            @if(data?.collectingInstitution){
-                <dt><b>Collecting Institution:</b></dt>
-                <dd>{{data?.collectingInstitution}}</dd>
-            }
-            @if(data?.collectionDate){
-                <dt><b>Collection Date:</b></dt>
-                <dd>{{data?.collectionDate}}</dd>
-            }
-            @if(data?.geographicLocationCountryAndOrSea){
-                <dt><b>Geographic Location (Country and/or Sea):</b></dt>
-                <dd>{{data?.geographicLocationCountryAndOrSea}}</dd>
-            }
-            @if(data?.geographicLocationRegionAndLocality){
-                <dt><b>Geographic Location (Region and Locality):</b></dt>
-                <dd>{{data?.geographicLocationRegionAndLocality}}</dd>
-            }
-            @if(data?.geographicLocationLatitude){
-                <dt><b>Geographic Location (Latitude):</b></dt>
-                <dd>{{data?.geographicLocationLatitude.text}}</dd>
-            }
-            @if(data?.geographicLocationLongitude){
-                <dt><b>Geographic Location (Longitude):</b></dt>
-                <dd>{{data?.geographicLocationLongitude.text}}</dd>
-            }
-            @if(data?.habitat){
-                <dt><b>Habitat:</b></dt>
-                <dd>{{data?.habitat}}</dd>
-            }
+    <div class="item0"></div>
+    <div class="item2">
+        <mat-card class="main-card">
+            <mat-card-title style="text-align: center">{{ data?.accession }}</mat-card-title>
+            <mat-card-actions>
+                <div fxLayout="column">
+                    <dl>
+                        @if (data?.commonName) {
+                            <dt><b>Common Name:</b></dt>
+                            <dd>{{ data?.commonName }}</dd>
+                        }
+                        @if (data?.accession) {
+                            <dt><b>BioSamples ID:</b></dt>
+                            <dd>{{ data?.accession }}</dd>
+                        }
+                        @if (data?.organism) {
+                            <dt><b>Scientific Name:</b></dt>
+                            <dd>{{ data?.organism.text }}</dd>
+                        }
+                        @if (data?.organismPart) {
+                            <dt><b>Organism Part:</b></dt>
+                            <dd>{{ data?.organismPart }}</dd>
+                        }
+                        @if (data?.sex) {
+                            <dt><b>Sex:</b></dt>
+                            <dd>{{ data?.sex }}</dd>
+                        }
+                        @if (data?.taxonId) {
+                            <dt><b>Tax ID:</b></dt>
+                            <dd>{{ data?.taxonId }}</dd>
+                        }
+                        @if (data?.specimenId) {
+                            <dt><b>Specimen ID:</b></dt>
+                            <dd>{{ data?.specimenId }}</dd>
+                        }
+                        @if (data?.lifestage) {
+                            <dt><b>Lifestage:</b></dt>
+                            <dd>{{ data?.lifestage }}</dd>
+                        }
+                        @if (data?.gal) {
+                            <dt><b>Gal:</b></dt>
+                            <dd>{{ data?.gal }}</dd>
+                        }
+                        @if (data?.galSampleId) {
+                            <dt><b>Gal Sample ID:</b></dt>
+                            <dd>{{ data?.galSampleId }}</dd>
+                        }
+                        @if (data?.collectedBy) {
+                            <dt><b>Collected by:</b></dt>
+                            <dd>{{ data?.collectedBy }}</dd>
+                        }
+                        @if (data?.collectingInstitution) {
+                            <dt><b>Collecting Institution:</b></dt>
+                            <dd>{{ data?.collectingInstitution }}</dd>
+                        }
+                        @if (data?.collectionDate) {
+                            <dt><b>Collection Date:</b></dt>
+                            <dd>{{ data?.collectionDate }}</dd>
+                        }
+                        @if (data?.geographicLocationCountryAndOrSea) {
+                            <dt><b>Geographic Location (Country and/or Sea):</b></dt>
+                            <dd>{{ data?.geographicLocationCountryAndOrSea }}</dd>
+                        }
+                        @if (data?.geographicLocationRegionAndLocality) {
+                            <dt><b>Geographic Location (Region and Locality):</b></dt>
+                            <dd>{{ data?.geographicLocationRegionAndLocality }}</dd>
+                        }
+                        @if (data?.geographicLocationLatitude) {
+                            <dt><b>Geographic Location (Latitude):</b></dt>
+                            <dd>{{ data?.geographicLocationLatitude.text }}</dd>
+                        }
+                        @if (data?.geographicLocationLongitude) {
+                            <dt><b>Geographic Location (Longitude):</b></dt>
+                            <dd>{{ data?.geographicLocationLongitude.text }}</dd>
+                        }
+                        @if (data?.habitat) {
+                            <dt><b>Habitat:</b></dt>
+                            <dd>{{ data?.habitat }}</dd>
+                        }
 
-            @if(data?.identifiedBy){
-                <dt><b>Identified by:</b></dt>
-                <dd>{{data?.identifiedBy}}</dd>
-            }
-            @if(data?.identifierAffiliation){
-                <dt><b>Identifier Affiliation:</b></dt>
-                <dd>{{data?.identifierAffiliation}}</dd>
-            }
-            @if(data?.specimenVoucher){
-                <dt><b>Specimen Voucher:</b></dt>
-                <dd>{{data?.specimenVoucher}}</dd>
-            }
-            @if(data?.projectName){
-                <dt><b>Project Name:</b></dt>
-                <dd>{{data?.projectName}}</dd>
-            }
-        </dl>
+                        @if (data?.identifiedBy) {
+                            <dt><b>Identified by:</b></dt>
+                            <dd>{{ data?.identifiedBy }}</dd>
+                        }
+                        @if (data?.identifierAffiliation) {
+                            <dt><b>Identifier Affiliation:</b></dt>
+                            <dd>{{ data?.identifierAffiliation }}</dd>
+                        }
+                        @if (data?.specimenVoucher) {
+                            <dt><b>Specimen Voucher:</b></dt>
+                            <dd>{{ data?.specimenVoucher }}</dd>
+                        }
+                        @if (data?.projectName) {
+                            <dt><b>Project Name:</b></dt>
+                            <dd>{{ data?.projectName }}</dd>
+                        }
+                    </dl>
 
-        <mat-divider></mat-divider>
+                    <mat-divider></mat-divider>
 
-        <dl>
-            @for(item of data?.customFields; track $index ){
-                <dt><b>{{item.name}}:</b></dt>
-                <dd>{{item.value}}</dd>
-            }
-        </dl>
-        </div>
-      </mat-card-actions>
-    </mat-card>
-  </div>
-  <div class="item3"></div>
+                    <dl>
+                        @for (item of data?.customFields; track $index) {
+                            <dt><b>{{ item.name }}:</b></dt>
+                            <dd>{{ item.value }}</dd>
+                        }
+                    </dl>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+    <div class="item3"></div>
 </div>

@@ -1,5 +1,5 @@
 var url = "https://portal.darwintreeoflife.org/api/taxonomy/tree";
-treeJSON = d3.json(url, function(error, treeData) {
+treeJSON = d3.json(url, function (error, treeData) {
 
     // Calculate total nodes, max label length
     var totalNodes = 0;
@@ -54,7 +54,7 @@ treeJSON = d3.json(url, function(error, treeData) {
 
     // define a d3 diagonal projection for use by the node paths later on.
     var diagonal = d3.svg.diagonal()
-        .projection(function(d) {
+        .projection(function (d) {
             return [d.y, d.x];
         });
 
@@ -85,19 +85,20 @@ treeJSON = d3.json(url, function(error, treeData) {
     }
 
     // Call visit function to establish maxLabelLength
-    visit(treeData, function(d) {
+    visit(treeData, function (d) {
         totalNodes++;
         maxLabelLength = d.name.length + d.commonName.length + 5;
-    }, function(d) {
+    }, function (d) {
         return d.children && d.children.length > 0 ? d.children : null;
     });
 
     // sort the tree according to the node names
     function sortTree() {
-        tree.sort(function(a, b) {
+        tree.sort(function (a, b) {
             return b.name.toLowerCase() < a.name.toLowerCase() ? 1 : -1;
         });
     }
+
     // Sort the tree initially incase the JSON isn't in a sorted order.
     sortTree();
 
@@ -122,7 +123,7 @@ treeJSON = d3.json(url, function(error, treeData) {
             d3.select(domNode).select('g.node').attr("transform", "translate(" + translateX + "," + translateY + ")");
             zoomListener.scale(zoomListener.scale());
             zoomListener.translate([translateX, translateY]);
-            panTimer = setTimeout(function() {
+            panTimer = setTimeout(function () {
                 pan(domNode, speed, direction);
             }, 50);
         }
@@ -162,17 +163,17 @@ treeJSON = d3.json(url, function(error, treeData) {
         }
     }
 
-    var overCircle = function(d) {
+    var overCircle = function (d) {
         selectedNode = d;
         updateTempConnector();
     };
-    var outCircle = function(d) {
+    var outCircle = function (d) {
         selectedNode = null;
         updateTempConnector();
     };
 
     // Function to update the temporary connector indicating dragging affiliation
-    var updateTempConnector = function() {
+    var updateTempConnector = function () {
         var data = [];
         if (draggingNode !== null && selectedNode !== null) {
             // have to flip the source coordinates since we did this for the existing connectors on the original tree
@@ -246,21 +247,21 @@ treeJSON = d3.json(url, function(error, treeData) {
     function click(d) {
         clickCount++;
         if ((d._children && d._children.length === 1) && clickCount === 1) {
-            singleClickTimer = setTimeout(function() {
+            singleClickTimer = setTimeout(function () {
                 clickCount = 0;
                 expand(d);
                 singleClick(d);
             }, 400);
 
         } else if (d.children && d.children.length === 1) {
-            singleClickTimer = setTimeout(function() {
+            singleClickTimer = setTimeout(function () {
                 clickCount = 0;
                 collapse(d);
                 singleClick(d);
             }, 400);
         }
         if (clickCount === 1) {
-            singleClickTimer = setTimeout(function() {
+            singleClickTimer = setTimeout(function () {
                 clickCount = 0;
                 singleClick(d);
             }, 400);
@@ -282,11 +283,11 @@ treeJSON = d3.json(url, function(error, treeData) {
         var obj = d
         var jsonArray = []
         while (obj.parent != null) {
-            var json = { 'rank': obj.rank, 'taxonomy': obj.name }
+            var json = {'rank': obj.rank, 'taxonomy': obj.name}
             jsonArray.push(json)
             obj = obj.parent
         }
-        tempObj = { 'rank': 'superkingdom', 'taxonomy': 'Eukaryota' }
+        tempObj = {'rank': 'superkingdom', 'taxonomy': 'Eukaryota'}
         jsonArray.push(tempObj)
         jsonArray.reverse();
         var encodedJsonArray = encodeURIComponent(JSON.stringify(jsonArray))
@@ -295,7 +296,7 @@ treeJSON = d3.json(url, function(error, treeData) {
                 url: 'https://portal.darwintreeoflife.org/api/root_organisms/root/filter/results?from=0&size=2000&taxonomyFilter=' + encodedJsonArray,
                 type: 'post',
                 data: {},
-                success: function(response) {
+                success: function (response) {
                     $('#organismsTable').DataTable().clear().destroy();
                     $('.modal-heading').text(d.rank)
                     $("#organismsTable").find("tr:gt(0)").remove();
@@ -345,7 +346,7 @@ treeJSON = d3.json(url, function(error, treeData) {
                         destroy: true
                     });
 
-                    $('#organismsModal').modal({ backdrop: 'static', keyboard: false });
+                    $('#organismsModal').modal({backdrop: 'static', keyboard: false});
                     $('#organismsModal').modal('show');
                     $(".modal-backdrop").show();
 
@@ -359,13 +360,13 @@ treeJSON = d3.json(url, function(error, treeData) {
         // This prevents the layout looking squashed when new nodes are made visible or looking sparse when nodes are removed
         // This makes the layout more consistent.
         var levelWidth = [1];
-        var childCount = function(level, n) {
+        var childCount = function (level, n) {
 
             if (n.children && n.children.length > 0) {
                 if (levelWidth.length <= level + 1) levelWidth.push(0);
 
                 levelWidth[level + 1] += n.children.length;
-                n.children.forEach(function(d) {
+                n.children.forEach(function (d) {
                     childCount(level + 1, d);
                 });
             }
@@ -379,7 +380,7 @@ treeJSON = d3.json(url, function(error, treeData) {
             links = tree.links(nodes);
 
         // Set widths between levels based on maxLabelLength.
-        nodes.forEach(function(d) {
+        nodes.forEach(function (d) {
             d.y = (d.depth * (maxLabelLength * 10)); //maxLabelLength * 10px
             // alternatively to keep a fixed scale one can set a fixed depth per level
             // Normalize for fixed-depth by commenting out below line
@@ -388,7 +389,7 @@ treeJSON = d3.json(url, function(error, treeData) {
 
         // Update the nodes…
         node = svgGroup.selectAll("g.node")
-            .data(nodes, function(d) {
+            .data(nodes, function (d) {
                 return d.id || (d.id = ++i);
             });
 
@@ -396,7 +397,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         var nodeEnter = node.enter().append("g")
             // .call(dragListener)
             .attr("class", "node")
-            .attr("transform", function(d) {
+            .attr("transform", function (d) {
                 return "translate(" + source.y0 + "," + source.x0 + ")";
             })
             .on('click', click);
@@ -405,20 +406,20 @@ treeJSON = d3.json(url, function(error, treeData) {
             .attr("id", "circleCustomTooltip")
             .attr('class', 'nodeCircle')
             .attr("r", 0)
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 return d._children ? "lightsteelblue" : "#fff";
             });
 
         nodeEnter.append("text")
-            .attr("x", function(d) {
+            .attr("x", function (d) {
                 return d.children || d._children ? -10 : 10;
             })
             .attr("dy", ".35em")
             .attr('class', 'nodeText')
-            .attr("text-anchor", function(d) {
+            .attr("text-anchor", function (d) {
                 return d.children || d._children ? "end" : "start";
             })
-            .text(function(d) {
+            .text(function (d) {
                 var name;
                 name = d.name;
                 if ($('#commonName').prop("checked") == true) {
@@ -443,13 +444,13 @@ treeJSON = d3.json(url, function(error, treeData) {
 
         // Update the text to reflect whether node has children or not.
         node.select('text')
-            .attr("x", function(d) {
+            .attr("x", function (d) {
                 return d.children || d._children ? -10 : 10;
             })
-            .attr("text-anchor", function(d) {
+            .attr("text-anchor", function (d) {
                 return d.children || d._children ? "end" : "start";
             })
-            .text(function(d) {
+            .text(function (d) {
                 var name;
                 name = d.name;
                 if ($('#commonName').prop("checked") == true) {
@@ -466,7 +467,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         // Change the circle fill depending on whether it has children and is collapsed
         node.select("circle.nodeCircle")
             .attr("r", 4.5)
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 return d._children ? "lightsteelblue" : "#fff";
             });
 
@@ -477,7 +478,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         // Transition nodes to their new position.
         var nodeUpdate = node.transition()
             .duration(duration)
-            .attr("transform", function(d) {
+            .attr("transform", function (d) {
                 return "translate(" + d.y + "," + d.x + ")";
             });
 
@@ -486,7 +487,7 @@ treeJSON = d3.json(url, function(error, treeData) {
             .style("fill-opacity", 1);
         nodeUpdate.select("circle")
             .attr("r", 4.5)
-            .style("fill", function(d) {
+            .style("fill", function (d) {
                 if (d.class === "found") {
                     return "#2E8B57"; //red
                 } else if (d._children) {
@@ -495,7 +496,7 @@ treeJSON = d3.json(url, function(error, treeData) {
                     return "#fff";
                 }
             })
-            .style("stroke", function(d) {
+            .style("stroke", function (d) {
                 if (d.class === "found") {
                     return "#2E8B57"; //red
                 }
@@ -503,7 +504,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         // Transition exiting nodes to the parent's new position.
         var nodeExit = node.exit().transition()
             .duration(duration)
-            .attr("transform", function(d) {
+            .attr("transform", function (d) {
                 return "translate(" + source.y + "," + source.x + ")";
             })
             .remove();
@@ -516,14 +517,14 @@ treeJSON = d3.json(url, function(error, treeData) {
 
         // Update the links…
         var link = svgGroup.selectAll("path.link")
-            .data(links, function(d) {
+            .data(links, function (d) {
                 return d.target.id;
             });
 
         // Enter any new links at the parent's previous position.
         link.enter().insert("path", "g")
             .attr("class", "link")
-            .attr("d", function(d) {
+            .attr("d", function (d) {
                 var o = {
                     x: source.x0,
                     y: source.y0
@@ -538,7 +539,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         link.transition()
             .duration(duration)
             .attr("d", diagonal)
-            .style("stroke", function(d) {
+            .style("stroke", function (d) {
                 if (d.target.class === "found") {
                     return "#2E8B57";
                 }
@@ -547,7 +548,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         // Transition exiting nodes to the parent's new position.
         link.exit().transition()
             .duration(duration)
-            .attr("d", function(d) {
+            .attr("d", function (d) {
                 var o = {
                     x: source.x,
                     y: source.y
@@ -560,7 +561,7 @@ treeJSON = d3.json(url, function(error, treeData) {
             .remove();
 
         // Stash the old positions for transition.
-        nodes.forEach(function(d) {
+        nodes.forEach(function (d) {
             d.x0 = d.x;
             d.y0 = d.y;
         });
@@ -575,7 +576,7 @@ treeJSON = d3.json(url, function(error, treeData) {
     root.y0 = 0;
 
     // Collapse all children of roots children before rendering.
-    root.children.forEach(function(child) {
+    root.children.forEach(function (child) {
         collapse(child);
     });
 
@@ -588,15 +589,15 @@ treeJSON = d3.json(url, function(error, treeData) {
     let select2Data = [];
     select2DataCollectName(root);
     let select2DataObject = [];
-    select2Data.sort(function(a, b) {
-            if (a > b) return 1; // sort
-            if (a < b) return -1;
-            return 0;
-        })
-        .filter(function(item, i, ar) {
+    select2Data.sort(function (a, b) {
+        if (a > b) return 1; // sort
+        if (a < b) return -1;
+        return 0;
+    })
+        .filter(function (item, i, ar) {
             return ar.indexOf(item) === i;
         }) // remove duplicate items
-        .filter(function(item, i, ar) {
+        .filter(function (item, i, ar) {
             select2DataObject.push({
                 "label": item,
                 "value": i + 1
@@ -609,7 +610,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         autoFocus: true,
         source: select2DataObject,
 
-        response: function(event, ui) {
+        response: function (event, ui) {
             if (ui.content.length === 1) {
                 $("#count").text(ui.content.length + ' record found');
             } else if (ui.content.length == 0) {
@@ -619,13 +620,13 @@ treeJSON = d3.json(url, function(error, treeData) {
             }
 
         },
-        select: function(event, ui) {
+        select: function (event, ui) {
             $("#search").val(ui.item.label);
             resetGraph();
             toggle(root);
 
             var paths = searchTree(root, ui.item.label, []);
-            if (typeof(paths) !== "undefined") {
+            if (typeof (paths) !== "undefined") {
                 openPaths(paths);
                 $("#count").text('');
             } else {
@@ -735,7 +736,7 @@ treeJSON = d3.json(url, function(error, treeData) {
         root.y0 = 0;
 
         // Collapse all children of roots children before rendering.
-        root.children.forEach(function(child) {
+        root.children.forEach(function (child) {
             collapse(child);
         });
         clearAll(root);
@@ -757,10 +758,10 @@ treeJSON = d3.json(url, function(error, treeData) {
 
     function interpolateZoom(translate, scale) {
         var self = this;
-        return d3.transition().duration(350).tween("zoom", function() {
+        return d3.transition().duration(350).tween("zoom", function () {
             var iTranslate = d3.interpolate(zoomListener.translate(), translate),
                 iScale = d3.interpolate(zoomListener.scale(), scale);
-            return function(t) {
+            return function (t) {
                 zoomListener.scale(iScale(t)).translate(iTranslate(t));
                 zoomed();
             };
@@ -777,13 +778,15 @@ treeJSON = d3.json(url, function(error, treeData) {
             translate = zoomListener.translate(),
             translate0 = [],
             l = [],
-            view = { x: translate[0], y: translate[1], k: zoomListener.scale() };
+            view = {x: translate[0], y: translate[1], k: zoomListener.scale()};
 
         d3.event.preventDefault();
         direction = (this.id === 'zoom_in') ? 1 : -1;
         target_zoom = zoomListener.scale() * (1 + factor * direction);
 
-        if (target_zoom < extent[0] || target_zoom > extent[1]) { return false; }
+        if (target_zoom < extent[0] || target_zoom > extent[1]) {
+            return false;
+        }
 
         translate0 = [(center[0] - view.x) / view.k, (center[1] - view.y) / view.k];
         view.k = target_zoom;

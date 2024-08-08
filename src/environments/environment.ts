@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  cookieDomain: 'localhost',
-  host: 'https://portal.erga-biodiversity.eu'
+    production: false,
+    cookieDomain: 'localhost',
+    host: 'https://portal.erga-biodiversity.eu'
 };
 
 /*
