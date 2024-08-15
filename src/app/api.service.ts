@@ -74,7 +74,7 @@ export class ApiService {
             filterValue: string[], currentClass: string, phylogeny_filters: string[], index_name: string, ) {
         const project_names = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
         const offset = pageIndex * pageSize;
-        let url = `https://portal.erga-biodiversity.eu/api/export_csv/?limit=${pageSize}&offset=${offset}`;
+        let url = `https://portal.erga-biodiversity.eu/api/export-csv/?limit=${pageSize}&offset=${offset}`;
         if (searchValue) {
             url += `&search=${searchValue}`;
         }
