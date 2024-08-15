@@ -45,7 +45,11 @@ export class DynamicScriptLoaderService {
                     if (script.readyState === "loaded" || script.readyState === "complete") {
                         script.onreadystatechange = null;
                         this.scripts[name].loaded = true;
-                        resolve({script: name, loaded: true, status: 'Loaded'});
+                        resolve({
+                            script: name,
+                            loaded: true,
+                            status: 'Loaded'
+                        });
                     }
                 };
             } else {  //Others
@@ -54,7 +58,11 @@ export class DynamicScriptLoaderService {
                     resolve({script: name, loaded: true, status: 'Loaded'});
                 };
             }
-            script.onerror = (error: any) => resolve({script: name, loaded: false, status: 'Loaded'});
+            script.onerror = (error: any) => resolve({
+                script: name,
+                loaded: false,
+                status: 'Loaded'
+            });
             document.getElementsByTagName('head')[0].appendChild(script);
             // } else {
             //   resolve({ script: name, loaded: true, status: 'Already Loaded' });

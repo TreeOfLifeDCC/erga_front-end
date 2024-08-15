@@ -11,7 +11,12 @@ import {
     MatCellDef,
     MatColumnDef,
     MatHeaderCell,
-    MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef,
+    MatHeaderCellDef,
+    MatHeaderRow,
+    MatHeaderRowDef,
+    MatNoDataRow,
+    MatRow,
+    MatRowDef,
     MatTable,
     MatTableDataSource
 } from "@angular/material/table";
@@ -332,5 +337,11 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     checkNagoyaProtocol(data: any): boolean {
         return data.hasOwnProperty('nagoya_protocol');
     }
+
+
+
+
+
+
 
 }

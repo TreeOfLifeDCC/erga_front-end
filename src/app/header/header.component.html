@@ -1,5 +1,6 @@
 <mat-sidenav-container>
-    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
+    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                 [fixedInViewport]="mobileQuery.matches"
                  fixedTopGap="56">
         <mat-nav-list>
             <a mat-list-item routerLink="/data_portal">
@@ -37,7 +38,8 @@
             </div>
             <div>
                 <a routerLink="/home">
-                    <img src="../../assets/erga_logo.png" class="img-fluid" alt="home">
+                    <img src="../../assets/erga_logo.png" class="img-fluid"
+                         alt="home">
                 </a>
             </div>
             <div fxFlex fxLayout fxLayoutAlign="flex-end" fxHide.xs>

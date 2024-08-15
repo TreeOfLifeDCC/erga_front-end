@@ -297,13 +297,23 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
     generateTolidLink(data: any) {
         const organismName = data.organism.split(' ').join('_');
-        const firstChar: string = data.tolid.charAt(0);
-        const clade = this.codes[firstChar as keyof typeof this.codes];
+        let clade;
         let project_name;
         if (data.project_name === 'ERGA') {
             project_name = 'erga'
         } else {
             project_name = 'darwin'
+        }
+        if (typeof (data.tolid) === 'string') {
+            const firstChar: string = data.tolid.charAt(0);
+            clade = this.codes[firstChar as keyof typeof this.codes];
+
+        } else {
+            if (data.tolid.length > 0) {
+                const firstChar: string = data.tolid[0].charAt(0);
+                clade = this.codes[firstChar as keyof typeof this.codes];
+
+            }
         }
         return `https://tolqc.cog.sanger.ac.uk/${project_name}/${clade}/${organismName}`;
     }
@@ -333,6 +343,17 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             data: {
                 genomNotes: data.genome_notes,
             }
+        });
+    }
+
+    downloadFile(format: string) {
+        this._apiService.downloadRecords( this.paginator.pageIndex,
+            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
+            this.currentClass, this.phylogenyFilters, 'data_portal').subscribe((res: Blob) => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(res);
+            a.download = 'data_portal.' + format;
+            a.click();
         });
     }
 

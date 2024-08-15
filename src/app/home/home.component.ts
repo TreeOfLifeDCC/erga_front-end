@@ -2,7 +2,12 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router, NavigationEnd, RouterLink} from "@angular/router";
 import {ApiService} from "../api.service";
 import {MatChip, MatChipSet} from "@angular/material/chips";
-import {MatCard, MatCardActions, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
+import {
+    MatCard,
+    MatCardActions,
+    MatCardSubtitle,
+    MatCardTitle
+} from "@angular/material/card";
 import {BannerComponent} from "../banner/banner.component";
 import {MatAnchor, MatButton} from "@angular/material/button";
 

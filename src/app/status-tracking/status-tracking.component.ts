@@ -1,4 +1,10 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    EventEmitter,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, MatSortHeader} from "@angular/material/sort";

@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {DynamicScriptLoaderService} from './services/dynamic-script-loader.service';
+import {
+    DynamicScriptLoaderService
+} from './services/dynamic-script-loader.service';
 import {ActivatedRoute} from "@angular/router";
 
 @Component({

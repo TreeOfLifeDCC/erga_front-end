@@ -3,7 +3,8 @@
     <div class="item0"></div>
     <div class="item2">
         <mat-card class="main-card">
-            <mat-card-title style="text-align: center">{{ data?.accession }}</mat-card-title>
+            <mat-card-title style="text-align: center">{{ data?.accession }}
+            </mat-card-title>
             <mat-card-actions>
                 <div fxLayout="column">
                     <dl>
@@ -60,11 +61,13 @@
                             <dd>{{ data?.collectionDate }}</dd>
                         }
                         @if (data?.geographicLocationCountryAndOrSea) {
-                            <dt><b>Geographic Location (Country and/or Sea):</b></dt>
+                            <dt><b>Geographic Location (Country and/or
+                                Sea):</b></dt>
                             <dd>{{ data?.geographicLocationCountryAndOrSea }}</dd>
                         }
                         @if (data?.geographicLocationRegionAndLocality) {
-                            <dt><b>Geographic Location (Region and Locality):</b></dt>
+                            <dt><b>Geographic Location (Region and
+                                Locality):</b></dt>
                             <dd>{{ data?.geographicLocationRegionAndLocality }}</dd>
                         }
                         @if (data?.geographicLocationLatitude) {

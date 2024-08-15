@@ -3,7 +3,8 @@
     <div class="item0"></div>
     <div class="item2">
         <mat-card class="main-card">
-            <mat-card-title style="text-align: center">{{ data?.accession }}</mat-card-title>
+            <mat-card-title style="text-align: center">{{ data?.accession }}
+            </mat-card-title>
             <mat-card-actions>
                 <div fxLayout="column">
                     <dl>
@@ -60,11 +61,13 @@
                             <dd>{{ data?.collectionDate }}</dd>
                         }
                         @if (data?.geographicLocationCountryAndOrSea) {
-                            <dt><b>Geographic Location (Country and/or Sea):</b></dt>
+                            <dt><b>Geographic Location (Country and/or
+                                Sea):</b></dt>
                             <dd>{{ data?.geographicLocationCountryAndOrSea }}</dd>
                         }
                         @if (data?.geographicLocationRegionAndLocality) {
-                            <dt><b>Geographic Location (Region and Locality):</b></dt>
+                            <dt><b>Geographic Location (Region and
+                                Locality):</b></dt>
                             <dd>{{ data?.geographicLocationRegionAndLocality }}</dd>
                         }
                         @if (data?.geographicLocationLatitude) {
@@ -128,15 +131,20 @@
             }
             <mat-form-field class="searchField">
                 <mat-label>Filter</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+                <input matInput (keyup)="applyFilter($event)"
+                       placeholder="Ex. Mia" #input>
             </mat-form-field>
             <table mat-table [dataSource]="specimensData" matSort>
                 <ng-container matColumnDef="accession">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> BioSample ID</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        BioSample ID
+                    </th>
                     <td mat-cell *matCellDef="let row">
-                        <a mat-button [routerLink]="['/specimen', row.accession]">{{ row.accession }}</a>
+                        <a mat-button
+                           [routerLink]="['/specimen', row.accession]">{{ row.accession }}</a>
                         @if (checkNagoyaProtocol(row)) {
-                            <mat-chip style="margin-bottom: 5px; background-color: yellow; color: black">
+                            <mat-chip
+                                    style="margin-bottom: 5px; background-color: yellow; color: black">
                                 <a mat-button
                                    href="https://drive.google.com/file/d/1tkTdo-dI30YFokE2YpwmzP9onhrrEyhD/view?usp=drive_link">
                                     Nagoya Protocol</a>
@@ -146,30 +154,45 @@
                 </ng-container>
 
                 <ng-container matColumnDef="organism">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Organism
+                    </th>
                     <td mat-cell *matCellDef="let row"> {{ row.organism }}</td>
                 </ng-container>
 
                 <ng-container matColumnDef="commonName">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Common Name</th>
-                    <td mat-cell *matCellDef="let row"> {{ row.commonName }}</td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Common Name
+                    </th>
+                    <td mat-cell *matCellDef="let row"> {{ row.commonName }}
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="organismPart">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism Part</th>
-                    <td mat-cell *matCellDef="let row"> {{ row.organismPart }}</td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Organism Part
+                    </th>
+                    <td mat-cell
+                        *matCellDef="let row"> {{ row.organismPart }}
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="sex">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sex</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                        Sex
+                    </th>
                     <td mat-cell *matCellDef="let row"> {{ row.sex }}</td>
                 </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="specimensDisplayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: specimensDisplayedColumns;"></tr>
+                <tr mat-header-row
+                    *matHeaderRowDef="specimensDisplayedColumns"></tr>
+                <tr mat-row
+                    *matRowDef="let row; columns: specimensDisplayedColumns;"></tr>
             </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
-                           #metadataPaginator [length]="resultsLength"></mat-paginator>
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                           aria-label="Select page of users"
+                           #metadataPaginator
+                           [length]="resultsLength"></mat-paginator>
 
         }
 

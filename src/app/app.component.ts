@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {NgcCookieConsentService, NgcCookieConsentConfig} from 'ngx-cookieconsent';
+import {
+    NgcCookieConsentService,
+    NgcCookieConsentConfig
+} from 'ngx-cookieconsent';
 import {environment} from '../environments/environment';
 import {HeaderComponent} from "./header/header.component";
 import {RouterOutlet} from "@angular/router";

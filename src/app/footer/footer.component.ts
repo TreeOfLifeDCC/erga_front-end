@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {MatSidenavContainer, MatSidenavContent} from "@angular/material/sidenav";
+import {
+    MatSidenavContainer,
+    MatSidenavContent
+} from "@angular/material/sidenav";
 import {MatToolbar} from "@angular/material/toolbar";
 
 @Component({

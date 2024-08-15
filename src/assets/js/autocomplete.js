@@ -681,7 +681,10 @@
         }
     };
 
-    $.each({show: "fadeIn", hide: "fadeOut"}, function (method, defaultEffect) {
+    $.each({
+        show: "fadeIn",
+        hide: "fadeOut"
+    }, function (method, defaultEffect) {
         $.Widget.prototype["_" + method] = function (element, options, callback) {
             if (typeof options === "string") {
                 options = {effect: options};
@@ -864,7 +867,10 @@
                     element: withinElement,
                     isWindow: isWindow,
                     isDocument: isDocument,
-                    offset: hasOffset ? $(element).offset() : {left: 0, top: 0},
+                    offset: hasOffset ? $(element).offset() : {
+                        left: 0,
+                        top: 0
+                    },
                     scrollLeft: withinElement.scrollLeft(),
                     scrollTop: withinElement.scrollTop(),
                     width: withinElement.outerWidth(),
@@ -881,7 +887,8 @@
             // Make a copy, we don't want to modify arguments
             options = $.extend({}, options);
 
-            var atOffset, targetWidth, targetHeight, targetOffset, basePosition, dimensions,
+            var atOffset, targetWidth, targetHeight, targetOffset,
+                basePosition, dimensions,
                 target = $(options.of),
                 within = $.position.getWithinInfo(options.within),
                 scrollInfo = $.position.getScrollInfo(within),
@@ -5281,7 +5288,8 @@
         },
 
         _scrollIntoView: function (item) {
-            var borderTop, paddingTop, offset, scroll, elementHeight, itemHeight;
+            var borderTop, paddingTop, offset, scroll, elementHeight,
+                itemHeight;
             if (this._hasScroll()) {
                 borderTop = parseFloat($.css(this.activeMenu[0], "borderTopWidth")) || 0;
                 paddingTop = parseFloat($.css(this.activeMenu[0], "paddingTop")) || 0;
@@ -7317,7 +7325,11 @@
                         title: buttonText
                     }) :
                     $("<button type='button'></button>").addClass(this._triggerClass).html(!buttonImage ? buttonText : $("<img/>").attr(
-                        {src: buttonImage, alt: buttonText, title: buttonText})));
+                        {
+                            src: buttonImage,
+                            alt: buttonText,
+                            title: buttonText
+                        })));
                 input[isRTL ? "before" : "after"](inst.trigger);
                 inst.trigger.on("click", function () {
                     if ($.datepicker._datepickerShowing && $.datepicker._lastInput === input[0]) {
@@ -7508,7 +7520,10 @@
                 target.disabled = true;
                 inst.trigger.filter("button").each(function () {
                     this.disabled = true;
-                }).end().filter("img").css({opacity: "0.5", cursor: "default"});
+                }).end().filter("img").css({
+                    opacity: "0.5",
+                    cursor: "default"
+                });
             } else if (nodeName === "div" || nodeName === "span") {
                 inline = $target.children("." + this._inlineClass);
                 inline.children().addClass("ui-state-disabled");
@@ -7854,7 +7869,11 @@
             inst.dpDiv.empty();
 
             // determine sizing offscreen
-            inst.dpDiv.css({position: "absolute", display: "block", top: "-1000px"});
+            inst.dpDiv.css({
+                position: "absolute",
+                display: "block",
+                top: "-1000px"
+            });
             $.datepicker._updateDatepicker(inst);
 
             // fix width for dynamic number of date pickers
@@ -7862,8 +7881,10 @@
             offset = $.datepicker._checkOffset(inst, offset, isFixed);
             inst.dpDiv.css({
                 position: ($.datepicker._inDialog && $.blockUI ?
-                    "static" : (isFixed ? "fixed" : "absolute")), display: "none",
-                left: offset.left + "px", top: offset.top + "px"
+                    "static" : (isFixed ? "fixed" : "absolute")),
+                display: "none",
+                left: offset.left + "px",
+                top: offset.top + "px"
             });
 
             if (!inst.inline) {
@@ -8011,7 +8032,11 @@
 
                 this._lastInput = null;
                 if (this._inDialog) {
-                    this._dialogInput.css({position: "absolute", left: "0", top: "-100px"});
+                    this._dialogInput.css({
+                        position: "absolute",
+                        left: "0",
+                        top: "-100px"
+                    });
                     if ($.blockUI) {
                         $.unblockUI();
                         $("body").append(this.dpDiv);
@@ -8731,10 +8756,13 @@
         /* Generate the HTML for the current state of the date picker. */
         _generateHTML: function (inst) {
             var maxDraw, prevText, prev, nextText, next, currentText, gotoDate,
-                controls, buttonPanel, firstDay, showWeek, dayNames, dayNamesMin,
+                controls, buttonPanel, firstDay, showWeek, dayNames,
+                dayNamesMin,
                 monthNames, monthNamesShort, beforeShowDay, showOtherMonths,
-                selectOtherMonths, defaultDate, html, dow, row, group, col, selectedDate,
-                cornerClass, calender, thead, day, daysInMonth, leadDays, curRows, numRows,
+                selectOtherMonths, defaultDate, html, dow, row, group, col,
+                selectedDate,
+                cornerClass, calender, thead, day, daysInMonth, leadDays,
+                curRows, numRows,
                 printDate, dRow, tbody, daySettings, otherMonth, unselectable,
                 tempDate = new Date(),
                 today = this._daylightSavingAdjust(
@@ -8924,7 +8952,8 @@
         _generateMonthYearHeader: function (inst, drawMonth, drawYear, minDate, maxDate,
                                             secondary, monthNames, monthNamesShort) {
 
-            var inMinYear, inMaxYear, month, years, thisYear, determineYear, year, endYear,
+            var inMinYear, inMaxYear, month, years, thisYear, determineYear,
+                year, endYear,
                 changeMonth = this._get(inst, "changeMonth"),
                 changeYear = this._get(inst, "changeYear"),
                 showMonthAfterYear = this._get(inst, "showMonthAfterYear"),
@@ -9092,8 +9121,10 @@
                 new Date().getFullYear() % 100 + parseInt(shortYearCutoff, 10));
             return {
                 shortYearCutoff: shortYearCutoff,
-                dayNamesShort: this._get(inst, "dayNamesShort"), dayNames: this._get(inst, "dayNames"),
-                monthNamesShort: this._get(inst, "monthNamesShort"), monthNames: this._get(inst, "monthNames")
+                dayNamesShort: this._get(inst, "dayNamesShort"),
+                dayNames: this._get(inst, "dayNames"),
+                monthNamesShort: this._get(inst, "monthNamesShort"),
+                monthNames: this._get(inst, "monthNames")
             };
         },
 
@@ -11498,7 +11529,10 @@
                         };
 
                         if (pr && pr.length) {
-                            $(pr[0]).css({width: data.width, height: data.height});
+                            $(pr[0]).css({
+                                width: data.width,
+                                height: data.height
+                            });
                         }
 
                         // Propagating resize, and updating values for each animation step
@@ -11704,8 +11738,10 @@
             $(o.alsoResize).each(function () {
                 var el = $(this);
                 el.data("ui-resizable-alsoresize", {
-                    width: parseFloat(el.width()), height: parseFloat(el.height()),
-                    left: parseFloat(el.css("left")), top: parseFloat(el.css("top"))
+                    width: parseFloat(el.width()),
+                    height: parseFloat(el.height()),
+                    left: parseFloat(el.css("left")),
+                    top: parseFloat(el.css("top"))
                 });
             });
         },
@@ -11723,7 +11759,9 @@
                 };
 
             $(o.alsoResize).each(function () {
-                var el = $(this), start = $(this).data("ui-resizable-alsoresize"), style = {},
+                var el = $(this),
+                    start = $(this).data("ui-resizable-alsoresize"),
+                    style = {},
                     css = el.parents(ui.originalElement[0]).length ?
                         ["width", "height"] :
                         ["width", "height", "top", "left"];
@@ -13601,7 +13639,12 @@
                 y2 = y1;
                 y1 = tmp;
             }
-            this.helper.css({left: x1, top: y1, width: x2 - x1, height: y2 - y1});
+            this.helper.css({
+                left: x1,
+                top: y1,
+                width: x2 - x1,
+                height: y2 - y1
+            });
 
             this.selectees.each(function () {
                 var selectee = $.data(this, "selectable-item"),
@@ -14550,7 +14593,8 @@
         },
 
         _mouseCapture: function (event) {
-            var position, normValue, distance, closestHandle, index, allowed, offset, mouseOverHandle,
+            var position, normValue, distance, closestHandle, index, allowed,
+                offset, mouseOverHandle,
                 that = this,
                 o = this.options;
 
@@ -15837,7 +15881,10 @@
 
             queries.push([$.isFunction(this.options.items) ?
                 this.options.items
-                    .call(this.element, null, {options: this.options, item: this.currentItem}) :
+                    .call(this.element, null, {
+                        options: this.options,
+                        item: this.currentItem
+                    }) :
                 $(this.options.items, this.element)
                     .not(".ui-sortable-helper")
                     .not(".ui-sortable-placeholder"), this]);
@@ -16058,7 +16105,8 @@
         },
 
         _contactContainers: function (event) {
-            var i, j, dist, itemWithLeastDistance, posProperty, sizeProperty, cur, nearBottom,
+            var i, j, dist, itemWithLeastDistance, posProperty, sizeProperty,
+                cur, nearBottom,
                 floating, axis,
                 innermostContainer = null,
                 innermostIndex = null;
@@ -18093,7 +18141,10 @@
                 url: anchor.attr("href"),
                 beforeSend: function (jqXHR, settings) {
                     return that._trigger("beforeLoad", event,
-                        $.extend({jqXHR: jqXHR, ajaxSettings: settings}, eventData));
+                        $.extend({
+                            jqXHR: jqXHR,
+                            ajaxSettings: settings
+                        }, eventData));
                 }
             };
         },

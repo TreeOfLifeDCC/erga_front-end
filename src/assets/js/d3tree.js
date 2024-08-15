@@ -346,7 +346,10 @@ treeJSON = d3.json(url, function (error, treeData) {
                         destroy: true
                     });
 
-                    $('#organismsModal').modal({backdrop: 'static', keyboard: false});
+                    $('#organismsModal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
                     $('#organismsModal').modal('show');
                     $(".modal-backdrop").show();
 
