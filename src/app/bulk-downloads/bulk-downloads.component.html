@@ -45,50 +45,19 @@
                                     install -r requirement.txt </code></li>
                             </ul>
                             <h4><strong>Run script using command:</strong></h4>
-                            Enter below command in terminal: <br/><br/><code>python
-                            app/downloader-utility.py
-                            --project_name "DToL" --phylogeny "Chordata"
-                            --data_status "Mapped Reads - Done"
-                            --experiment_type "Chromium genome"
-                            --download_location "/Users/Documents"
-                            --download_option
-                            "assemblies" --species_list "Apamea sordens,Bufo
-                            bufo"</code> <br/>
-                            <br/>Where: <br/><br/>
-                            <br/><code> <strong>--project_name</strong>
-                            (Required) The name of the project (`e.g., DToL,
-                            ERGA, 25 genomes, Canadian BioGenome Project
-                            (CBP)`)</code> <br/>
-                            <br/><code> <strong>--phylogeny</strong>
-                            (Optional/Required) The name of the Taxonomy for
-                            the download (`eg : Dikarya`)</code> <br/>
-                            <br/><code> <strong>--data_status</strong>
-                            (Optional) The filter of data status for the
-                            download (`eg : Biosamples - Submitted,Mapped Reads
-                            - Submitted,Assemblies - Submitted,Raw
-                            Data - Submitted,Annotation Complete - Done,Genome
-                            Notes - Submitted`)</code> <br/>
-                            <br/><code> <strong>--experiment_type</strong>
-                            (Optional) The filter of experiment type (`eg
-                            : PacBio - HiFi,Hi-C - Arima v2,Hi-C - Arima
-                            v1`)</code> <br/>
-                            <br/><code> <strong>--download_location</strong>
-                            (Optional) The location for the
-                            download</code> <br/>
-                            <br/><code> <strong>--download_option</strong>
-                            (Required) The type of
-                            data(`annotations,assemblies, experiments`) that
-                            you want to download.</code> <br/>
-                            <br/><code> <strong>--species_list</strong>
-                            (Optional/Required) The List of species that you
-                            want to download.</code> <br/><br/>
-                            <br/><strong>Note:</strong> <br/><br/>The
-                            <code><strong>--phylogeny</strong></code> and
-                            <code><strong>--species_list</strong></code>
-                            parameters are conditional you need to provide
-                            one of them.
-                            <br/>
-                            <br/>
+
+                            Enter below command in terminal: <br /><br /><code>python  app/downloader-utility.py --project_name "DToL" --phylogeny "Chordata"   --data_status "Mapped Reads - Done" --experiment_type "Chromium genome"  --download_location "/Users/Documents" --download_option "assemblies" --species_list "Apamea sordens,Bufo bufo"</code> <br />
+                            <br />Where: <br /><br />
+                            <br /><code> <strong>--project_name</strong> (Required)  The name of the project (`e.g., DToL, ERGA, 25 genomes, Canadian BioGenome Project (CBP)`)</code> <br />
+                            <br /><code> <strong>--phylogeny</strong> (Optional/Required)  The name of the Taxonomy for the download (`eg : Dikarya`)</code> <br />
+                            <br /><code> <strong>--data_status</strong> (Optional) The filter of data status for the download (`eg : Biosamples - Submitted,Mapped Reads - Submitted,Assemblies - Submitted,Raw Data - Submitted,Annotation Complete - Done,Genome Notes - Submitted`)</code> <br />
+                            <br /><code> <strong>--experiment_type</strong> (Optional) The filter of experiment type (`eg : PacBio - HiFi,Hi-C - Arima v2,Hi-C - Arima v1`)</code> <br />
+                            <br /><code> <strong>--download_location</strong> (Optional) The location for the download</code> <br />
+                            <br /><code> <strong>--download_option</strong> (Required) The type of data(`annotations,assemblies, experiments`) that you want to download.</code> <br />
+                            <br /><code> <strong>--species_list</strong> (Optional/Required) The List of species that you want to download.</code> <br /><br />
+                            <br /><strong>Note:</strong> <br /><br />The <code><strong>--phylogeny</strong></code>  and  <code><strong>--species_list</strong></code> parameters are conditional you need to provide one of them.
+                            <br />
+                            <br />
                             <h3><strong>2. Build Docker Image: </strong></h3>
                             <h4><strong>Requirement:</strong></h4>
                             <ul style="list-style-type: disc;">
