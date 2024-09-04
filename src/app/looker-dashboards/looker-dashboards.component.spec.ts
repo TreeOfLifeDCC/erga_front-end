@@ -1,23 +1,23 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LookerDashboardsComponent } from './looker-dashboards.component';
+import {LookerDashboardsComponent} from './looker-dashboards.component';
 
 describe('LookerDashboardsComponent', () => {
-  let component: LookerDashboardsComponent;
-  let fixture: ComponentFixture<LookerDashboardsComponent>;
+    let component: LookerDashboardsComponent;
+    let fixture: ComponentFixture<LookerDashboardsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [LookerDashboardsComponent]
-    })
-    .compileComponents();
-    
-    fixture = TestBed.createComponent(LookerDashboardsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [LookerDashboardsComponent]
+        })
+            .compileComponents();
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+        fixture = TestBed.createComponent(LookerDashboardsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

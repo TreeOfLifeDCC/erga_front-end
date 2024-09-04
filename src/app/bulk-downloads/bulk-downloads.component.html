@@ -6,23 +6,46 @@
         <!--  <div class="item1"></div>-->
         <div class="item2">
             <mat-card>
-                <mat-card-title style="text-align: center">Download Data</mat-card-title>
+                <mat-card-title style="text-align: center">Download Data
+                </mat-card-title>
                 <mat-card-actions style="width: 100%">
                     <dl class="card-contents">
-                        <div class="container" style="padding-top: 20px; text-align: justify;">
-                            <h2 style="text-align: left;"><span style="color: #000000;">Downloader Utility </span></h2>
-                            Download data using python script. Downloader utility is a python script that used for downloading all assemblies, annotations and experiments data. This utility can be run on any machine where Python or Docker is installed. If you do not have Python installed, it can be downloaded from the <a href="https://www.python.org/downloads/">Python website</a>. If you want to download Docker, it can be downloaded from the <a href="https://www.docker.com/products/docker-desktop/"> Docker website </a>. <br /><br>
-                            <button mat-raised-button onclick="location.href='https://github.com/TreeOfLifeDCC/downloader-utility';"  color="accent"> Download downloader-utility
-                            </button> <br /><br /><br />
+                        <div class="container"
+                             style="padding-top: 20px; text-align: justify;">
+                            <h2 style="text-align: left;"><span
+                                    style="color: #000000;">Downloader Utility </span>
+                            </h2>
+                            Download data using python script. Downloader
+                            utility is a python script that used for
+                            downloading all assemblies, annotations and
+                            experiments data. This utility can be run on any
+                            machine where Python or Docker is installed. If you
+                            do not have Python installed, it can be
+                            downloaded from the <a
+                                href="https://www.python.org/downloads/">Python
+                            website</a>. If you
+                            want to download Docker, it can be downloaded from
+                            the <a
+                                href="https://www.docker.com/products/docker-desktop/">
+                            Docker website </a>. <br/><br>
+                            <button mat-raised-button
+                                    onclick="location.href='https://github.com/TreeOfLifeDCC/downloader-utility';"
+                                    color="accent"> Download downloader-utility
+                            </button>
+                            <br/><br/><br/>
 
-                            <p style="text-align: left;">There are two ways to run this utility:</p>
-                            <h3><strong>1. Run the python script by providing parameters:</strong></h3>
+                            <p style="text-align: left;">There are two ways to
+                                run this utility:</p>
+                            <h3><strong>1. Run the python script by providing
+                                parameters:</strong></h3>
                             <h4><strong>Requirement:</strong></h4>
                             <ul style="list-style-type: disc;">
                                 <li>Python installed:</li>
-                                <li>Run requirement.txt using command <code>pip install -r requirement.txt </code></li>
+                                <li>Run requirement.txt using command <code>pip
+                                    install -r requirement.txt </code></li>
                             </ul>
                             <h4><strong>Run script using command:</strong></h4>
+
                             Enter below command in terminal: <br /><br /><code>python  app/downloader-utility.py --project_name "DToL" --phylogeny "Chordata"   --data_status "Mapped Reads - Done" --experiment_type "Chromium genome"  --download_location "/Users/Documents" --download_option "assemblies" --species_list "Apamea sordens,Bufo bufo"</code> <br />
                             <br />Where: <br /><br />
                             <br /><code> <strong>--project_name</strong> (Required)  The name of the project (`e.g., DToL, ERGA, 25 genomes, Canadian BioGenome Project (CBP)`)</code> <br />
@@ -33,7 +56,7 @@
                             <br /><code> <strong>--download_option</strong> (Required) The type of data(`annotations,assemblies, experiments`) that you want to download.</code> <br />
                             <br /><code> <strong>--species_list</strong> (Optional/Required) The List of species that you want to download.</code> <br /><br />
                             <br /><strong>Note:</strong> <br /><br />The <code><strong>--phylogeny</strong></code>  and  <code><strong>--species_list</strong></code> parameters are conditional you need to provide one of them.
-                        <br />
+                            <br />
                             <br />
                             <h3><strong>2. Build Docker Image: </strong></h3>
                             <h4><strong>Requirement:</strong></h4>
@@ -42,19 +65,32 @@
                             </ul>
                             <h4>Create docker build using command:</h4>
                             <ul>
-                                <li><code>docker build -t downloader-utility:latest .</code></li>
+                                <li><code>docker build -t
+                                    downloader-utility:latest .</code></li>
                             </ul>
-                            <br />
-                            <h4><strong>Run docker image by providing parameters:</strong></h4>
-                            <p><code>docker run --rm -v "$PWD/download_location:/code/app/download_option" downloader-utility:latest  --project_name "DToL" --phylogeny Chordata  --experiment_type "Chromium genome" --download_option annotations --species_list "Apamea sordens,Bufo bufo"</code></p>
-                            <br />
+                            <br/>
+                            <h4><strong>Run docker image by providing
+                                parameters:</strong></h4>
+                            <p><code>docker run --rm -v
+                                "$PWD/download_location:/code/app/download_option"
+                                downloader-utility:latest --project_name "DToL"
+                                --phylogeny Chordata --experiment_type
+                                "Chromium genome" --download_option annotations
+                                --species_list "Apamea sordens,Bufo
+                                bufo"</code></p>
+                            <br/>
                             <h4><strong>Note:</strong></h4>
-                            <p>Using docker image data is downloaded into download_location e.g <code>/Users/downloads </code> and <code>download_option</code> is (<code>"annotations,assemblies","experiments"</code>).</p>
-                            <br />
+                            <p>Using docker image data is downloaded into
+                                download_location e.g
+                                <code>/Users/downloads </code> and <code>download_option</code>
+                                is (<code>"annotations,assemblies","experiments"</code>).
+                            </p>
+                            <br/>
 
                             <h2><strong>Support</strong></h2>
 
-                            Please report any issues at <a href="mailto:dtol-dcc@ebi.ac.uk">biodiversity-portal&#64;.ac.uk</a>.
+                            Please report any issues at <a
+                                href="mailto:dtol-dcc@ebi.ac.uk">biodiversity-portal&#64;.ac.uk</a>.
 
 
                         </div>
