@@ -12,7 +12,8 @@ RUN npm install --legacy-peer-deps
 # Copy the rest of the files into the container and build
 COPY . .
 
-RUN npm run build --prod
+RUN npm run build -- --configuration production
+
 
 FROM nginx:alpine
 COPY --from=build /source/dist/erga_front-end /usr/share/nginx/html
