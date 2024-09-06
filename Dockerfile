@@ -1,5 +1,4 @@
-FROM node:21.6.2 as build
-
+FROM node:20.15.0 as build
 WORKDIR /source
 
 # Copy the package lock file into the container
