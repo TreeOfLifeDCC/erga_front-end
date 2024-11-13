@@ -24,11 +24,10 @@ import {
     MatRow, MatRowDef,
     MatTable
 } from "@angular/material/table";
-import {RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
-import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -105,11 +104,13 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
 
-    constructor(private _apiService: ApiService, private dialog: MatDialog, private titleService: Title,
-                private router: Router,
-                private activatedRoute: ActivatedRoute,) {
-    }
-
+    constructor(
+        private _apiService: ApiService,
+        private activatedRoute: ActivatedRoute,
+        private router: Router,
+        private dialog: MatDialog,
+        private titleService: Title
+    ) {}
 
     ngOnInit(): void {
         this.titleService.setTitle('Data Portal');
@@ -228,7 +229,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         clearTimeout(this.timer);
         const index = this.activeFilters.indexOf(filterValue);
         index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-        this.filterChanged.emit();
+        this.updateUrlQueryParams();
     }
 
     checkStyle(filterValue: string) {
@@ -256,7 +257,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                 const index = this.classes.indexOf(this.currentClass) + 1;
                 this.currentClass = this.classes[index];
                 console.log(this.phylogenyFilters);
-                this.filterChanged.emit();
+                this.updateUrlQueryParams();
             }
         }, delay);
     }
@@ -265,13 +266,13 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.phylogenyFilters.splice(this.phylogenyFilters.length - 1, 1);
         const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
         this.currentClass = this.classes[previousClassIndex];
-        this.filterChanged.emit();
+        this.updateUrlQueryParams();
     }
 
     onRefreshClick() {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
-        this.filterChanged.emit();
+        this.updateUrlQueryParams();
     }
 
     getStyle(status: string) {
@@ -345,4 +346,40 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         });
     }
 
+    updateUrlQueryParams() {
+        this.queryParams = {};
+
+        if (this.activeFilters.length > 0) {
+            this.queryParams['filters'] = this.activeFilters.join(',');
+        }
+
+        if (this.phylogenyFilters.length > 0) {
+            this.queryParams['phylogenyFilters'] = this.phylogenyFilters.join(',');
+        }
+
+        if (this.currentClass && this.currentClass !== 'kingdom') {
+            this.queryParams['currentClass'] = this.currentClass;
+        }
+
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: this.queryParams,
+            replaceUrl: true,
+            skipLocationChange: false
+        });
+
+        this.filterChanged.emit();
+    }
+
+    loadFiltersFromUrl() {
+        this.activatedRoute.queryParamMap.subscribe(params => {
+            const filtersParam = params.get('filters');
+            const phylogenyFiltersParam = params.get('phylogenyFilters');
+            const currentClassParam = params.get('currentClass');
+
+            this.activeFilters = filtersParam ? filtersParam.split(',') : [];
+            this.phylogenyFilters = phylogenyFiltersParam ? phylogenyFiltersParam.split(',') : [];
+            this.currentClass = currentClassParam || 'kingdom';
+        });
+    }
 }
