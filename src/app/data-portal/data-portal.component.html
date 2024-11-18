@@ -338,7 +338,7 @@
                                         }
                                         @if (genomelength > 1) {
                                             <a class="genome" target="_blank"
-                                               (click)="openGenomeNoteDialog(row._source)">
+                                               (click)="openGenomeNoteDialog(row._source, 'genome_note')">
                                                 Genome Note</a>
                                         }
                                     </mat-chip>
@@ -351,12 +351,18 @@
                                             Info</a>
                                     </mat-chip>
                                 }
-                                @if (row._source.tolid && checkShowTolQc(row._source)) {
+                                @if (checkShowTolQc(row._source)) {
                                     <mat-chip
-                                            style="margin-left: 5px; margin-bottom: 5px; background-color: #C0C2C4; color: black">
-                                        <a mat-button
-                                           href="{{generateTolidLink(row._source)}}">ToL
-                                            QC</a>
+                                            style="margin-left: 5px; margin-bottom: 5px; background-color: #C0C2C4;
+                                            color: black">
+                                        @if (tolqc_length == 1) {
+                                            <a mat-button href="{{row._source.tolqc_links[0]}}">ToL QC</a>
+                                        }
+                                        @if (tolqc_length > 1) {
+                                            <a target="_blank"
+                                               (click)="openGenomeNoteDialog(row._source, 'tol_qc')">
+                                                ToL QC</a>
+                                        }
                                     </mat-chip>
                                 }
                             </td>
