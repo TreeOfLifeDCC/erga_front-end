@@ -50,7 +50,6 @@ import {MatTableExporterModule} from "mat-table-exporter";
         MatTab,
         MatProgressSpinner,
         MatButton,
-
         MatInput,
         MatTable,
         MatSort,
@@ -81,34 +80,6 @@ import {MatTableExporterModule} from "mat-table-exporter";
     styleUrls: ['./data-portal-details.component.css']
 })
 export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
-    codes = {
-        m: 'mammals',
-        d: 'dicots',
-        i: 'insects',
-        u: 'algae',
-        p: 'protists',
-        x: 'molluscs',
-        t: 'other-animal-phyla',
-        q: 'arthropods',
-        k: 'chordates',
-        f: 'fish',
-        a: 'amphibians',
-        b: 'birds',
-        e: 'echinoderms',
-        w: 'annelids',
-        j: 'jellyfish',
-        h: 'platyhelminths',
-        n: 'nematodes',
-        v: 'vascular-plants',
-        l: 'monocots',
-        c: 'non-vascular-plants',
-        g: 'fungi',
-        o: 'sponges',
-        r: 'reptiles',
-        s: 'sharks',
-        y: 'bacteria',
-        z: 'archea'
-    };
     organismData: any;
     metadataDisplayedColumns: string[] = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
     annotationsDisplayedColumns: string[] = ['species', 'accession', 'annotation_gtf', 'annotation_gff3', 'proteins',
@@ -227,9 +198,10 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.filesDataLength = 0;
                 }
 
-                if (data.results[0]['_source']['goat_info']) {
+                if (data.results[0]['_source']['goat_info'] &&
+                    data.results[0]['_source']['goat_info'].hasOwnProperty('attributes')) {
                     this.goatData = new MatTableDataSource(data.results[0]['_source']['goat_info']['attributes'])
-                    this.goatDataLength = data.results[0]['_source']['goat_info']['attributes'].length;
+                    this.goatDataLength = data.results[0]._source.goat_info?.attributes?.length;
                     this.goatDataLink = data.results[0]['_source']['goat_info']['url'];
                 } else {
                     this.goatDataLength = 0;
@@ -325,13 +297,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         if (data && data.length !== 0) {
             return data[0][key];
         }
-    }
-
-    generateTolidLink(data: any) {
-        const organismName = data.organism.split(' ').join('_');
-        const firstChar: string = data.tolid.charAt(0);
-        const clade = this.codes[firstChar as keyof typeof this.codes];
-        return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
     }
 
     checkNagoyaProtocol(data: any): boolean {

@@ -1,7 +1,5 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable, throwError} from 'rxjs';
-import {catchError, map, retry} from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -61,7 +59,7 @@ export class ApiService {
         return this.http.get<any>(url);
     }
 
-    getDetailsData(organismName: any, indexName = 'data_portal') {
+    getDetailsData(organismName: any, indexName = 'data_portal_test') {
         const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
         return this.http.get<any>(url);
     }

@@ -122,7 +122,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                     this.isLoadingResults = true;
                     return this._apiService.getData(this.paginator.pageIndex,
                         this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-                        this.currentClass, this.phylogenyFilters, 'data_portal'
+                        this.currentClass, this.phylogenyFilters, 'data_portal_test'
                     ).pipe(catchError(() => observableOf(null)));
                 }),
                 map(data => {
