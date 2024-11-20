@@ -22,12 +22,11 @@ import {
     MatHeaderCellDef,
     MatHeaderRow, MatHeaderRowDef, MatNoDataRow,
     MatRow, MatRowDef,
-    MatTable, MatTableDataSource
+    MatTable
 } from "@angular/material/table";
 import {RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
-import {NgForOf, NgIf} from "@angular/common";
 import {MatTableExporterModule} from "mat-table-exporter";
 
 
@@ -66,42 +65,12 @@ import {MatTableExporterModule} from "mat-table-exporter";
         MatCellDef,
         MatButton,
         MatInput,
-        NgIf,
-        NgForOf,
         MatSortHeader,
         MatTableExporterModule
     ],
     styleUrls: ['./data-portal.component.css']
 })
 export class DataPortalComponent implements OnInit, AfterViewInit {
-    codes = {
-        m: 'mammals',
-        d: 'dicots',
-        i: 'insects',
-        u: 'algae',
-        p: 'protists',
-        x: 'molluscs',
-        t: 'other-animal-phyla',
-        q: 'arthropods',
-        k: 'chordates',
-        f: 'fish',
-        a: 'amphibians',
-        b: 'birds',
-        e: 'echinoderms',
-        w: 'annelids',
-        j: 'jellyfish',
-        h: 'platyhelminths',
-        n: 'nematodes',
-        v: 'vascular-plants',
-        l: 'monocots',
-        c: 'non-vascular-plants',
-        g: 'fungi',
-        o: 'sponges',
-        r: 'reptiles',
-        s: 'sharks',
-        y: 'bacteria',
-        z: 'archea'
-    };
     symbiontsFilters: any[] = [];
     displayedColumns: string[] = ['organism', 'commonName', 'commonNameSource', 'currentStatus', 'externalReferences'];
     data: any;
@@ -127,6 +96,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
     preventSimpleClick = false;
     genomelength = 0;
+    tolqc_length = 0;
     result: any;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -152,7 +122,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                     this.isLoadingResults = true;
                     return this._apiService.getData(this.paginator.pageIndex,
                         this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-                        this.currentClass, this.phylogenyFilters, 'data_portal'
+                        this.currentClass, this.phylogenyFilters, 'data_portal_test'
                     ).pipe(catchError(() => observableOf(null)));
                 }),
                 map(data => {
@@ -187,9 +157,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                             this.aggregations.symbionts_assemblies_status.buckets,
                             'symbionts_assemblies_status');
                     }
-                    // this.result = new MatTableDataSource(data.result);
-                    // this.result.paginator= this.paginator;
-                    // this.data=this.result
                     return data.results;
                 }),
             )
@@ -295,31 +262,13 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         }
     }
 
-    generateTolidLink(data: any) {
-        const organismName = data.organism.split(' ').join('_');
-        let clade;
-        let project_name;
-        if (data.project_name === 'ERGA') {
-            project_name = 'erga'
-        } else {
-            project_name = 'darwin'
-        }
-        if (typeof (data.tolid) === 'string') {
-            const firstChar: string = data.tolid.charAt(0);
-            clade = this.codes[firstChar as keyof typeof this.codes];
-
-        } else {
-            if (data.tolid.length > 0) {
-                const firstChar: string = data.tolid[0].charAt(0);
-                clade = this.codes[firstChar as keyof typeof this.codes];
-
-            }
-        }
-        return `https://tolqc.cog.sanger.ac.uk/${project_name}/${clade}/${organismName}`;
-    }
-
     checkShowTolQc(data: any) {
-        return !data.hasOwnProperty('show_tolqc');
+        if (data.hasOwnProperty('tolqc_links')) {
+            this.tolqc_length = data.tolqc_links.length;
+            return data.tolqc_links.length > 0;
+        } else {
+            return false;
+        }
     }
 
     checkGenomeNotes(data: any) {
@@ -336,14 +285,25 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
 
-    openGenomeNoteDialog(data: any) {
-        const dialogRef = this.dialog.open(GenomeNoteListComponent, {
-            width: '550px',
+    openGenomeNoteDialog(data: any, dialogType: string) {
+        if (dialogType === 'genome_note') {const dialogRef = this.dialog.open(GenomeNoteListComponent, {
+            width: '1000px',
             autoFocus: false,
             data: {
-                genomNotes: data.genome_notes,
+                genomeNotes: data.genome_notes,
+                dialogType: dialogType
             }
         });
+        } else {
+            const dialogRef = this.dialog.open(GenomeNoteListComponent, {
+                width: '1000px',
+                autoFocus: false,
+                data: {
+                    tolqcLinks: data.tolqc_links,
+                    dialogType: dialogType,
+                }
+            })
+        }
     }
 
     downloadFile(format: string) {
