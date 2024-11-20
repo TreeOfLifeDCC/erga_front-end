@@ -53,7 +53,6 @@ import {MatTableExporterModule} from "mat-table-exporter";
         MatInput,
         MatTable,
         MatSort,
-        RouterLink,
         MatColumnDef,
         MatHeaderCell,
         MatHeaderCellDef,
@@ -159,7 +158,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         const routeParams = this.route.snapshot.paramMap;
         const organismId = routeParams.get('organismId');
-        this._apiService.getDetailsData(organismId).subscribe(
+        this._apiService.getDetailsData(organismId, 'data_portal_test').subscribe(
             data => {
                 this.isLoadingResults = false;
                 this.isRateLimitReached = data === null;
