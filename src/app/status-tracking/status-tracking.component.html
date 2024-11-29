@@ -195,7 +195,8 @@
                                        style="cursor: pointer"
                                        [style]="checkStyle(phylogeny_name.key)"
                                        (dblclick)="onFilterClick(phylogeny_name.key)"
-                                       (click)="changeCurrentClass(phylogeny_name.key)">
+                                       (click)="changeCurrentClassWithFiltering(phylogeny_name.key)"
+                        >
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
                                 <div>
