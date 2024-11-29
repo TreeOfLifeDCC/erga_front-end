@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild, EventEmitter} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, EventEmitter, ElementRef} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
@@ -28,6 +28,7 @@ import {RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -93,20 +94,47 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         "species_group", "species_subgroup", "species", "subspecies", "varietas", "forma"];
     timer: any;
     phylogenyFilters: string[] = [];
-
+    queryParams: any = {};
     preventSimpleClick = false;
     genomelength = 0;
     tolqc_length = 0;
     result: any;
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
 
-    constructor(private _apiService: ApiService, private dialog: MatDialog, private titleService: Title) {
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild('input', { static: true }) searchInput: ElementRef;
+
+    constructor(private _apiService: ApiService, private dialog: MatDialog, private titleService: Title,
+                private router: Router,
+                private activatedRoute: ActivatedRoute,) {
     }
+
 
     ngOnInit(): void {
         this.titleService.setTitle('Data Portal');
+
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.queryParams = {...params};
+        });
+        if ('filter' in this.queryParams){
+            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+                [...this.queryParams['filter']] : [this.queryParams['filter']];
+        }
+        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+            this.sort.active = this.queryParams['sortActive'];
+            this.sort.direction = this.queryParams['sortDirection'];
+        }
+        if ('searchValue' in this.queryParams){
+            this.searchValue = this.queryParams['searchValue'];
+            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+        }
+        if ('pageIndex' in this.queryParams){
+            this.paginator.pageIndex = this.queryParams['pageIndex'];
+        }
+        if ('pageSize' in this.queryParams){
+            this.paginator.pageSize = this.queryParams['pageSize'];
+        }
     }
 
     ngAfterViewInit() {
