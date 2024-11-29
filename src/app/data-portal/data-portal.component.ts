@@ -95,7 +95,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     timer: any;
     phylogenyFilters: string[] = [];
     queryParams: any = {};
-    preventSimpleClick = false;
     genomelength = 0;
     tolqc_length = 0;
     result: any;
@@ -148,9 +147,14 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                 startWith({}),
                 switchMap(() => {
                     this.isLoadingResults = true;
+
+                    const activeFiltersForSort = this.activeFilters
+                        .filter(filter => !filter.includes(':'))
+                        .map(filter => filter);
+
                     return this._apiService.getData(this.paginator.pageIndex,
-                        this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-                        this.currentClass, this.phylogenyFilters, 'data_portal_test'
+                        this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction,
+                        activeFiltersForSort, this.currentClass, this.phylogenyFilters, 'data_portal_test'
                     ).pipe(catchError(() => observableOf(null)));
                 }),
                 map(data => {
@@ -224,11 +228,14 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
 
     onFilterClick(filterValue: string) {
-        this.preventSimpleClick = true;
         clearTimeout(this.timer);
         const index = this.activeFilters.indexOf(filterValue);
         index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-        this.filterChanged.emit();
+        if (filterValue.includes(':')) {
+            this.onRefreshClick();
+        } else {
+            this.filterChanged.emit();
+        }
     }
 
     checkStyle(filterValue: string) {
@@ -243,21 +250,29 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         if (filterName.startsWith('symbionts_')) {
             return 'Symbionts-' + filterName.split('-')[1]
         }
+        if (filterName.includes(':')) {
+            return filterName.split(':')[1]
+        }
         return filterName;
     }
 
-    changeCurrentClass(filterValue: string) {
-        console.log('single click');
+    changeCurrentClassWithFiltering(filterValue: string) {
         let delay = 200;
-        this.preventSimpleClick = false;
         this.timer = setTimeout(() => {
-            if (!this.preventSimpleClick) {
-                this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
-                const index = this.classes.indexOf(this.currentClass) + 1;
-                this.currentClass = this.classes[index];
-                console.log(this.phylogenyFilters);
-                this.filterChanged.emit();
+            this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
+
+            const index = this.classes.indexOf(this.currentClass) + 1;
+            this.currentClass = this.classes[index];
+
+            const newPhylogenyFilter = `${this.currentClass}:${filterValue}`;
+            const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
+            if (existingPhylogenyFilterIndex !== -1) {
+                this.activeFilters[existingPhylogenyFilterIndex] = newPhylogenyFilter;
+            } else {
+                this.activeFilters.push(newPhylogenyFilter);
             }
+
+            this.filterChanged.emit();
         }, delay);
     }
 
@@ -271,6 +286,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     onRefreshClick() {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
+
+        const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
+        if (existingPhylogenyFilterIndex !== -1) {
+            this.activeFilters.splice(existingPhylogenyFilterIndex, 1);
+        }
+
         this.filterChanged.emit();
     }
 
