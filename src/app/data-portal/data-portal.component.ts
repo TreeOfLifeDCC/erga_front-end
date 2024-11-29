@@ -370,16 +370,4 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
         this.filterChanged.emit();
     }
-
-    loadFiltersFromUrl() {
-        this.activatedRoute.queryParamMap.subscribe(params => {
-            const filtersParam = params.get('filters');
-            const phylogenyFiltersParam = params.get('phylogenyFilters');
-            const currentClassParam = params.get('currentClass');
-
-            this.activeFilters = filtersParam ? filtersParam.split(',') : [];
-            this.phylogenyFilters = phylogenyFiltersParam ? phylogenyFiltersParam.split(',') : [];
-            this.currentClass = currentClassParam || 'kingdom';
-        });
-    }
 }
