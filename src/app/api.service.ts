@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
     providedIn: 'root',
@@ -7,7 +8,9 @@ import {HttpClient} from "@angular/common/http";
 })
 export class ApiService {
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+                private router: Router,
+                private activatedRoute: ActivatedRoute) {
     }
 
     getData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
@@ -68,6 +71,21 @@ export class ApiService {
         }
         url += `&current_class=${currentClass}`;
 
+        // will not reload the page, but will update query params
+        this.router.navigate([],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: {
+                    'filter': filterValue,
+                    'sortActive': sortActive,
+                    'sortDirection': sortDirection,
+                    'searchValue': searchValue,
+                    'pageIndex': pageIndex,
+                    'pageSize': pageSize
+                },
+                queryParamsHandling: 'merge',
+            });
+
         return this.http.get<any>(url);
     }
 
@@ -125,7 +143,6 @@ export class ApiService {
         }
         url += `&current_class=${currentClass}`;
         return this.http.get(url, {responseType: 'blob' as 'blob'});
-
 
     }
 

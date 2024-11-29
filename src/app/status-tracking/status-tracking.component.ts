@@ -1,10 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
@@ -32,6 +26,7 @@ import {RouterLink} from "@angular/router";
 import {MatAnchor} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-status-tracking',
@@ -97,14 +92,38 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     phylogenyFilters: string[] = [];
     symbiontsFilters: any[] = [];
     preventSimpleClick = false;
+    queryParams: any = {};
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild('input', { static: true }) searchInput: ElementRef;
 
-    constructor(private _apiService: ApiService) {
-    }
+    constructor(private _apiService: ApiService,
+                private router: Router,
+                private activatedRoute: ActivatedRoute,) { }
 
     ngOnInit(): void {
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.queryParams = {...params};
+        });
+        if ('filter' in this.queryParams){
+            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+                [...this.queryParams['filter']] : [this.queryParams['filter']];
+        }
+        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+            this.sort.active = this.queryParams['sortActive'];
+            this.sort.direction = this.queryParams['sortDirection'];
+        }
+        if ('searchValue' in this.queryParams){
+            this.searchValue = this.queryParams['searchValue'];
+            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+        }
+        if ('pageIndex' in this.queryParams){
+            this.paginator.pageIndex = this.queryParams['pageIndex'];
+        }
+        if ('pageSize' in this.queryParams){
+            this.paginator.pageSize = this.queryParams['pageSize'];
+        }
     }
 
     ngAfterViewInit() {
