@@ -31,6 +31,17 @@ import {MatTableExporterModule} from "mat-table-exporter";
 import {ActivatedRoute, Router} from '@angular/router';
 
 
+interface FilterGroup {
+    itemLimit: number;
+    defaultItemLimit: number;
+    isCollapsed: boolean;
+    filters: any[];
+}
+
+interface FilterGroups {
+    projects: FilterGroup;
+}
+
 @Component({
     selector: 'app-data-portal',
     templateUrl: './data-portal.component.html',
@@ -99,6 +110,15 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     genomelength = 0;
     tolqc_length = 0;
     result: any;
+
+    filterGroups = {
+        projects: {
+            defaultItemLimit: 5,
+            itemLimit: 5,
+            isCollapsed: true,
+            filters: []
+        }
+    };
 
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -185,6 +205,9 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                             this.aggregations.symbionts_assemblies_status.buckets,
                             'symbionts_assemblies_status');
                     }
+
+                    this.filterGroups.projects.filters = this.aggregations.project_name.buckets;
+
                     return data.results;
                 }),
             )
@@ -345,4 +368,9 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         });
     }
 
+    toggleCollapse(filterGroupName: keyof FilterGroups) {
+        const group = this.filterGroups[filterGroupName];
+        group.isCollapsed = !group.isCollapsed;
+        group.itemLimit = group.isCollapsed ? group.defaultItemLimit : group.filters.length;
+    }
 }
