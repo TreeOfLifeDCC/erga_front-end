@@ -9,7 +9,6 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {FlexModule} from "@angular/flex-layout";
 import {MatLine} from "@angular/material/core";
 import {MatChip, MatChipSet} from "@angular/material/chips";
-import {NgForOf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -22,7 +21,7 @@ import {
     MatNoDataRow, MatRow, MatRowDef,
     MatTable
 } from "@angular/material/table";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatAnchor} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
@@ -99,36 +98,43 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
 
     constructor(
         private _apiService: ApiService,
-        private activatedRoute: ActivatedRoute,
-        private router: Router
+        private activatedRoute: ActivatedRoute
     ) {}
 
     ngOnInit(): void {
 
-        this.loadFiltersFromUrl();
-
         this.activatedRoute.queryParams.subscribe(params => {
             this.queryParams = {...params};
-        });
-        if ('filter' in this.queryParams){
-            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
-                [...this.queryParams['filter']] : [this.queryParams['filter']];
-        }
-        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
-            this.sort.active = this.queryParams['sortActive'];
-            this.sort.direction = this.queryParams['sortDirection'];
-        }
-        if ('searchValue' in this.queryParams){
-            this.searchValue = this.queryParams['searchValue'];
-            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
-        }
-        if ('pageIndex' in this.queryParams){
-            this.paginator.pageIndex = this.queryParams['pageIndex'];
-        }
-        if ('pageSize' in this.queryParams){
-            this.paginator.pageSize = this.queryParams['pageSize'];
-        }
 
+            this.activeFilters = [];
+            this.phylogenyFilters = [];
+            this.currentClass = 'kingdom';
+
+            if ('filter' in this.queryParams){
+                this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+                    [...this.queryParams['filter']] : [this.queryParams['filter']];
+            }
+            if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+                this.sort.active = this.queryParams['sortActive'];
+                this.sort.direction = this.queryParams['sortDirection'];
+            }
+            if ('searchValue' in this.queryParams){
+                this.searchValue = this.queryParams['searchValue'];
+                this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+            }
+            if ('pageIndex' in this.queryParams){
+                this.paginator.pageIndex = this.queryParams['pageIndex'];
+            }
+            if ('pageSize' in this.queryParams){
+                this.paginator.pageSize = this.queryParams['pageSize'];
+            }
+            if (this.phylogenyFilters.length > 0) {
+                this.queryParams['phylogenyFilters'] = this.phylogenyFilters.join(',');
+            }
+            if (this.currentClass && this.currentClass !== 'kingdom') {
+                this.queryParams['currentClass'] = this.currentClass;
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -215,14 +221,12 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         this.searchChanged.emit();
     }
 
-
     onFilterClick(filterValue: string) {
-        console.log('double click');
         this.preventSimpleClick = true;
         clearTimeout(this.timer);
         const index = this.activeFilters.indexOf(filterValue);
         index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-        this.updateUrlQueryParams();
+        this.filterChanged.emit();
     }
 
     checkStyle(filterValue: string) {
@@ -250,7 +254,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                 const index = this.classes.indexOf(this.currentClass) + 1;
                 this.currentClass = this.classes[index];
                 console.log(this.phylogenyFilters);
-                this.updateUrlQueryParams();
+                this.filterChanged.emit();
             }
         }, delay);
     }
@@ -259,15 +263,14 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         this.phylogenyFilters.splice(this.phylogenyFilters.length - 1, 1);
         const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
         this.currentClass = this.classes[previousClassIndex];
-        this.updateUrlQueryParams();
+        this.filterChanged.emit();
     }
 
     onRefreshClick() {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
-        this.updateUrlQueryParams();
+        this.filterChanged.emit();
     }
-
 
     getStyle(status: string) {
         if (status === 'Done') {
@@ -276,45 +279,4 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
             return 'background-color: #D8BCAA; color: black';
         }
     }
-
-    updateUrlQueryParams() {
-        this.queryParams = {};
-
-        if (this.activeFilters.length > 0) {
-            this.queryParams['filters'] = this.activeFilters.join(',');
-        }
-
-        if (this.phylogenyFilters.length > 0) {
-            this.queryParams['phylogenyFilters'] = this.phylogenyFilters.join(',');
-        }
-
-        if (this.currentClass && this.currentClass !== 'kingdom') {
-            this.queryParams['currentClass'] = this.currentClass;
-        }
-
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: this.queryParams,
-            replaceUrl: true,
-            skipLocationChange: false
-        });
-
-        this.filterChanged.emit();
-    }
-
-
-    loadFiltersFromUrl() {
-        this.activatedRoute.queryParamMap.subscribe(params => {
-            const filtersParam = params.get('filters');
-            const phylogenyFiltersParam = params.get('phylogenyFilters');
-            const currentClassParam = params.get('currentClass');
-
-            this.activeFilters = filtersParam ? filtersParam.split(',') : [];
-            this.phylogenyFilters = phylogenyFiltersParam ? phylogenyFiltersParam.split(',') : [];
-            this.currentClass = currentClassParam || 'kingdom';
-
-            this.updateUrlQueryParams();
-        });
-    }
-
 }

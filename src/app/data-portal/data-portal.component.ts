@@ -24,7 +24,7 @@ import {
     MatRow, MatRowDef,
     MatTable
 } from "@angular/material/table";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
@@ -98,15 +98,15 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     genomelength = 0;
     tolqc_length = 0;
     result: any;
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
+
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
 
 
     constructor(
         private _apiService: ApiService,
         private activatedRoute: ActivatedRoute,
-        private router: Router,
         private dialog: MatDialog,
         private titleService: Title
     ) {}
@@ -114,31 +114,38 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
         this.titleService.setTitle('Data Portal');
 
-        this.loadFiltersFromUrl();
-
-
         this.activatedRoute.queryParams.subscribe(params => {
             this.queryParams = {...params};
-        });
-        if ('filter' in this.queryParams){
-            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
-                [...this.queryParams['filter']] : [this.queryParams['filter']];
-        }
-        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
-            this.sort.active = this.queryParams['sortActive'];
-            this.sort.direction = this.queryParams['sortDirection'];
-        }
-        if ('searchValue' in this.queryParams){
-            this.searchValue = this.queryParams['searchValue'];
-            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
-        }
-        if ('pageIndex' in this.queryParams){
-            this.paginator.pageIndex = this.queryParams['pageIndex'];
-        }
-        if ('pageSize' in this.queryParams){
-            this.paginator.pageSize = this.queryParams['pageSize'];
-        }
 
+            this.activeFilters = [];
+            this.phylogenyFilters = [];
+            this.currentClass = 'kingdom';
+
+            if ('filter' in this.queryParams){
+                this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+                    [...this.queryParams['filter']] : [this.queryParams['filter']];
+            }
+            if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+                this.sort.active = this.queryParams['sortActive'];
+                this.sort.direction = this.queryParams['sortDirection'];
+            }
+            if ('searchValue' in this.queryParams){
+                this.searchValue = this.queryParams['searchValue'];
+                this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+            }
+            if ('pageIndex' in this.queryParams){
+                this.paginator.pageIndex = this.queryParams['pageIndex'];
+            }
+            if ('pageSize' in this.queryParams){
+                this.paginator.pageSize = this.queryParams['pageSize'];
+            }
+            if (this.phylogenyFilters.length > 0) {
+                this.queryParams['phylogenyFilters'] = this.phylogenyFilters.join(',');
+            }
+            if (this.currentClass && this.currentClass !== 'kingdom') {
+                this.queryParams['currentClass'] = this.currentClass;
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -226,13 +233,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.searchChanged.emit();
     }
 
-
     onFilterClick(filterValue: string) {
         this.preventSimpleClick = true;
         clearTimeout(this.timer);
         const index = this.activeFilters.indexOf(filterValue);
         index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-        this.updateUrlQueryParams();
+        this.filterChanged.emit();
     }
 
     checkStyle(filterValue: string) {
@@ -260,7 +266,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                 const index = this.classes.indexOf(this.currentClass) + 1;
                 this.currentClass = this.classes[index];
                 console.log(this.phylogenyFilters);
-                this.updateUrlQueryParams();
+                this.filterChanged.emit();
             }
         }, delay);
     }
@@ -269,13 +275,13 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.phylogenyFilters.splice(this.phylogenyFilters.length - 1, 1);
         const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
         this.currentClass = this.classes[previousClassIndex];
-        this.updateUrlQueryParams();
+        this.filterChanged.emit();
     }
 
     onRefreshClick() {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
-        this.updateUrlQueryParams();
+        this.filterChanged.emit();
     }
 
     getStyle(status: string) {
@@ -316,12 +322,9 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         return data.hasOwnProperty('nagoya_protocol');
     }
 
-
-
     openGenomeNoteDialog(data: any, dialogType: string) {
         if (dialogType === 'genome_note') {const dialogRef = this.dialog.open(GenomeNoteListComponent, {
             width: '1000px',
-
             autoFocus: false,
             data: {
                 genomeNotes: data.genome_notes,
@@ -348,46 +351,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             a.href = URL.createObjectURL(res);
             a.download = 'data_portal.' + format;
             a.click();
-        });
-    }
-
-    updateUrlQueryParams() {
-        this.queryParams = {};
-
-        if (this.activeFilters.length > 0) {
-            this.queryParams['filters'] = this.activeFilters.join(',');
-        }
-
-        if (this.phylogenyFilters.length > 0) {
-            this.queryParams['phylogenyFilters'] = this.phylogenyFilters.join(',');
-        }
-
-        if (this.currentClass && this.currentClass !== 'kingdom') {
-            this.queryParams['currentClass'] = this.currentClass;
-        }
-
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: this.queryParams,
-            replaceUrl: true,
-            skipLocationChange: false
-        });
-
-        this.filterChanged.emit();
-    }
-
-
-    loadFiltersFromUrl() {
-        this.activatedRoute.queryParamMap.subscribe(params => {
-            const filtersParam = params.get('filters');
-            const phylogenyFiltersParam = params.get('phylogenyFilters');
-            const currentClassParam = params.get('currentClass');
-
-            this.activeFilters = filtersParam ? filtersParam.split(',') : [];
-            this.phylogenyFilters = phylogenyFiltersParam ? phylogenyFiltersParam.split(',') : [];
-            this.currentClass = currentClassParam || 'kingdom';
-
-            this.updateUrlQueryParams();
         });
     }
 
