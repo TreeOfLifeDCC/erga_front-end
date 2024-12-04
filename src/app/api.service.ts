@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable, throwError} from 'rxjs';
-import {catchError, map, retry} from 'rxjs/operators';
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
     providedIn: 'root',
@@ -9,13 +8,27 @@ import {catchError, map, retry} from 'rxjs/operators';
 })
 export class ApiService {
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient,
+                private router: Router,
+                private activatedRoute: ActivatedRoute) {
     }
 
     getData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
             filterValue: string[], currentClass: string, phylogeny_filters: string[], index_name: string) {
 
-        const project_names = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
+        const project_names = [
+            'DTOL',
+            'ERGA',
+            'Project Psyche',
+            'ERGA BGE',
+            'ERGA Pilot',
+            '25 genomes',
+            'ATLASea',
+            'CBP',
+            'ENDEMIXIT',
+            'ERGA Community Genomes',
+            'ERGA Swiss node'
+        ];
         const offset = pageIndex * pageSize;
         let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
         if (searchValue) {
@@ -58,10 +71,25 @@ export class ApiService {
         }
         url += `&current_class=${currentClass}`;
 
+        // will not reload the page, but will update query params
+        this.router.navigate([],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: {
+                    'filter': filterValue,
+                    'sortActive': sortActive,
+                    'sortDirection': sortDirection,
+                    'searchValue': searchValue,
+                    'pageIndex': pageIndex,
+                    'pageSize': pageSize
+                },
+                queryParamsHandling: 'merge',
+            });
+
         return this.http.get<any>(url);
     }
 
-    getDetailsData(organismName: any, indexName = 'data_portal') {
+    getDetailsData(organismName: any, indexName: string) {
         const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
         return this.http.get<any>(url);
     }
@@ -115,7 +143,6 @@ export class ApiService {
         }
         url += `&current_class=${currentClass}`;
         return this.http.get(url, {responseType: 'blob' as 'blob'});
-
 
     }
 

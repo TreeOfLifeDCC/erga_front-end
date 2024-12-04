@@ -1,10 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, MatSortHeader} from "@angular/material/sort";
@@ -47,7 +41,6 @@ import {HttpClient} from "@angular/common/http";
         MatLine,
         MatChipSet,
         MatChip,
-        NgForOf,
         MatIcon,
         MatProgressSpinner,
         MatTable,
@@ -98,11 +91,11 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     phylogenyFilters: string[] = [];
     symbiontsFilters: any[] = [];
     preventSimpleClick = false;
-
     queryParams: any = {};
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild(MatSort, { static: true }) sort: MatSort;
+    @ViewChild('input', { static: true }) searchInput: ElementRef;
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
 
     constructor(
         private _apiService: ApiService,
@@ -111,7 +104,31 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     ) {}
 
     ngOnInit(): void {
+
         this.loadFiltersFromUrl();
+
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.queryParams = {...params};
+        });
+        if ('filter' in this.queryParams){
+            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+                [...this.queryParams['filter']] : [this.queryParams['filter']];
+        }
+        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+            this.sort.active = this.queryParams['sortActive'];
+            this.sort.direction = this.queryParams['sortDirection'];
+        }
+        if ('searchValue' in this.queryParams){
+            this.searchValue = this.queryParams['searchValue'];
+            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+        }
+        if ('pageIndex' in this.queryParams){
+            this.paginator.pageIndex = this.queryParams['pageIndex'];
+        }
+        if ('pageSize' in this.queryParams){
+            this.paginator.pageSize = this.queryParams['pageSize'];
+        }
+
     }
 
     ngAfterViewInit() {
@@ -126,7 +143,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                     this.isLoadingResults = true;
                     return this._apiService.getData(this.paginator.pageIndex,
                         this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-                        this.currentClass, this.phylogenyFilters, 'tracking_status_index'
+                        this.currentClass, this.phylogenyFilters, 'tracking_status_index_test'
                     ).pipe(catchError(() => observableOf(null)));
                 }),
                 map(data => {
@@ -285,6 +302,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         this.filterChanged.emit();
     }
 
+
     loadFiltersFromUrl() {
         this.activatedRoute.queryParamMap.subscribe(params => {
             const filtersParam = params.get('filters');
@@ -298,4 +316,5 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
             this.updateUrlQueryParams();
         });
     }
+
 }
