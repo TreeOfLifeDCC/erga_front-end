@@ -9,7 +9,6 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {FlexModule} from "@angular/flex-layout";
 import {MatLine} from "@angular/material/core";
 import {MatChip, MatChipSet} from "@angular/material/chips";
-import {NgForOf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -26,7 +25,8 @@ import {RouterLink} from "@angular/router";
 import {MatAnchor} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+
 
 @Component({
     selector: 'app-status-tracking',
@@ -91,39 +91,50 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     timer: any;
     phylogenyFilters: string[] = [];
     symbiontsFilters: any[] = [];
-    preventSimpleClick = false;
     queryParams: any = {};
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
 
-    constructor(private _apiService: ApiService,
-                private router: Router,
-                private activatedRoute: ActivatedRoute,) { }
+    constructor(
+        private _apiService: ApiService,
+        private activatedRoute: ActivatedRoute,
+    ) {}
 
     ngOnInit(): void {
         this.activatedRoute.queryParams.subscribe(params => {
             this.queryParams = {...params};
+
+            this.activeFilters = [];
+            this.phylogenyFilters = [];
+            this.currentClass = 'kingdom';
+
+            if ('filter' in this.queryParams){
+                this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+                    [...this.queryParams['filter']] : [this.queryParams['filter']];
+            }
+            if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+                this.sort.active = this.queryParams['sortActive'];
+                this.sort.direction = this.queryParams['sortDirection'];
+            }
+            if ('searchValue' in this.queryParams){
+                this.searchValue = this.queryParams['searchValue'];
+                this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+            }
+            if ('pageIndex' in this.queryParams){
+                this.paginator.pageIndex = this.queryParams['pageIndex'];
+            }
+            if ('pageSize' in this.queryParams){
+                this.paginator.pageSize = this.queryParams['pageSize'];
+            }
+            if (this.phylogenyFilters.length > 0) {
+                this.queryParams['phylogenyFilters'] = this.phylogenyFilters.join(',');
+            }
+            if (this.currentClass && this.currentClass !== 'kingdom') {
+                this.queryParams['currentClass'] = this.currentClass;
+            }
         });
-        if ('filter' in this.queryParams){
-            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
-                [...this.queryParams['filter']] : [this.queryParams['filter']];
-        }
-        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
-            this.sort.active = this.queryParams['sortActive'];
-            this.sort.direction = this.queryParams['sortDirection'];
-        }
-        if ('searchValue' in this.queryParams){
-            this.searchValue = this.queryParams['searchValue'];
-            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
-        }
-        if ('pageIndex' in this.queryParams){
-            this.paginator.pageIndex = this.queryParams['pageIndex'];
-        }
-        if ('pageSize' in this.queryParams){
-            this.paginator.pageSize = this.queryParams['pageSize'];
-        }
     }
 
     ngAfterViewInit() {
@@ -136,9 +147,15 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                 startWith({}),
                 switchMap(() => {
                     this.isLoadingResults = true;
+
+                    const activeFiltersForSort = this.activeFilters
+                        .filter(filter => !filter.includes(':'))
+                        .map(filter => filter);
+
                     return this._apiService.getData(this.paginator.pageIndex,
-                        this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-                        this.currentClass, this.phylogenyFilters, 'tracking_status_index_test'
+                        this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction,
+                        activeFiltersForSort, this.currentClass, this.phylogenyFilters,
+                        'tracking_status_index_test'
                     ).pipe(catchError(() => observableOf(null)));
                 }),
                 map(data => {
@@ -212,12 +229,14 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
 
 
     onFilterClick(filterValue: string) {
-        console.log('double click');
-        this.preventSimpleClick = true;
         clearTimeout(this.timer);
         const index = this.activeFilters.indexOf(filterValue);
         index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-        this.filterChanged.emit();
+        if (filterValue.includes(':')) {
+            this.onRefreshClick();
+        } else {
+            this.filterChanged.emit();
+        }
     }
 
     checkStyle(filterValue: string) {
@@ -232,21 +251,29 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         if (filterName.startsWith('symbionts_')) {
             return 'Symbionts-' + filterName.split('-')[1]
         }
+        if (filterName.includes(':')) {
+            return filterName.split(':')[1]
+        }
         return filterName;
     }
 
-    changeCurrentClass(filterValue: string) {
-        console.log('single click');
+    changeCurrentClassWithFiltering(filterValue: string) {
         let delay = 200;
-        this.preventSimpleClick = false;
         this.timer = setTimeout(() => {
-            if (!this.preventSimpleClick) {
-                this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
-                const index = this.classes.indexOf(this.currentClass) + 1;
-                this.currentClass = this.classes[index];
-                console.log(this.phylogenyFilters);
-                this.filterChanged.emit();
+            this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
+
+            const index = this.classes.indexOf(this.currentClass) + 1;
+            this.currentClass = this.classes[index];
+
+            const newPhylogenyFilter = `${this.currentClass}:${filterValue}`;
+            const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
+            if (existingPhylogenyFilterIndex !== -1) {
+                this.activeFilters[existingPhylogenyFilterIndex] = newPhylogenyFilter;
+            } else {
+                this.activeFilters.push(newPhylogenyFilter);
             }
+
+            this.filterChanged.emit();
         }, delay);
     }
 
@@ -260,6 +287,12 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     onRefreshClick() {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
+
+        const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
+        if (existingPhylogenyFilterIndex !== -1) {
+            this.activeFilters.splice(existingPhylogenyFilterIndex, 1);
+        }
+
         this.filterChanged.emit();
     }
 
