@@ -74,7 +74,8 @@ import {MatTableExporterModule} from "mat-table-exporter";
         NgForOf,
         MatLabel,
         MatFormField,
-        MatTableExporterModule
+        MatTableExporterModule,
+        RouterLink
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -136,6 +137,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     showMetadata = false;
     showData = false;
     showGenomeNote = false;
+
+    geoLocation: boolean;
 
     @ViewChild('metadataPaginator') metadataPaginator: MatPaginator;
     @ViewChild('metadataSort') metadataSort: MatSort;
