@@ -74,7 +74,8 @@ import {MatTableExporterModule} from "mat-table-exporter";
         NgForOf,
         MatLabel,
         MatFormField,
-        MatTableExporterModule
+        MatTableExporterModule,
+        RouterLink
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
