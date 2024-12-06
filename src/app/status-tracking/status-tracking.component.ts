@@ -9,7 +9,7 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {FlexModule} from "@angular/flex-layout";
 import {MatLine} from "@angular/material/core";
 import {MatChip, MatChipSet} from "@angular/material/chips";
-import {NgForOf, NgStyle} from "@angular/common";
+import {NgStyle} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -26,7 +26,8 @@ import {RouterLink} from "@angular/router";
 import {MatAnchor} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+
 
 
 interface FilterGroup {
@@ -119,32 +120,60 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
 
-    constructor(private _apiService: ApiService,
-                private router: Router,
-                private activatedRoute: ActivatedRoute,) { }
+    constructor(
+        private _apiService: ApiService,
+        private activatedRoute: ActivatedRoute
+    ) {}
 
     ngOnInit(): void {
         this.activatedRoute.queryParams.subscribe(params => {
             this.queryParams = {...params};
+
+            this.activeFilters = [];
+            this.phylogenyFilters = [];
+            this.currentClass = "kingdom";
+
+            if ("filter" in this.queryParams) {
+                this.activeFilters = Array.isArray(this.queryParams["filter"])
+                    ? [...this.queryParams["filter"]]
+                    : [this.queryParams["filter"]];
+            }
+            if ("phylogenyFilters" in this.queryParams) {
+                let phylogenyFilters = [];
+
+                if (Array.isArray(this.queryParams["phylogenyFilters"])) {
+                    phylogenyFilters = [...this.queryParams["phylogenyFilters"]];
+                } else {
+                    phylogenyFilters = [this.queryParams["phylogenyFilters"]];
+                }
+
+                phylogenyFilters = phylogenyFilters.filter((item) => item !== "");
+
+                if (phylogenyFilters.length > 0) {
+                    this.phylogenyFilters = phylogenyFilters;
+                    this.activeFilters.push(...this.phylogenyFilters);
+                }
+            }
+            if (this.queryParams["sortActive"] && this.queryParams["sortDirection"]) {
+                this.sort.active = this.queryParams["sortActive"];
+                this.sort.direction = this.queryParams["sortDirection"];
+            }
+            if ("searchValue" in this.queryParams) {
+                this.searchValue = this.queryParams["searchValue"];
+                this.searchInput.nativeElement.value = this.queryParams["searchValue"];
+            }
+            if ("pageIndex" in this.queryParams) {
+                this.paginator.pageIndex = this.queryParams["pageIndex"];
+            }
+            if ("pageSize" in this.queryParams) {
+                this.paginator.pageSize = this.queryParams["pageSize"];
+            }
+            if ("currentClass" in this.queryParams) {
+                this.currentClass = this.queryParams["currentClass"];
+            }
+
+            this.filterChanged.emit();
         });
-        if ('filter' in this.queryParams){
-            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
-                [...this.queryParams['filter']] : [this.queryParams['filter']];
-        }
-        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
-            this.sort.active = this.queryParams['sortActive'];
-            this.sort.direction = this.queryParams['sortDirection'];
-        }
-        if ('searchValue' in this.queryParams){
-            this.searchValue = this.queryParams['searchValue'];
-            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
-        }
-        if ('pageIndex' in this.queryParams){
-            this.paginator.pageIndex = this.queryParams['pageIndex'];
-        }
-        if ('pageSize' in this.queryParams){
-            this.paginator.pageSize = this.queryParams['pageSize'];
-        }
     }
 
     ngAfterViewInit() {
@@ -158,9 +187,9 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                 switchMap(() => {
                     this.isLoadingResults = true;
 
-                    const activeFiltersForSort = this.activeFilters
-                        .filter(filter => !filter.includes(':'))
-                        .map(filter => filter);
+                    const activeFiltersForSort = this.activeFilters.filter(
+                        filter => !filter.includes(':')
+                    );
 
                     return this._apiService.getData(this.paginator.pageIndex,
                         this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction,
@@ -262,8 +291,10 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         if (filterName.startsWith('symbionts_')) {
             return 'Symbionts-' + filterName.split('-')[1]
         }
-        if (filterName.includes(':')) {
-            return filterName.split(':')[1]
+        if (filterName.includes(":")) {
+            const filterNameSplitted = filterName.split("-");
+            const lastPart = filterNameSplitted[filterNameSplitted.length - 1];
+            return lastPart.charAt(0).toUpperCase() + lastPart.slice(1);
         }
         return filterName;
     }
@@ -289,10 +320,22 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     }
 
     onHistoryClick() {
-        this.phylogenyFilters.splice(this.phylogenyFilters.length - 1, 1);
-        const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
-        this.currentClass = this.classes[previousClassIndex];
-        this.filterChanged.emit();
+        if (this.phylogenyFilters.length > 0) {
+
+            let filter = this.phylogenyFilters[0];
+            const lastIndex = filter.lastIndexOf("-");
+
+            if (lastIndex !== -1) {
+                filter = filter.substring(0, lastIndex);
+                this.phylogenyFilters = [filter];
+            } else {
+                this.phylogenyFilters = [];
+            }
+
+            const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
+            this.currentClass = this.classes[previousClassIndex];
+            this.filterChanged.emit();
+        }
     }
 
     onRefreshClick() {

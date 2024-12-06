@@ -81,7 +81,9 @@ export class ApiService {
                     'sortDirection': sortDirection,
                     'searchValue': searchValue,
                     'pageIndex': pageIndex,
-                    'pageSize': pageSize
+                    'pageSize': pageSize,
+                    'phylogenyFilters': phylogeny_filters.join("-"),
+                    'currentClass': currentClass
                 },
                 queryParamsHandling: 'merge',
             });

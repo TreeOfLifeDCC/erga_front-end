@@ -118,6 +118,11 @@ table {
     min-width: 300px;
 }
 
+mat-chip-set {
+    padding-left: 15px;
+    padding-top: 4px;
+}
+
 /*ng-container {*/
 /*  word-wrap: break-word !important;*/
 /*  white-space: unset !important;*/
@@ -135,4 +140,3 @@ table {
 /*a {*/
 /*  color: white;*/
 /*}*/
-
