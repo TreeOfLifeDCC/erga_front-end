@@ -58,10 +58,8 @@
                     <ng-container matColumnDef="accession">
                         <th mat-header-cell *matHeaderCellDef> Accession</th>
                         <td mat-cell *matCellDef="let row">
-                            <a mat-button
-                               href="https://www.ebi.ac.uk/biosamples/samples/{{row.accession}}">
-                                {{row.accession}}
-                            </a>
+                            <a [routerLink]="['/organism/', row.accession]">
+                                {{row.accession}}</a>
                             <mat-chip
                                     style="margin-bottom: 5px; background-color: yellow; color: black"
                                     *ngIf="checkNagoyaProtocol(row)">
@@ -673,6 +671,19 @@
                 <a mat-button href="{{goatDataLink}}"
                    style="background-color: limegreen; color: black; margin-top: 5px">
                     Read the GoaT info in full here</a>
+            </mat-tab>
+
+            <mat-tab label="Geo Location Maps">
+                <ng-template matTabContent>
+                    <mat-tab-group>
+                        <mat-tab label="Sampling Map" *ngIf="geoLocation">
+                            <!-- Geo Section -->
+                            <hr>
+
+                            <hr>
+                        </mat-tab>
+                    </mat-tab-group>
+                </ng-template>
             </mat-tab>
         </mat-tab-group>
     </div>
