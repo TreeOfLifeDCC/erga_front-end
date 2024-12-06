@@ -79,7 +79,9 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
         MatFormField,
         MatTableExporterModule,
         MatExpansionModule,
-        MatExpansionPanel
+        MatExpansionPanel,
+        MatTableExporterModule,
+        RouterLink
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -141,6 +143,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     showMetadata = false;
     showData = false;
     showGenomeNote = false;
+
+    geoLocation: boolean;
 
     @ViewChild('metadataPaginator') metadataPaginator: MatPaginator;
     @ViewChild('metadataSort') metadataSort: MatSort;
