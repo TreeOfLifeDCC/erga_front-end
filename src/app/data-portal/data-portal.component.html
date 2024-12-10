@@ -129,11 +129,13 @@
             <mat-card-title class="card-title" style="display: flex; flex-direction: column;">
                 <div style="display: flex; align-items: center;">
                     <span>Projects</span>
-                    <mat-icon
-                            (click)="toggleCollapse('projects')"
-                            style="cursor: pointer; margin-left: auto; margin-right: 50px;">
-                        {{ filterGroups.projects.isCollapsed ? 'add' : 'remove' }}
-                    </mat-icon>
+                    @if (aggregations?.project_name.buckets.length > filterGroups.projects.defaultItemLimit) {
+                        <mat-icon
+                                (click)="toggleCollapse('projects')"
+                                style="cursor: pointer; margin-left: auto; margin-right: 50px;">
+                            {{ filterGroups.projects.isCollapsed ? 'add' : 'remove' }}
+                        </mat-icon>
+                    }
                 </div>
             </mat-card-title>
             <mat-card-actions fxFlexAlign="center" style="width: 100%">
