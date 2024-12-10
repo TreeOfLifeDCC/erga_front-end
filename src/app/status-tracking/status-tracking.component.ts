@@ -9,7 +9,7 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {FlexModule} from "@angular/flex-layout";
 import {MatLine} from "@angular/material/core";
 import {MatChip, MatChipSet} from "@angular/material/chips";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgStyle} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
@@ -27,6 +27,18 @@ import {MatAnchor} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from '@angular/router';
+
+
+interface FilterGroup {
+    itemLimit: number;
+    defaultItemLimit: number;
+    isCollapsed: boolean;
+    filters: any[];
+}
+
+interface FilterGroups {
+    projects: FilterGroup;
+}
 
 @Component({
     selector: 'app-status-tracking',
@@ -62,7 +74,8 @@ import {ActivatedRoute, Router} from '@angular/router';
         MatLabel,
         MatFormField,
         MatHeaderRowDef,
-        MatRowDef
+        MatRowDef,
+        NgStyle
     ],
     providers: [HttpClient],
     standalone: true
@@ -93,6 +106,15 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     symbiontsFilters: any[] = [];
     preventSimpleClick = false;
     queryParams: any = {};
+
+    filterGroups = {
+        projects: {
+            defaultItemLimit: 5,
+            itemLimit: 5,
+            isCollapsed: true,
+            filters: []
+        }
+    };
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -174,6 +196,8 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                             'symbionts_assemblies_status');
                     }
 
+                    this.filterGroups.projects.filters = this.aggregations.project_name.buckets;
+
                     return data.results;
                 }),
             )
@@ -209,7 +233,6 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         this.searchValue = (event.target as HTMLInputElement).value;
         this.searchChanged.emit();
     }
-
 
     onFilterClick(filterValue: string) {
         console.log('double click');
@@ -263,7 +286,6 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         this.filterChanged.emit();
     }
 
-
     getStyle(status: string) {
         if (status === 'Done') {
             return 'background-color: #A8BAA8; color: black';
@@ -272,5 +294,9 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         }
     }
 
-
+    toggleCollapse(filterGroupName: keyof FilterGroups) {
+        const group = this.filterGroups[filterGroupName];
+        group.isCollapsed = !group.isCollapsed;
+        group.itemLimit = group.isCollapsed ? group.defaultItemLimit : group.filters.length;
+    }
 }

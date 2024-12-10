@@ -128,29 +128,44 @@
         </mat-card>
         <br>
         <mat-card class="main-card">
-            <mat-card-title class="card-title">Projects</mat-card-title>
+            <mat-card-title class="card-title" style="display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center;">
+                    <span>Projects</span>
+                    @if (aggregations?.project_name.buckets.length > filterGroups.projects.defaultItemLimit) {
+                        <mat-icon
+                                (click)="toggleCollapse('projects')"
+                                style="cursor: pointer; margin-left: auto; margin-right: 50px;">
+                            {{ filterGroups.projects.isCollapsed ? 'add' : 'remove' }}
+                        </mat-icon>
+                    }
+                </div>
+            </mat-card-title>
             <mat-card-actions fxFlexAlign="center" style="width: 100%">
-                <mat-list role="list" style="width: 100%">
+                <mat-list role="list" style="width: 100%;"
+                          [ngStyle]="{'max-height.px': filterGroups.projects.isCollapsed ? null : 250,
+                          'overflow-y': filterGroups.projects.isCollapsed ? null : 'auto'}">
                     @for (project of aggregations?.project_name.buckets; track $index) {
-                        <mat-list-item role="listitem"
-                                       style="cursor: pointer"
-                                       [style]="checkStyle(convertProjectName(project.key))"
-                                       (click)="onFilterClick(convertProjectName(project.key))">
-                            <div fxLayout="row" fxFlexFill
-                                 fxFlexAlign="center center">
-                                <div>
-                                    <h4 matLine
-                                        class="vertical-center">{{ convertProjectName(project.key) }}</h4>
+                        @if ($index < this.filterGroups.projects.itemLimit) {
+                            <mat-list-item role="listitem"
+                                           style="cursor: pointer"
+                                           [style]="checkStyle(convertProjectName(project.key))"
+                                           (click)="onFilterClick(convertProjectName(project.key))">
+                                <div fxLayout="row" fxFlexFill
+                                     fxFlexAlign="center center">
+                                    <div>
+                                        <h4 matLine
+                                            class="vertical-center">{{ convertProjectName(project.key) }}</h4>
+                                    </div>
+                                    <div style="margin-left: auto">
+                                        <mat-chip-set>
+                                            <mat-chip style="font-size: 10px">
+                                                {{ project.doc_count }}
+                                            </mat-chip>
+                                        </mat-chip-set>
+                                    </div>
                                 </div>
-                                <div style="margin-left: auto">
-                                    <mat-chip-set>
-                                        <mat-chip style="font-size: 10px">
-                                            {{ project.doc_count }}
-                                        </mat-chip>
-                                    </mat-chip-set>
-                                </div>
-                            </div>
-                        </mat-list-item>
+                            </mat-list-item>
+                        }
                     }
                 </mat-list>
             </mat-card-actions>
