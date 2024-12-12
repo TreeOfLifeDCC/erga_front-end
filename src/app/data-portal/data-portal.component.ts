@@ -123,6 +123,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
+    private isProcessing: boolean;
 
     constructor(
         private _apiService: ApiService,
@@ -309,23 +310,30 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     changeCurrentClassWithFiltering(filterValue: string) {
-        let delay = 200;
-        this.timer = setTimeout(() => {
-            this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
 
-            const index = this.classes.indexOf(this.currentClass) + 1;
-            this.currentClass = this.classes[index];
+        if (this.isProcessing) {
+            return;
+        }
+        this.isProcessing = true;
 
-            const newPhylogenyFilter = `${this.currentClass}:${filterValue}`;
-            const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
-            if (existingPhylogenyFilterIndex !== -1) {
-                this.activeFilters[existingPhylogenyFilterIndex] = newPhylogenyFilter;
-            } else {
-                this.activeFilters.push(newPhylogenyFilter);
-            }
+        this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
 
-            this.filterChanged.emit();
-        }, delay);
+        const index = this.classes.indexOf(this.currentClass) + 1;
+        this.currentClass = this.classes[index];
+
+        const newPhylogenyFilter = `${this.currentClass}:${filterValue}`;
+        const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
+        if (existingPhylogenyFilterIndex !== -1) {
+            this.activeFilters[existingPhylogenyFilterIndex] = newPhylogenyFilter;
+        } else {
+            this.activeFilters.push(newPhylogenyFilter);
+        }
+
+        this.filterChanged.emit();
+
+        setTimeout(() => {
+            this.isProcessing = false;
+        }, 200);
     }
 
     onHistoryClick() {
