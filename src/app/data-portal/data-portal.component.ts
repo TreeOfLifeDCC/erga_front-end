@@ -28,7 +28,7 @@ import {RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 
 
 interface FilterGroup {
@@ -106,7 +106,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     timer: any;
     phylogenyFilters: string[] = [];
     queryParams: any = {};
-    preventSimpleClick = false;
     genomelength = 0;
     tolqc_length = 0;
     result: any;
@@ -124,37 +123,66 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
+    private isProcessing: boolean;
 
-    constructor(private _apiService: ApiService, private dialog: MatDialog, private titleService: Title,
-                private router: Router,
-                private activatedRoute: ActivatedRoute,) {
-    }
-
+    constructor(
+        private _apiService: ApiService,
+        private dialog: MatDialog,
+        private titleService: Title,
+        private activatedRoute: ActivatedRoute
+    ) {}
 
     ngOnInit(): void {
-        this.titleService.setTitle('Data Portal');
+        this.titleService.setTitle("Data Portal");
 
-        this.activatedRoute.queryParams.subscribe(params => {
-            this.queryParams = {...params};
+        this.activatedRoute.queryParams.subscribe((params) => {
+            this.queryParams = { ...params };
+
+            this.activeFilters = [];
+            this.phylogenyFilters = [];
+            this.currentClass = "kingdom";
+
+            if ("filter" in this.queryParams) {
+                this.activeFilters = Array.isArray(this.queryParams["filter"])
+                    ? [...this.queryParams["filter"]]
+                    : [this.queryParams["filter"]];
+            }
+            if ("phylogenyFilters" in this.queryParams) {
+                let phylogenyFilters = [];
+
+                if (Array.isArray(this.queryParams["phylogenyFilters"])) {
+                    phylogenyFilters = [...this.queryParams["phylogenyFilters"]];
+                } else {
+                    phylogenyFilters = [this.queryParams["phylogenyFilters"]];
+                }
+
+                phylogenyFilters = phylogenyFilters.filter((item) => item !== "");
+
+                if (phylogenyFilters.length > 0) {
+                    this.phylogenyFilters = phylogenyFilters;
+                    this.activeFilters.push(...this.phylogenyFilters);
+                }
+            }
+            if (this.queryParams["sortActive"] && this.queryParams["sortDirection"]) {
+                this.sort.active = this.queryParams["sortActive"];
+                this.sort.direction = this.queryParams["sortDirection"];
+            }
+            if ("searchValue" in this.queryParams) {
+                this.searchValue = this.queryParams["searchValue"];
+                this.searchInput.nativeElement.value = this.queryParams["searchValue"];
+            }
+            if ("pageIndex" in this.queryParams) {
+                this.paginator.pageIndex = this.queryParams["pageIndex"];
+            }
+            if ("pageSize" in this.queryParams) {
+                this.paginator.pageSize = this.queryParams["pageSize"];
+            }
+            if ("currentClass" in this.queryParams) {
+                this.currentClass = this.queryParams["currentClass"];
+            }
+
+            this.filterChanged.emit();
         });
-        if ('filter' in this.queryParams){
-            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
-                [...this.queryParams['filter']] : [this.queryParams['filter']];
-        }
-        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
-            this.sort.active = this.queryParams['sortActive'];
-            this.sort.direction = this.queryParams['sortDirection'];
-        }
-        if ('searchValue' in this.queryParams){
-            this.searchValue = this.queryParams['searchValue'];
-            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
-        }
-        if ('pageIndex' in this.queryParams){
-            this.paginator.pageIndex = this.queryParams['pageIndex'];
-        }
-        if ('pageSize' in this.queryParams){
-            this.paginator.pageSize = this.queryParams['pageSize'];
-        }
     }
 
     ngAfterViewInit() {
@@ -168,9 +196,14 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                 startWith({}),
                 switchMap(() => {
                     this.isLoadingResults = true;
+
+                    const activeFiltersForSort = this.activeFilters.filter(
+                        filter => !filter.includes(':')
+                    );
+
                     return this._apiService.getData(this.paginator.pageIndex,
-                        this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-                        this.currentClass, this.phylogenyFilters, 'data_portal_test'
+                        this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction,
+                        activeFiltersForSort, this.currentClass, this.phylogenyFilters, 'data_portal_test'
                     ).pipe(catchError(() => observableOf(null)));
                 }),
                 map(data => {
@@ -245,13 +278,15 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.searchChanged.emit();
     }
 
-
     onFilterClick(filterValue: string) {
-        this.preventSimpleClick = true;
         clearTimeout(this.timer);
         const index = this.activeFilters.indexOf(filterValue);
         index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-        this.filterChanged.emit();
+        if (filterValue.includes(':')) {
+            this.onRefreshClick();
+        } else {
+            this.filterChanged.emit();
+        }
     }
 
     checkStyle(filterValue: string) {
@@ -263,37 +298,72 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     displayActiveFilterName(filterName: string) {
-        if (filterName.startsWith('symbionts_')) {
-            return 'Symbionts-' + filterName.split('-')[1]
+        if (filterName.startsWith("symbionts_")) {
+            return "Symbionts-" + filterName.split("-")[1];
+        }
+        if (filterName.includes(":")) {
+            const filterNameSplitted = filterName.split("-");
+            const lastPart = filterNameSplitted[filterNameSplitted.length - 1];
+            return lastPart.charAt(0).toUpperCase() + lastPart.slice(1);
         }
         return filterName;
     }
 
-    changeCurrentClass(filterValue: string) {
-        console.log('single click');
-        let delay = 200;
-        this.preventSimpleClick = false;
-        this.timer = setTimeout(() => {
-            if (!this.preventSimpleClick) {
-                this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
-                const index = this.classes.indexOf(this.currentClass) + 1;
-                this.currentClass = this.classes[index];
-                console.log(this.phylogenyFilters);
-                this.filterChanged.emit();
-            }
-        }, delay);
+    changeCurrentClassWithFiltering(filterValue: string) {
+
+        if (this.isProcessing) {
+            return;
+        }
+        this.isProcessing = true;
+
+        this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
+
+        const index = this.classes.indexOf(this.currentClass) + 1;
+        this.currentClass = this.classes[index];
+
+        const newPhylogenyFilter = `${this.currentClass}:${filterValue}`;
+        const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
+        if (existingPhylogenyFilterIndex !== -1) {
+            this.activeFilters[existingPhylogenyFilterIndex] = newPhylogenyFilter;
+        } else {
+            this.activeFilters.push(newPhylogenyFilter);
+        }
+
+        this.filterChanged.emit();
+
+        setTimeout(() => {
+            this.isProcessing = false;
+        }, 200);
     }
 
     onHistoryClick() {
-        this.phylogenyFilters.splice(this.phylogenyFilters.length - 1, 1);
-        const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
-        this.currentClass = this.classes[previousClassIndex];
-        this.filterChanged.emit();
+        if (this.phylogenyFilters.length > 0) {
+
+            let filter = this.phylogenyFilters[0];
+            const lastIndex = filter.lastIndexOf("-");
+
+            if (lastIndex !== -1) {
+                filter = filter.substring(0, lastIndex);
+                this.phylogenyFilters = [filter];
+            } else {
+                this.phylogenyFilters = [];
+            }
+
+            const previousClassIndex = this.classes.indexOf(this.currentClass) - 1;
+            this.currentClass = this.classes[previousClassIndex];
+            this.filterChanged.emit();
+        }
     }
 
     onRefreshClick() {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
+
+        const existingPhylogenyFilterIndex = this.activeFilters.findIndex(filter => filter.includes(':'));
+        if (existingPhylogenyFilterIndex !== -1) {
+            this.activeFilters.splice(existingPhylogenyFilterIndex, 1);
+        }
+
         this.filterChanged.emit();
     }
 

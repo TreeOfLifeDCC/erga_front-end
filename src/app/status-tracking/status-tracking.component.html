@@ -187,15 +187,14 @@
                     </mat-icon>
                 }
             </mat-card-title>
-
             <mat-card-actions fxFlexAlign="center" style="width: 100%">
                 <mat-list role="list" style="width: 100%">
                     @for (phylogeny_name of aggregations?.taxonomies[currentClass]?.buckets; track $index) {
                         <mat-list-item role="listbox"
                                        style="cursor: pointer"
                                        [style]="checkStyle(phylogeny_name.key)"
-                                       (dblclick)="onFilterClick(phylogeny_name.key)"
-                                       (click)="changeCurrentClass(phylogeny_name.key)">
+                                       (click)="changeCurrentClassWithFiltering(phylogeny_name.key)"
+                        >
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
                                 <div>
