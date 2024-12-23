@@ -136,6 +136,8 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
 
             this.activeFilters = [];
             this.phylogenyFilters = [];
+            this.searchValue = '';
+            this.searchChanged.emit();
             this.currentClass = "kingdom";
 
             if ("filter" in this.queryParams) {

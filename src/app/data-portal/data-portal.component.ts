@@ -143,6 +143,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
             this.activeFilters = [];
             this.phylogenyFilters = [];
+            this.searchValue = '';
+            this.searchChanged.emit();
             this.currentClass = "kingdom";
 
             if ("filter" in this.queryParams) {
@@ -183,6 +185,10 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             if ("currentClass" in this.queryParams) {
                 this.currentClass = this.queryParams["currentClass"];
             }
+            if ("searchValue" in this.queryParams) {
+                this.currentClass = this.queryParams["currentClass"];
+            }
+
 
             this.filterChanged.emit();
         });
