@@ -100,53 +100,61 @@ export class ApiService {
         return this.http.get<any>('https://portal.erga-biodiversity.eu/api/summary');
     }
 
-    downloadRecords(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
-            filterValue: string[], currentClass: string, phylogeny_filters: string[], index_name: string, ) {
-        const project_names = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
-        const offset = pageIndex * pageSize;
-        let url = `https://portal.erga-biodiversity.eu/api/export-csv/?limit=${pageSize}&offset=${offset}`;
-        if (searchValue) {
-            url += `&search=${searchValue}`;
-        }
-        if (sortActive && sortDirection) {
-            url += `&sort=${sortActive}:${sortDirection}`;
-        }
+    downloadRecords(downloadOption: string, pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
+                    filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string,) {
+
+
+        // const url = `https://portal.erga-biodiversity.eu/api/data-download`;
+        const url = `http://127.0.0.1:8000/data-download`;
+        const projectNames = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
+
+        // phylogeny
+        const phylogenyStr = phylogenyFilters.length ? phylogenyFilters.join('-') : '';
+
+        // Filter string
+        let filterStr = '';
+
         if (filterValue.length !== 0) {
-            let filterStr = '&filter=';
-            let filterItem;
-            for (let i = 0; i < filterValue.length; i++) {
-                if (project_names.indexOf(filterValue[i]) !== -1) {
-                    filterValue[i] === 'DToL' ? filterItem = 'project_name:dtol' : filterItem = `project_name:${filterValue[i]}`;
-                } else if (filterValue[i].includes('-')) {
-                    if (filterValue[i].startsWith('symbionts')) {
-                        filterItem = filterValue[i].replace('-', ':');
+            const filterItems = [];
+
+            for (const item of filterValue) {
+                let filterItem = '';
+
+                if (projectNames.includes(item)) {
+                    filterItem = item === 'DToL' ? 'project_name:dtol' : `project_name:${item}`;
+                } else if (item.includes('-') && !item.startsWith('experimentType')) {
+                    if (item.startsWith('symbionts') || item.startsWith('metagenomes')) {
+                        filterItem = item.replace('-', ':');
                     } else {
-                        filterItem = filterValue[i].split(' - ')[0].toLowerCase().split(' ').join('_');
-                        if (filterItem === 'assemblies') {
-                            filterItem = 'assemblies_status:Done';
-                        } else
-                            filterItem = `${filterItem}:Done`;
+                        filterItem = item.split(' - ')[0].toLowerCase().replace(/\s+/g, '_');
+                        filterItem = (filterItem === 'assemblies') ? 'assemblies_status:Done' :
+                            (filterItem === 'genome_notes') ? 'genome_notes:Submitted' :
+                                `${filterItem}:Done`;
                     }
+                } else if (item.includes('_') && item.startsWith('experimentType')) {
+                    filterItem = item.replace('_', ':');
                 } else {
-                    filterItem = `${currentClass}:${filterValue[i]}`;
+                    filterItem = `${currentClass}:${item}`;
                 }
-                filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
 
-            }
-            url += filterStr;
-        }
-        if (phylogeny_filters.length !== 0) {
-            let filterStr = '&phylogeny_filters=';
-            for (let i = 0; i < phylogeny_filters.length; i++) {
-                filterStr === '&phylogeny_filters=' ? filterStr += `${phylogeny_filters[i]}` : filterStr += `-${phylogeny_filters[i]}`;
+                filterItems.push(filterItem);
             }
 
-            url += filterStr;
+            filterStr = filterItems.join(',');
         }
-        url += `&current_class=${currentClass}`;
-        return this.http.get(url, {responseType: 'blob' as 'blob'});
 
+        const payload = {
+            pageIndex,
+            pageSize,
+            searchValue,
+            sortValue: `${sortActive}:${sortDirection}`,
+            filterValue: filterStr || '',
+            currentClass,
+            phylogenyFilters: phylogenyStr,
+            indexName,
+            downloadOption
+        };
+        return this.http.post(url, payload, {responseType: 'blob'});
     }
 
-
-    }
+}
