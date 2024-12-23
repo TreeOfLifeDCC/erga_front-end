@@ -23,10 +23,11 @@ import {
     MatTable
 } from "@angular/material/table";
 import {RouterLink} from "@angular/router";
-import {MatAnchor} from "@angular/material/button";
+import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute} from '@angular/router';
+import {MatProgressBar} from "@angular/material/progress-bar";
 
 
 
@@ -76,7 +77,9 @@ interface FilterGroups {
         MatFormField,
         MatHeaderRowDef,
         MatRowDef,
-        NgStyle
+        NgStyle,
+        MatButton,
+        MatProgressBar
     ],
     providers: [HttpClient],
     standalone: true
@@ -115,6 +118,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
             filters: []
         }
     };
+    displayProgressBar = false;
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -132,6 +136,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
 
             this.activeFilters = [];
             this.phylogenyFilters = [];
+            this.searchValue = '';
             this.currentClass = "kingdom";
 
             if ("filter" in this.queryParams) {
@@ -174,6 +179,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
             }
 
             this.filterChanged.emit();
+            this.searchChanged.emit();
         });
     }
 
@@ -370,5 +376,28 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         const group = this.filterGroups[filterGroupName];
         group.isCollapsed = !group.isCollapsed;
         group.itemLimit = group.isCollapsed ? group.defaultItemLimit : group.filters.length;
+    }
+
+    downloadFile(downloadOption: string) {
+        this.displayProgressBar = true;
+        this._apiService.downloadRecords(downloadOption, this.paginator.pageIndex,
+            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
+            this.currentClass, this.phylogenyFilters, 'tracking_status_index_test').subscribe({
+            next: (response: Blob) => {
+                const blobUrl = window.URL.createObjectURL(response);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = 'status_tracking.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            },
+            error: error => {
+                console.error('Error downloading the CSV file:', error);
+            },
+            complete: () => {
+                this.displayProgressBar = false;
+            }
+        });
     }
 }

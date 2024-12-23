@@ -29,6 +29,7 @@ import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
 import {ActivatedRoute} from '@angular/router';
+import {MatProgressBar} from "@angular/material/progress-bar";
 
 
 interface FilterGroup {
@@ -78,7 +79,8 @@ interface FilterGroups {
         MatButton,
         MatInput,
         MatSortHeader,
-        MatTableExporterModule
+        MatTableExporterModule,
+        MatProgressBar
     ],
     styleUrls: ['./data-portal.component.css']
 })
@@ -118,6 +120,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             filters: []
         }
     };
+    displayProgressBar = false;
 
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -140,6 +143,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
             this.activeFilters = [];
             this.phylogenyFilters = [];
+            this.searchValue = '';
             this.currentClass = "kingdom";
 
             if ("filter" in this.queryParams) {
@@ -182,6 +186,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             }
 
             this.filterChanged.emit();
+            this.searchChanged.emit();
         });
     }
 
@@ -426,14 +431,27 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         }
     }
 
-    downloadFile(format: string) {
-        this._apiService.downloadRecords( this.paginator.pageIndex,
+
+    downloadFile(downloadOption: string) {
+        this.displayProgressBar = true;
+        this._apiService.downloadRecords(downloadOption, this.paginator.pageIndex,
             this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-            this.currentClass, this.phylogenyFilters, 'data_portal').subscribe((res: Blob) => {
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(res);
-            a.download = 'data_portal.' + format;
-            a.click();
+            this.currentClass, this.phylogenyFilters, 'data_portal').subscribe({
+            next: (response: Blob) => {
+                const blobUrl = window.URL.createObjectURL(response);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = 'data_portal.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            },
+            error: error => {
+                console.error('Error downloading the CSV file:', error);
+            },
+            complete: () => {
+                this.displayProgressBar = false;
+            }
         });
     }
 
