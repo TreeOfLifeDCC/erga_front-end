@@ -123,6 +123,10 @@ mat-chip-set {
     padding-top: 4px;
 }
 
+.download-btn {
+    padding-left: 10px;
+}
+
 /*ng-container {*/
 /*  word-wrap: break-word !important;*/
 /*  white-space: unset !important;*/
