@@ -184,9 +184,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             if ("currentClass" in this.queryParams) {
                 this.currentClass = this.queryParams["currentClass"];
             }
-            if ("searchValue" in this.queryParams) {
-                this.currentClass = this.queryParams["currentClass"];
-            }
 
             this.filterChanged.emit();
             this.searchChanged.emit();
