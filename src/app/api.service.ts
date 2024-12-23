@@ -104,8 +104,7 @@ export class ApiService {
                     filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string,) {
 
 
-        // const url = `https://portal.erga-biodiversity.eu/api/data-download`;
-        const url = `http://127.0.0.1:8000/data-download`;
+        const url = `https://portal.erga-biodiversity.eu/api/data-download`;
         const projectNames = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
 
         // phylogeny
