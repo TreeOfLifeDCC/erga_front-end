@@ -10,7 +10,7 @@
                     @if (getStatusCount(aggregations?.biosamples.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('BioSamples - Submitted')"
-                                       (click)="onFilterClick('BioSamples - Submitted')"
+                                       (click)="onFilterClick('biosamples','BioSamples - Submitted')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -31,7 +31,7 @@
                     @if (getStatusCount(aggregations?.raw_data.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('Raw Data - Submitted')"
-                                       (click)="onFilterClick('Raw Data - Submitted')"
+                                       (click)="onFilterClick('raw_data','Raw Data - Submitted')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -53,7 +53,7 @@
                     @if (getStatusCount(aggregations?.assemblies_status.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('Assemblies - Submitted')"
-                                       (click)="onFilterClick('Assemblies - Submitted')"
+                                       (click)="onFilterClick('assemblies','Assemblies - Submitted')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -74,7 +74,7 @@
                     @if (getStatusCount(aggregations?.annotation_complete.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('Annotation Complete - Done')"
-                                       (click)="onFilterClick('Annotation Complete - Done')"
+                                       (click)="onFilterClick('annotation_complete','Annotation Complete - Done')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -103,7 +103,7 @@
                     @for (filter of symbiontsFilters; track $index) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle(filter.label + '-' + filter.key)"
-                                       (click)="onFilterClick(filter.label + '-' + filter.key)"
+                                       (click)="onFilterClick(filter.label, filter.key)" style="cursor: pointer;"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -134,7 +134,7 @@
                         <mat-list-item role="listitem"
                                        style="cursor: pointer"
                                        [style]="checkStyle(convertProjectName(project.key))"
-                                       (click)="onFilterClick(convertProjectName(project.key))">
+                                       (click)="onFilterClick('project_name',convertProjectName(project.key))">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
                                 <div>
@@ -155,18 +155,17 @@
             </mat-card-actions>
         </mat-card>
         <br>
+
         <mat-card class="main-card">
             <mat-card-title class="card-title">
-                Phylogeny/{{ currentClass }}
+                Phylogeny/{{currentClass}}
                 @if (phylogenyFilters.length !== 0) {
-                    <mat-icon (click)="onRefreshClick()"
-                              style="cursor: pointer">
+                    <mat-icon (click)="onRefreshClick()" style="cursor: pointer;">
                         refresh
                     </mat-icon>
                 }
                 @if (phylogenyFilters.length !== 0) {
-                    <mat-icon (click)="onHistoryClick()"
-                              style="cursor: pointer">
+                    <mat-icon (click)="onHistoryClick()" style="cursor: pointer">
                         arrow_circle_left
                     </mat-icon>
                 }
@@ -177,8 +176,7 @@
                         <mat-list-item role="listbox"
                                        style="cursor: pointer"
                                        [style]="checkStyle(phylogeny_name.key)"
-                                       (dblclick)="onFilterClick(phylogeny_name.key)"
-                                       (click)="changeCurrentClass(phylogeny_name.key)"
+                                       (click)="onFilterClick('phylogeny',phylogeny_name.key, true)"
                         >
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -220,14 +218,38 @@
             }
             <div class="example-table-container">
 
-                <div class="container2">
+                <div class="filters_div">
                     <mat-chip-set>
-                        @for (item of activeFilters; track $index) {
+                        @for (field of activeFilters; track $index) {
                             <div class="item4">
-                                <mat-chip (click)="onFilterClick(item)" style="cursor: pointer; padding: 0;
-                 background-color: #e0efea;">
+                                <mat-chip selected (click)="onFilterClick('removeFilter',field)"
+                                          style="cursor: pointer; padding: 0; background-color: #e0efea;">
                                     <div style="display: flex; align-items: center;">
-                                        <div style="margin-right: 3px">{{ displayActiveFilterName(item) }}</div>
+                                        <div style="margin-right: 3px"> {{ displayActiveFilterName(field) }}</div>
+                                        <mat-icon>close</mat-icon>
+                                    </div>
+                                </mat-chip>
+                            </div>
+                        }
+
+                        @if (phylogenyFilters.length > 0) {
+                            <div class="item4">
+                                <mat-chip selected (click)="removePhylogenyFilters()"
+                                          style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="margin-right: 3px"> {{ displayActiveFilterName(lastPhylogenyVal) }}</div>
+                                        <mat-icon>close</mat-icon>
+                                    </div>
+                                </mat-chip>
+                            </div>
+                        }
+
+                        @if(activeFilters.length > 0 || phylogenyFilters.length > 0){
+                            <div class="item4">
+                                <mat-chip selected (click)="removeFilter()"
+                                          style="cursor: pointer; padding: 0; background-color: #F08080;">
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="margin-right: 3px"> Remove all filters</div>
                                         <mat-icon>close</mat-icon>
                                     </div>
                                 </mat-chip>

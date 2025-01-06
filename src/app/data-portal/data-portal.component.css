@@ -10,10 +10,11 @@
     gap: 5px 5px;
 }
 
-.container2 {
+.filters_div {
     display: flex; /* or inline-flex */
     flex-flow: row wrap;
     justify-content: flex-start;
+    padding-left: 15px;
 }
 
 .item4 {
