@@ -79,7 +79,8 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     isLoadingResults = true;
     isRateLimitReached = false;
     aggregations: any;
-
+    isPhylogenyFilterProcessing = false; // Flag to prevent double-clicking
+    lastPhylogenyVal = '';
     activeFilters = new Array<string>();
 
     currentStyle: string;
@@ -103,27 +104,51 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                 private activatedRoute: ActivatedRoute,) { }
 
     ngOnInit(): void {
-        this.activatedRoute.queryParams.subscribe(params => {
-            this.queryParams = {...params};
-        });
-        if ('filter' in this.queryParams){
-            this.activeFilters = Array.isArray(this.queryParams['filter']) ?
-                [...this.queryParams['filter']] : [this.queryParams['filter']];
+
+        // get url parameters
+        const queryParamMap: any = this.activatedRoute.snapshot['queryParamMap'];
+        const params = queryParamMap['params'];
+        if (Object.keys(params).length !== 0) {
+            for (const key in params) {
+                if (params.hasOwnProperty(key)) {
+                    if (params[key].includes('phylogenyFilters - ')) {
+                        const phylogenyFilters = params[key].split('phylogenyFilters - ')[1];
+                        // Remove square brackets and split by comma
+                        this.phylogenyFilters = phylogenyFilters.slice(1, -1).split(',');
+                    } else if (params[key].includes('phylogenyCurrentClass - ')) {
+                        const phylogenyCurrentClass = params[key].split('phylogenyCurrentClass - ')[1];
+                        this.currentClass = phylogenyCurrentClass;
+                    } else if (params[key].includes('searchValue - ')) {
+                        this.searchValue = params[key].split('searchValue - ')[1];
+                    } else {
+                        this.activeFilters.push(params[key]);
+                    }
+
+                }
+            }
         }
-        if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
-            this.sort.active = this.queryParams['sortActive'];
-            this.sort.direction = this.queryParams['sortDirection'];
-        }
-        if ('searchValue' in this.queryParams){
-            this.searchValue = this.queryParams['searchValue'];
-            this.searchInput.nativeElement.value = this.queryParams['searchValue'];
-        }
-        if ('pageIndex' in this.queryParams){
-            this.paginator.pageIndex = this.queryParams['pageIndex'];
-        }
-        if ('pageSize' in this.queryParams){
-            this.paginator.pageSize = this.queryParams['pageSize'];
-        }
+
+        // this.activatedRoute.queryParams.subscribe(params => {
+        //     this.queryParams = {...params};
+        // });
+        // if ('filter' in this.queryParams){
+        //     this.activeFilters = Array.isArray(this.queryParams['filter']) ?
+        //         [...this.queryParams['filter']] : [this.queryParams['filter']];
+        // }
+        // if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
+        //     this.sort.active = this.queryParams['sortActive'];
+        //     this.sort.direction = this.queryParams['sortDirection'];
+        // }
+        // if ('searchValue' in this.queryParams){
+        //     this.searchValue = this.queryParams['searchValue'];
+        //     this.searchInput.nativeElement.value = this.queryParams['searchValue'];
+        // }
+        // if ('pageIndex' in this.queryParams){
+        //     this.paginator.pageIndex = this.queryParams['pageIndex'];
+        // }
+        // if ('pageSize' in this.queryParams){
+        //     this.paginator.pageSize = this.queryParams['pageSize'];
+        // }
     }
 
     ngAfterViewInit() {
@@ -174,10 +199,53 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                             'symbionts_assemblies_status');
                     }
 
+                    // get last phylogeny element for filter button
+                    this.lastPhylogenyVal = this.phylogenyFilters.slice(-1)[0];
+
+                    this.queryParams = [...this.activeFilters];
+
+                    // add search value to URL query param
+                    if (this.searchValue) {
+                        this.queryParams.push(`searchValue - ${this.searchValue}`);
+                    }
+
+                    if (this.phylogenyFilters && this.phylogenyFilters.length) {
+                        const index = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
+                        if (index > -1) {
+                            this.queryParams[index] = `phylogenyFilters - [${this.phylogenyFilters}]`;
+                        } else {
+                            this.queryParams.push(`phylogenyFilters - [${this.phylogenyFilters}]`);
+                        }
+                    }
+
+                    // update url with the value of the phylogeny current class
+                    this.updateQueryParams('phylogenyCurrentClass');
+
+                    this.replaceUrlQueryParams();
+
                     return data.results;
                 }),
             )
             .subscribe(data => (this.data = data));
+    }
+
+    removePhylogenyFilters() {
+        // update url with the value of the phylogeny current class
+        const queryParamPhyloIndex = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
+        if (queryParamPhyloIndex > -1) {
+            this.queryParams.splice(queryParamPhyloIndex, 1);
+        }
+
+        const queryParamCurrentClassIndex = this.queryParams.findIndex((element: any) => element.includes('phylogenyCurrentClass - '));
+        if (queryParamCurrentClassIndex > -1) {
+            this.queryParams.splice(queryParamCurrentClassIndex, 1);
+        }
+        // Replace current url parameters with new parameters.
+        this.replaceUrlQueryParams();
+        // reset phylogeny variables
+        this.phylogenyFilters = [];
+        this.currentClass = 'kingdom';
+        this.filterChanged.emit();
     }
 
     merge = (first: any[], second: any[], filterLabel: string) => {
@@ -211,13 +279,71 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     }
 
 
-    onFilterClick(filterValue: string) {
-        console.log('double click');
-        this.preventSimpleClick = true;
+    updateQueryParams(urlParam: string){
+        if (urlParam === 'phylogenyCurrentClass'){
+            const queryParamIndex = this.queryParams.findIndex((element: any) => element.includes('phylogenyCurrentClass - '));
+            if (queryParamIndex > -1) {
+                this.queryParams[queryParamIndex] = `phylogenyCurrentClass - ${this.currentClass}`;
+            } else {
+                this.queryParams.push(`phylogenyCurrentClass - ${this.currentClass}`);
+            }
+        }
+    }
+
+    removeFilter() {
         clearTimeout(this.timer);
-        const index = this.activeFilters.indexOf(filterValue);
-        index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
+        this.activeFilters = [];
+        this.phylogenyFilters = [];
+        this.currentClass = 'kingdom';
         this.filterChanged.emit();
+        this.router.navigate([]);
+    }
+
+    replaceUrlQueryParams() {
+        this.router.navigate([], {
+            relativeTo: this.activatedRoute,
+            queryParams: this.queryParams,
+            replaceUrl: true,
+            skipLocationChange: false
+        });
+    }
+
+    onFilterClick(filterName:String , filterValue: string, phylogenyFilter: boolean = false) {
+        // phylogeney filter selection
+        if (phylogenyFilter) {
+            if (this.isPhylogenyFilterProcessing) {
+                return;
+            }
+            // Set flag to prevent further clicks
+            this.isPhylogenyFilterProcessing = true;
+
+            this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
+            const index = this.classes.indexOf(this.currentClass) + 1;
+            this.currentClass = this.classes[index];
+
+            // update url with the value of the phylogeny current class
+            this.updateQueryParams('phylogenyCurrentClass');
+
+            // Replace current parameters with new parameters.
+            this.replaceUrlQueryParams();
+            this.filterChanged.emit();
+
+            // Reset isPhylogenyFilterProcessing flag
+            setTimeout(() => {
+                this.isPhylogenyFilterProcessing = false;
+            }, 500);
+        } else{
+            clearTimeout(this.timer);
+            if (filterName.startsWith('symbionts_') || filterName.startsWith('metagenomes_')){
+                filterValue = `${filterName}-${filterValue}`;
+            }
+            const index = this.activeFilters.indexOf(filterValue);
+            console.log(index)
+
+            index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
+            console.log(this.activeFilters)
+            this.filterChanged.emit();
+        }
     }
 
     checkStyle(filterValue: string) {
@@ -229,26 +355,12 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     }
 
     displayActiveFilterName(filterName: string) {
-        if (filterName.startsWith('symbionts_')) {
-            return 'Symbionts-' + filterName.split('-')[1]
+        if (filterName && filterName.startsWith('symbionts_')) {
+            return 'Symbionts-' + filterName.split('-')[1];
         }
         return filterName;
     }
 
-    changeCurrentClass(filterValue: string) {
-        console.log('single click');
-        let delay = 200;
-        this.preventSimpleClick = false;
-        this.timer = setTimeout(() => {
-            if (!this.preventSimpleClick) {
-                this.phylogenyFilters.push(`${this.currentClass}:${filterValue}`);
-                const index = this.classes.indexOf(this.currentClass) + 1;
-                this.currentClass = this.classes[index];
-                console.log(this.phylogenyFilters);
-                this.filterChanged.emit();
-            }
-        }, delay);
-    }
 
     onHistoryClick() {
         this.phylogenyFilters.splice(this.phylogenyFilters.length - 1, 1);
@@ -260,6 +372,13 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     onRefreshClick() {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
+        // remove phylogenyFilters param from url
+        const index = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
+        if (index > -1) {
+            this.queryParams.splice(index, 1);
+            // Replace current parameters with new parameters.
+            this.replaceUrlQueryParams();
+        }
         this.filterChanged.emit();
     }
 
