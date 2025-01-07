@@ -124,3 +124,7 @@ mat-chip {
     padding: 4px 9px !important;
 }
 
+.download-btn {
+    padding-left: 10px;
+}
+

@@ -27,6 +27,7 @@ import {MatAnchor} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from '@angular/router';
+import {MatProgressBar} from "@angular/material/progress-bar";
 
 @Component({
     selector: 'app-status-tracking',
@@ -62,7 +63,8 @@ import {ActivatedRoute, Router} from '@angular/router';
         MatLabel,
         MatFormField,
         MatHeaderRowDef,
-        MatRowDef
+        MatRowDef,
+        MatProgressBar
     ],
     providers: [HttpClient],
     standalone: true
@@ -94,6 +96,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     symbiontsFilters: any[] = [];
     preventSimpleClick = false;
     queryParams: any = {};
+    displayProgressBar = false;
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -389,6 +392,29 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         } else {
             return 'background-color: #D8BCAA; color: black';
         }
+    }
+
+    downloadFile(downloadOption: string) {
+        this.displayProgressBar = true;
+        this._apiService.downloadRecords(downloadOption, this.paginator.pageIndex,
+            this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
+            this.currentClass, this.phylogenyFilters, 'tracking_status_index_test').subscribe({
+            next: (response: Blob) => {
+                const blobUrl = window.URL.createObjectURL(response);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = 'status_tracking.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            },
+            error: error => {
+                console.error('Error downloading the CSV file:', error);
+            },
+            complete: () => {
+                this.displayProgressBar = false;
+            }
+        });
     }
 
 
