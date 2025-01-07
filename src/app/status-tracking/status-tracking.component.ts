@@ -124,6 +124,8 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                         this.currentClass = phylogenyCurrentClass;
                     } else if (params[key].includes('searchValue - ')) {
                         this.searchValue = params[key].split('searchValue - ')[1];
+                    } else if (params[key].includes('searchValue - ')) {
+                        this.searchValue = params[key].split('searchValue - ')[1];
                     } else {
                         this.activeFilters.push(params[key]);
                     }
@@ -294,11 +296,12 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         }
     }
 
-    removeFilter() {
+    refreshPage() {
         clearTimeout(this.timer);
         this.activeFilters = [];
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
+        this.searchValue = '';
         this.filterChanged.emit();
         this.router.navigate([]);
     }

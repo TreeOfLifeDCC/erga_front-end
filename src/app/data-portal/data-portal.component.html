@@ -246,7 +246,7 @@
 
                         @if(activeFilters.length > 0 || phylogenyFilters.length > 0){
                             <div class="item4">
-                                <mat-chip selected (click)="removeFilter()"
+                                <mat-chip selected (click)="refreshPage()"
                                           style="cursor: pointer; padding: 0; background-color: #F08080;">
                                     <div style="display: flex; align-items: center;">
                                         <div style="margin-right: 3px"> Remove all filters</div>
