@@ -23,11 +23,11 @@ import {
     MatTable
 } from "@angular/material/table";
 import {RouterLink} from "@angular/router";
-import {MatAnchor} from "@angular/material/button";
+import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatProgressBar} from "@angular/material/progress-bar";
+import {MatProgressBar} from '@angular/material/progress-bar';
 
 @Component({
     selector: 'app-status-tracking',
@@ -64,7 +64,8 @@ import {MatProgressBar} from "@angular/material/progress-bar";
         MatFormField,
         MatHeaderRowDef,
         MatRowDef,
-        MatProgressBar
+        MatProgressBar,
+        MatButton
     ],
     providers: [HttpClient],
     standalone: true
