@@ -24,7 +24,7 @@ import {
     MatRow, MatRowDef,
     MatTable
 } from "@angular/material/table";
-import {RouterLink} from "@angular/router";
+import {NavigationEnd, RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
@@ -117,6 +117,15 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
 
     ngOnInit(): void {
+        // reload page if user clicks on menu link
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.urlAfterRedirects === '/data_portal') {
+                    this.refreshPage();
+                }
+            }
+        });
+
         this.titleService.setTitle('Data Portal');
 
         // get url parameters

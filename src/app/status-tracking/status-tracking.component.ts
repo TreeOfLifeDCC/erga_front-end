@@ -22,7 +22,7 @@ import {
     MatNoDataRow, MatRow, MatRowDef,
     MatTable
 } from "@angular/material/table";
-import {RouterLink} from "@angular/router";
+import {NavigationEnd, RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
@@ -108,6 +108,14 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                 private activatedRoute: ActivatedRoute,) { }
 
     ngOnInit(): void {
+        // reload page if user clicks on menu link
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                if (event.urlAfterRedirects === '/status_tracking') {
+                    this.refreshPage();
+                }
+            }
+        });
 
         // get url parameters
         const queryParamMap: any = this.activatedRoute.snapshot['queryParamMap'];
