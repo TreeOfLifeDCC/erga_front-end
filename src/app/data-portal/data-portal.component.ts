@@ -30,6 +30,7 @@ import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDivider} from "@angular/material/divider";
+import {MatProgressBar} from "@angular/material/progress-bar";
 
 
 @Component({
@@ -69,7 +70,8 @@ import {MatDivider} from "@angular/material/divider";
         MatInput,
         MatSortHeader,
         MatTableExporterModule,
-        MatDivider
+        MatDivider,
+        MatProgressBar
     ],
     styleUrls: ['./data-portal.component.css']
 })
@@ -101,6 +103,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     genomelength = 0;
     tolqc_length = 0;
     result: any;
+    displayProgressBar = false;
 
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
@@ -444,14 +447,26 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         }
     }
 
-    downloadFile(format: string) {
-        this._apiService.downloadRecords( this.paginator.pageIndex,
+    downloadFile(downloadOption: string) {
+        this.displayProgressBar = true;
+        this._apiService.downloadRecords(downloadOption, this.paginator.pageIndex,
             this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-            this.currentClass, this.phylogenyFilters, 'data_portal').subscribe((res: Blob) => {
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(res);
-            a.download = 'data_portal.' + format;
-            a.click();
+            this.currentClass, this.phylogenyFilters, 'data_portal').subscribe({
+            next: (response: Blob) => {
+                const blobUrl = window.URL.createObjectURL(response);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = 'data_portal.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            },
+            error: error => {
+                console.error('Error downloading the CSV file:', error);
+            },
+            complete: () => {
+                this.displayProgressBar = false;
+            }
         });
     }
 
