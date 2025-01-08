@@ -1,13 +1,15 @@
-<!--<cookie-law #cookieLaw>-->
-<!--  This website requires cookies, and the limited processing of your personal data in order to function. By using the-->
-<!--  site you are agreeing to this as outlined in our-->
-<!--  <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/european-reference-genome-atlas-data-portal" target="_blank">Privacy-->
-<!--    Notice</a>-->
-<!--</cookie-law>-->
-<div class="layout-container">
+@if (isHomeRoute) {
+    <!-- Special case for the home page to display the banner with a flexible footer -->
     <app-header></app-header>
-    <div class="content">
-        <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
     <app-footer></app-footer>
-</div>
+} @else {
+    <div class="layout-container">
+        <app-header></app-header>
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
+        <app-footer></app-footer>
+    </div>
+}
+
