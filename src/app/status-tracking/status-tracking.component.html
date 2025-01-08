@@ -139,7 +139,6 @@
                 }
             </mat-card-title>
 
-            <mat-card-title class="card-title">Projects</mat-card-title>
             <mat-card-actions fxFlexAlign="center" style="width: 100%">
                 <mat-list role="list" style="width: 100%">
                     @for (project of (showAll ? aggregations?.project_name.buckets : aggregations?.project_name.buckets.slice(0, 5)); track $index ) {
