@@ -105,8 +105,9 @@ table {
     max-width: 80px;
 }
 
-mat-chip {
-    padding: 4px 9px !important;
+mat-chip-set {
+    padding-left: 15px;
+    padding-top: 4px;
 }
 
 button {
