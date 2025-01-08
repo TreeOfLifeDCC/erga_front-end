@@ -291,7 +291,7 @@
 
                 <mat-form-field class="search_field">
                     <mat-label>Search</mat-label>
-                    <input matInput (keyup)="applyFilter($event)"
+                    <input matInput (keyup)="applyFilter($event)" [(ngModel)]='searchValue'
                            placeholder="ex. Salmo trutta" #input>
                 </mat-form-field>
 

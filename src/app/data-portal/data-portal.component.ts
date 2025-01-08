@@ -31,6 +31,7 @@ import {MatTableExporterModule} from "mat-table-exporter";
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDivider} from "@angular/material/divider";
 import {MatProgressBar} from "@angular/material/progress-bar";
+import {FormsModule} from "@angular/forms";
 
 
 @Component({
@@ -71,7 +72,8 @@ import {MatProgressBar} from "@angular/material/progress-bar";
         MatSortHeader,
         MatTableExporterModule,
         MatDivider,
-        MatProgressBar
+        MatProgressBar,
+        FormsModule
     ],
     styleUrls: ['./data-portal.component.css']
 })
