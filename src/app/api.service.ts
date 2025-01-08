@@ -94,9 +94,6 @@ export class ApiService {
         return this.http.get<any>(url);
     }
 
-    getSummaryData() {
-        return this.http.get<any>('https://portal.erga-biodiversity.eu/api/summary');
-    }
 
     downloadRecords(downloadOption: string, pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
                     filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string,) {
