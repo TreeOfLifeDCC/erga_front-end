@@ -101,9 +101,8 @@ export class ApiService {
     downloadRecords(downloadOption: string, pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
                     filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string,) {
 
+        const url = `https://portal.erga-biodiversity.eu/api/data-download`;
 
-        // const url = `https://portal.erga-biodiversity.eu/api/data-download`;
-        const url = `http://127.0.0.1:8000/data-download`;
         const projectNames = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
 
         // phylogeny
@@ -155,5 +154,4 @@ export class ApiService {
         return this.http.post(url, payload, {responseType: 'blob'});
     }
 
-
-    }
+}
