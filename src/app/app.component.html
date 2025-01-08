@@ -4,6 +4,10 @@
 <!--  <a href="https://www.ebi.ac.uk/data-protection/privacy-notice/european-reference-genome-atlas-data-portal" target="_blank">Privacy-->
 <!--    Notice</a>-->
 <!--</cookie-law>-->
-<app-header></app-header>
-<router-outlet></router-outlet>
-<app-footer></app-footer>
+<div class="layout-container">
+    <app-header></app-header>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+    <app-footer></app-footer>
+</div>
