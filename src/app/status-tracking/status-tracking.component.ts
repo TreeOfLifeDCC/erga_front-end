@@ -144,28 +144,6 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                 }
             }
         }
-
-        // this.activatedRoute.queryParams.subscribe(params => {
-        //     this.queryParams = {...params};
-        // });
-        // if ('filter' in this.queryParams){
-        //     this.activeFilters = Array.isArray(this.queryParams['filter']) ?
-        //         [...this.queryParams['filter']] : [this.queryParams['filter']];
-        // }
-        // if (this.queryParams['sortActive'] && this.queryParams['sortDirection']){
-        //     this.sort.active = this.queryParams['sortActive'];
-        //     this.sort.direction = this.queryParams['sortDirection'];
-        // }
-        // if ('searchValue' in this.queryParams){
-        //     this.searchValue = this.queryParams['searchValue'];
-        //     this.searchInput.nativeElement.value = this.queryParams['searchValue'];
-        // }
-        // if ('pageIndex' in this.queryParams){
-        //     this.paginator.pageIndex = this.queryParams['pageIndex'];
-        // }
-        // if ('pageSize' in this.queryParams){
-        //     this.paginator.pageSize = this.queryParams['pageSize'];
-        // }
     }
 
     ngAfterViewInit() {
