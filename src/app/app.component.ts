@@ -5,9 +5,8 @@ import {
 } from 'ngx-cookieconsent';
 import {environment} from '../environments/environment';
 import {HeaderComponent} from "./header/header.component";
-import {RouterOutlet} from "@angular/router";
+import {Router, RouterOutlet} from "@angular/router";
 import {FooterComponent} from "./footer/footer.component";
-
 
 export const cookieConfig: NgcCookieConsentConfig = {
     "cookie": {
@@ -48,18 +47,21 @@ class RouterExtService {
     imports: [
         HeaderComponent,
         RouterOutlet,
-        FooterComponent,
-
+        FooterComponent
     ],
     providers: [],
     standalone: true
 })
 export class AppComponent implements OnInit {
     title = 'erga_front-end';
+    isHomeRoute: boolean = false;
 
-    constructor() {
+    constructor(private router: Router) {
     }
 
     ngOnInit() {
+        this.router.events.subscribe(() => {
+            this.isHomeRoute = this.router.url === '/home';
+        });
     }
 }
