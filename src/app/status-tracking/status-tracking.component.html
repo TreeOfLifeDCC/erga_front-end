@@ -128,14 +128,25 @@
         </mat-card>
         <br>
         <mat-card class="main-card">
+            <mat-card-title class="card-title" fxLayout="row" fxLayoutAlign="start center">
+                <span>Projects</span>
+                @if (aggregations?.project_name.buckets.length > 5) {
+                    <mat-icon
+                            (click)="toggleProjects()"
+                            style="cursor: pointer; margin-left: 8px;">
+                        {{ showAll ? 'remove' : 'add' }}
+                    </mat-icon>
+                }
+            </mat-card-title>
+
             <mat-card-title class="card-title">Projects</mat-card-title>
             <mat-card-actions fxFlexAlign="center" style="width: 100%">
                 <mat-list role="list" style="width: 100%">
-                    @for (project of aggregations?.project_name.buckets; track $index) {
+                    @for (project of (showAll ? aggregations?.project_name.buckets : aggregations?.project_name.buckets.slice(0, 5)); track $index ) {
                         <mat-list-item role="listitem"
                                        style="cursor: pointer"
                                        [style]="checkStyle(convertProjectName(project.key))"
-                                       (click)="onFilterClick('project_name',convertProjectName(project.key))"
+                                       (click)="onFilterClick('project_name', convertProjectName(project.key))"
                                       >
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">

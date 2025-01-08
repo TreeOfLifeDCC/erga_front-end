@@ -89,6 +89,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     aggregations: any;
     isPhylogenyFilterProcessing = false; // Flag to prevent double-clicking
     activeFilters = new Array<string>();
+    showAll = false;
 
     currentStyle: string;
     currentClass = 'kingdom';
@@ -289,6 +290,9 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.router.navigate([]);
     }
 
+    toggleProjects(): void {
+        this.showAll = !this.showAll;
+    }
 
     merge = (first: any[], second: any[], filterLabel: string) => {
         for (let i = 0; i < second.length; i++) {

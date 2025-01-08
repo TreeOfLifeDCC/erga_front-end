@@ -98,6 +98,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
     preventSimpleClick = false;
     queryParams: any = {};
     displayProgressBar = false;
+    showAll = false;
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -285,6 +286,10 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         } else {
             return data;
         }
+    }
+
+    toggleProjects(): void {
+        this.showAll = !this.showAll;
     }
 
     applyFilter(event: Event) {
