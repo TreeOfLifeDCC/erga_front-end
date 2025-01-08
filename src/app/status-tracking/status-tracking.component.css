@@ -10,10 +10,12 @@
     gap: 5px 5px;
 }
 
-.container2 {
-    display: flex; /* or inline-flex */
+
+.filters_div {
+    display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
+    padding-left: 15px;
 }
 
 .item4 {
@@ -118,29 +120,11 @@ table {
     min-width: 300px;
 }
 
-mat-chip-set {
-    padding-left: 15px;
-    padding-top: 4px;
+mat-chip {
+    padding: 4px 9px !important;
 }
 
 .download-btn {
     padding-left: 10px;
 }
 
-/*ng-container {*/
-/*  word-wrap: break-word !important;*/
-/*  white-space: unset !important;*/
-/*  flex: 0 0 5% !important;*/
-/*  width: 5% !important;*/
-/*  overflow-wrap: break-word;*/
-/*  word-wrap: break-word;*/
-
-/*  word-break: break-word;*/
-
-/*  -ms-hyphens: auto;*/
-/*  -moz-hyphens: auto;*/
-/*  -webkit-hyphens: auto;*/
-/*}*/
-/*a {*/
-/*  color: white;*/
-/*}*/

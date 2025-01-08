@@ -81,9 +81,7 @@ export class ApiService {
                     'sortDirection': sortDirection,
                     'searchValue': searchValue,
                     'pageIndex': pageIndex,
-                    'pageSize': pageSize,
-                    'phylogenyFilters': phylogeny_filters.join("-"),
-                    'currentClass': currentClass
+                    'pageSize': pageSize
                 },
                 queryParamsHandling: 'merge',
             });
@@ -103,8 +101,8 @@ export class ApiService {
     downloadRecords(downloadOption: string, pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
                     filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string,) {
 
-
         const url = `https://portal.erga-biodiversity.eu/api/data-download`;
+
         const projectNames = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
 
         // phylogeny
