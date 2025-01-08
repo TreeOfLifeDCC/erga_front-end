@@ -28,6 +28,7 @@ import {MatInput} from "@angular/material/input";
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatProgressBar} from '@angular/material/progress-bar';
+import {FormsModule} from "@angular/forms";
 
 @Component({
     selector: 'app-status-tracking',
@@ -65,7 +66,8 @@ import {MatProgressBar} from '@angular/material/progress-bar';
         MatHeaderRowDef,
         MatRowDef,
         MatProgressBar,
-        MatButton
+        MatButton,
+        FormsModule
     ],
     providers: [HttpClient],
     standalone: true
