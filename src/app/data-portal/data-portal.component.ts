@@ -453,7 +453,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.displayProgressBar = true;
         this._apiService.downloadRecords(downloadOption, this.paginator.pageIndex,
             this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-            this.currentClass, this.phylogenyFilters, 'data_portal').subscribe({
+            this.currentClass, this.phylogenyFilters, 'data_portal_test').subscribe({
             next: (response: Blob) => {
                 const blobUrl = window.URL.createObjectURL(response);
                 const a = document.createElement('a');
