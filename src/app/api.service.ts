@@ -43,7 +43,7 @@ export class ApiService {
             for (let i = 0; i < filterValue.length; i++) {
                 if (project_names.indexOf(filterValue[i]) !== -1) {
                     filterValue[i] === 'DToL' ? filterItem = 'project_name:dtol' : filterItem = `project_name:${filterValue[i]}`;
-                } else if (filterValue[i].includes('-')) {
+                } else if (filterValue[i].includes('-') && !filterValue[i].startsWith('experimentType')) {
                     if (filterValue[i].startsWith('symbionts')) {
                         filterItem = filterValue[i].replace('-', ':');
                     } else {
@@ -53,12 +53,16 @@ export class ApiService {
                         } else
                             filterItem = `${filterItem}:Done`;
                     }
+                } else if (filterValue[i].includes('_') && filterValue[i].startsWith('experimentType')) {
+                    filterItem = filterValue[i].replace('_', ':');
+
                 } else {
                     filterItem = `${currentClass}:${filterValue[i]}`;
                 }
                 filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
 
             }
+
             url += filterStr;
         }
         if (phylogeny_filters.length !== 0) {

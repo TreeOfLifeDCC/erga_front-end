@@ -10,7 +10,7 @@
                     @if (getStatusCount(aggregations?.biosamples.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('BioSamples - Submitted')"
-                                       (click)="onFilterClick('biosamples','BioSamples - Submitted')"
+                                       (click)="onFilterClick('BioSamples - Submitted')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -31,7 +31,7 @@
                     @if (getStatusCount(aggregations?.raw_data.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('Raw Data - Submitted')"
-                                       (click)="onFilterClick('raw_data','Raw Data - Submitted')"
+                                       (click)="onFilterClick('Raw Data - Submitted')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -53,7 +53,7 @@
                     @if (getStatusCount(aggregations?.assemblies_status.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('Assemblies - Submitted')"
-                                       (click)="onFilterClick('assemblies','Assemblies - Submitted')"
+                                       (click)="onFilterClick('Assemblies - Submitted')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -74,7 +74,7 @@
                     @if (getStatusCount(aggregations?.annotation_complete.buckets)) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle('Annotation Complete - Done')"
-                                       (click)="onFilterClick('annotation_complete','Annotation Complete - Done')"
+                                       (click)="onFilterClick('Annotation Complete - Done')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -103,7 +103,7 @@
                     @for (filter of symbiontsFilters; track $index) {
                         <mat-list-item role="listitem"
                                        [style]="checkStyle(filter.label + '-' + filter.key)"
-                                       (click)="onFilterClick(filter.label, filter.key)" style="cursor: pointer;"
+                                       (click)="onFilterClick(filter.label + '-' + filter.key)" style="cursor: pointer;"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -127,25 +127,66 @@
         </mat-card>
         <br>
 
+        <!-- Experiment Type-->
         <mat-card class="main-card">
             <mat-card-title class="card-title" fxLayout="row" fxLayoutAlign="start center">
-                <span>Projects</span>
-                @if (aggregations?.project_name.buckets.length > 5) {
+                <span> Experiment Type </span>
+                @if (experimentTypeFilters.length > 5) {
                     <mat-icon
-                            (click)="toggleProjects()"
+                            (click)="toggleFilter('experimentTypes')"
                             style="cursor: pointer; margin-left: 8px;">
-                        {{ showAll ? 'remove' : 'add' }}
+                        {{ showAllFilters['experimentTypes'] ? 'remove' : 'add' }}
                     </mat-icon>
                 }
             </mat-card-title>
 
             <mat-card-actions fxFlexAlign="center" style="width: 100%">
                 <mat-list role="list" style="width: 100%">
-                    @for (project of (showAll ? aggregations?.project_name.buckets : aggregations?.project_name.buckets.slice(0, 5)); track $index ) {
+                    @for (filter of (showAllFilters['experimentTypes'] ? experimentTypeFilters : experimentTypeFilters.slice(0, 5)); track $index ) {
+                        <mat-list-item role="listitem"
+                                       style="cursor: pointer"
+                                       [style]="checkStyle(filter.label + '_' + filter.key)"
+                                       (click)="onFilterClick(filter.label + '_' + filter.key)">
+                            <div fxLayout="row" fxFlexFill
+                                 fxFlexAlign="center center">
+                                <div>
+                                    <h4 matLine
+                                        class="vertical-center">{{ filter.key }}</h4>
+                                </div>
+                                <div style="margin-left: auto">
+                                    <mat-chip-set>
+                                        <mat-chip style="font-size: 10px">
+                                            {{ filter.distinct_docs.doc_count }}
+                                        </mat-chip>
+                                    </mat-chip-set>
+                                </div>
+                            </div>
+                        </mat-list-item>
+                    }
+                </mat-list>
+            </mat-card-actions>
+        </mat-card>
+        <br>
+
+        <mat-card class="main-card">
+            <mat-card-title class="card-title" fxLayout="row" fxLayoutAlign="start center">
+                <span>Projects</span>
+                @if (aggregations?.project_name.buckets.length > 5) {
+                    <mat-icon
+                            (click)="toggleFilter('projects')"
+                            style="cursor: pointer; margin-left: 8px;">
+                        {{ showAllFilters['projects'] ? 'remove' : 'add' }}
+                    </mat-icon>
+                }
+            </mat-card-title>
+
+            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                <mat-list role="list" style="width: 100%">
+                    @for (project of (showAllFilters['projects'] ? aggregations?.project_name.buckets : aggregations?.project_name.buckets.slice(0, 5)); track $index ) {
                         <mat-list-item role="listitem"
                                        style="cursor: pointer"
                                        [style]="checkStyle(convertProjectName(project.key))"
-                                       (click)="onFilterClick('project_name', convertProjectName(project.key))">
+                                       (click)="onFilterClick(convertProjectName(project.key))">
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
                                 <div>
@@ -187,7 +228,7 @@
                         <mat-list-item role="listbox"
                                        style="cursor: pointer"
                                        [style]="checkStyle(phylogeny_name.key)"
-                                       (click)="onFilterClick('phylogeny',phylogeny_name.key, true)"
+                                       (click)="onFilterClick(phylogeny_name.key, true)"
                         >
                             <div fxLayout="row" fxFlexFill
                                  fxFlexAlign="center center">
@@ -233,7 +274,7 @@
                     <mat-chip-set>
                         @for (field of activeFilters; track $index) {
                             <div class="item4">
-                                <mat-chip selected (click)="onFilterClick('removeFilter',field)"
+                                <mat-chip selected (click)="onFilterClick(field)"
                                           style="cursor: pointer; padding: 0; background-color: #e0efea;">
                                     <div style="display: flex; align-items: center;">
                                         <div style="margin-right: 3px"> {{ displayActiveFilterName(field) }}</div>
