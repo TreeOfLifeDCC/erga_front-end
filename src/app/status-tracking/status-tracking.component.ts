@@ -308,8 +308,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
         });
     }
 
-    onFilterClick(filterName:String , filterValue: string, phylogenyFilter: boolean = false) {
-        // phylogeney filter selection
+    onFilterClick(filterValue: string, phylogenyFilter: boolean = false) {
         if (phylogenyFilter) {
             if (this.isPhylogenyFilterProcessing) {
                 return;
@@ -334,14 +333,8 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
             }, 500);
         } else{
             clearTimeout(this.timer);
-            if (filterName.startsWith('symbionts_') || filterName.startsWith('metagenomes_')){
-                filterValue = `${filterName}-${filterValue}`;
-            }
             const index = this.activeFilters.indexOf(filterValue);
-            console.log(index)
-
             index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-            console.log(this.activeFilters)
             this.filterChanged.emit();
         }
     }
