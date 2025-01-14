@@ -50,6 +50,8 @@ export class ApiService {
                         filterItem = filterValue[i].split(' - ')[0].toLowerCase().split(' ').join('_');
                         if (filterItem === 'assemblies') {
                             filterItem = 'assemblies_status:Done';
+                        }else if (filterItem === 'genome_notes') {
+                            filterItem = 'genome_notes:Submitted';
                         } else
                             filterItem = `${filterItem}:Done`;
                     }
@@ -125,9 +127,12 @@ export class ApiService {
                         filterItem = item.replace('-', ':');
                     } else {
                         filterItem = item.split(' - ')[0].toLowerCase().replace(/\s+/g, '_');
-                        filterItem = (filterItem === 'assemblies') ? 'assemblies_status:Done' :
-                            (filterItem === 'genome_notes') ? 'genome_notes:Submitted' :
-                                `${filterItem}:Done`;
+                        if (filterItem === 'assemblies') {
+                            filterItem = 'assemblies_status:Done';
+                        }else if (filterItem === 'genome_notes') {
+                            filterItem = 'genome_notes:Submitted';
+                        } else
+                            filterItem = `${filterItem}:Done`;
                     }
                 } else if (item.includes('_') && item.startsWith('experimentType')) {
                     filterItem = item.replace('_', ':');

@@ -12,8 +12,7 @@
                                        [style]="checkStyle('BioSamples - Submitted')"
                                        (click)="onFilterClick('BioSamples - Submitted')"
                                        style="cursor: pointer">
-                            <div fxLayout="row" fxFlexFill
-                                 fxFlexAlign="center center">
+                            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
                                 <div>
                                     <h4 matLine class="vertical-center">
                                         BioSamples - Submitted</h4>
@@ -33,8 +32,7 @@
                                        [style]="checkStyle('Raw Data - Submitted')"
                                        (click)="onFilterClick('Raw Data - Submitted')"
                                        style="cursor: pointer">
-                            <div fxLayout="row" fxFlexFill
-                                 fxFlexAlign="center center">
+                            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
                                 <div>
                                     <h4 matLine class="vertical-center">Raw
                                         Data - Submitted</h4>
@@ -55,8 +53,7 @@
                                        [style]="checkStyle('Assemblies - Submitted')"
                                        (click)="onFilterClick('Assemblies - Submitted')"
                                        style="cursor: pointer">
-                            <div fxLayout="row" fxFlexFill
-                                 fxFlexAlign="center center">
+                            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
                                 <div>
                                     <h4 matLine class="vertical-center">
                                         Assemblies - Submitted</h4>
@@ -76,8 +73,7 @@
                                        [style]="checkStyle('Annotation Complete - Done')"
                                        (click)="onFilterClick('Annotation Complete - Done')"
                                        style="cursor: pointer">
-                            <div fxLayout="row" fxFlexFill
-                                 fxFlexAlign="center center">
+                            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
                                 <div>
                                     <h4 matLine class="vertical-center">
                                         Annotation Complete - Done</h4>
@@ -86,6 +82,27 @@
                                     <mat-chip-set>
                                         <mat-chip style="font-size: 10px">
                                             {{ getStatusCount(aggregations?.annotation_complete.buckets) }}
+                                        </mat-chip>
+                                    </mat-chip-set>
+                                </div>
+                            </div>
+                        </mat-list-item>
+                    }
+
+                    @if (aggregations?.genome_notes.doc_count) {
+                        <mat-list-item role="listitem"
+                                       [style]="checkStyle('Genome Notes - Submitted')"
+                                       (click)="onFilterClick('Genome Notes - Submitted')"
+                                       style="cursor: pointer">
+                            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+                                <div>
+                                    <h4 matLine class="vertical-center">
+                                        Genome Notes - Submitted</h4>
+                                </div>
+                                <div style="margin-left: auto">
+                                    <mat-chip-set>
+                                        <mat-chip style="font-size: 10px">
+                                            {{ aggregations?.genome_notes.genome_count.doc_count }}
                                         </mat-chip>
                                     </mat-chip-set>
                                 </div>
