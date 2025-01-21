@@ -173,3 +173,32 @@ mat-chip {
         transform: scale(1);
     }
 }
+
+.card-header,
+.btn-success,
+.badge-success {
+    background-color: #8FBC45;
+}
+
+.custom-green-btn {
+    background-color: #8FBC45;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid #8FBC45;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.custom-green-btn:hover {
+    border-color: #28a745;
+}
+
+.text-center {
+    text-align: center!important;
+}

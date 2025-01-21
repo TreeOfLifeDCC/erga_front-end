@@ -25,7 +25,7 @@
             </mat-card-actions>
         </mat-card>
         <br>
-        <mat-tab-group>
+        <mat-tab-group (selectedTabChange)="onTabChange($event)">
             <mat-tab label="Metadata">
                 <div class="example-loading-shade"
                      *ngIf="isLoadingResults || isRateLimitReached">
@@ -674,16 +674,46 @@
             </mat-tab>
 
             <mat-tab label="Geo Location Maps">
-                <ng-template matTabContent>
-                    <mat-tab-group>
-                        <mat-tab label="Sampling Map" *ngIf="geoLocation">
-                            <!-- Geo Section -->
-                            <hr>
+                <mat-tab-group>
+                    <mat-tab label="Sampling Map" *ngIf="geoLocation">
+                        <!-- Geo Section -->
+                        <hr>
+                        <div class="col-md-12" *ngIf="geoLocation">
+                            <app-mapcluster [orgGeoList]="orgGeoList" [specGeoList]="specGeoList"></app-mapcluster>
+                        </div>
+                        <hr>
+                    </mat-tab>
+                    <mat-tab label="Occurrences Map" *ngIf="nbnatlas">
+                        <hr>
+                        <div style="display: flex; justify-content: center; align-items: center;">
+                            <a href="{{nbnatlasMapUrl}}" class="btn btn-success custom-green-btn" target="_blank">
+                                Open interactive map in new window
+                            </a>
+                        </div>
 
-                            <hr>
-                        </mat-tab>
-                    </mat-tab-group>
-                </ng-template>
+                        <div class="col-md-12" style=" display: block; margin-left: 100px; margin-right: auto;">
+                            <div [ngStyle]="{height:height+'px',width:width+'px'}" *ngIf="isLoading" class="loading" >
+                                <img style="margin-left: 280px;" [src]="loader" />
+                            </div>
+                            <div  *ngIf="url">
+                                <br>
+                                <div style="display: flex; justify-content: center; align-items: center;">
+                                    <img [src]='url' (load)="hideLoader()">
+                                </div>
+
+                                <p style="text-align: center; font-size: 14px; margin-top: 10px;">
+                                    The National Biodiversity Network records are shown on the map above
+                                    (See <a href="https://nbnatlas.org/help/nbn-atlas-terms-use/" target="_blank">terms and conditions</a>).
+                                </p>
+
+                                <a href="https://nbnatlas.org/" target="_blank">
+                                    <img src="assets/NBNPower.gif" style="display: block; margin: 0 auto;">
+                                </a>
+                            </div>
+                        </div>
+                        <hr>
+                    </mat-tab>
+                </mat-tab-group>
             </mat-tab>
         </mat-tab-group>
     </div>
