@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ApiService} from "../../api.service";
 import {MatSort} from "@angular/material/sort";
@@ -40,6 +40,8 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatTableExporterModule} from "mat-table-exporter";
 import {MatExpansionPanel} from "@angular/material/expansion";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {MapClusterComponent} from "../map-cluster/map-cluster.component";
+import {SafeResourceUrl} from "@angular/platform-browser";
 
 @Component({
     selector: 'app-data-portal-details',
@@ -81,7 +83,8 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
         MatExpansionModule,
         MatExpansionPanel,
         MatTableExporterModule,
-        RouterLink
+        RouterLink,
+        MapClusterComponent
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -145,6 +148,21 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     showGenomeNote = false;
 
     geoLocation: boolean;
+    orgGeoList: any;
+    specGeoList: any;
+
+    nbnatlas: any;
+    nbnatlasMapUrl: string;
+    @Input() height = 200;
+    @Input() width = 200;
+    @Input() loader = '../../assets/200.gif';
+    isLoading: boolean;
+    url: SafeResourceUrl;
+    hideLoader(){
+        this.isLoading = false;
+    }
+
+    @ViewChild("tabgroup", { static: false }) tabgroup: MatTabGroup;
 
     @ViewChild('metadataPaginator') metadataPaginator: MatPaginator;
     @ViewChild('metadataSort') metadataSort: MatSort;
@@ -166,6 +184,19 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
     }
 
+    private transformGeoList(data: any[]): any[] {
+        return data.map(item => ({
+            commonName: item.commonName,
+            organism: item.organism.text,
+            lng: item.lon,
+            sex: item.sex,
+            locality: item.locality,
+            accession: item.accession,
+            organismPart: item.organismPart,
+            lat: item.lat
+        }));
+    }
+
     ngAfterViewInit() {
         const routeParams = this.route.snapshot.paramMap;
         const organismId = routeParams.get('organismId');
@@ -175,7 +206,25 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.isRateLimitReached = data === null;
 
                 this.organismData = data.results[0]['_source'];
-                this.metadataData = new MatTableDataSource(data.results[0]['_source']['records']);
+                this.metadataData = new MatTableDataSource(this.organismData['records']);
+
+                this.orgGeoList = this.transformGeoList(this.metadataData.filteredData);
+                this.specGeoList = [];
+
+                if (this.orgGeoList !== undefined && this.orgGeoList.length !== 0) {
+                    this.geoLocation = true;
+                }
+
+                this.nbnatlas = this.organismData['nbnatlas'];
+
+                if (this.nbnatlas != null) {
+                    this.nbnatlasMapUrl = 'https://easymap.nbnatlas.org/Image?tvk=' +
+                        this.nbnatlas.split('/')[4] + '&ref=0&w=400&h=600&b0fill=6ecc39&title=0' ;
+                    this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.nbnatlasMapUrl);
+                    this.nbnatlasMapUrl = 'https://records.nbnatlas.org/occurrences/search?q=lsid:' +
+                        this.nbnatlas.split('/')[4] + '+&nbn_loading=true&fq=-occurrence_status%3A%22absent%22#tab_mapView';
+                }
+
                 this.metadataDataLength = data.results[0]['_source']['records'].length;
 
                 if (data.results[0]['_source']['annotation'] && data.results[0]['_source']['annotation'].lenght !== 0) {
@@ -325,7 +374,12 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         return this.sanitizer.bypassSecurityTrustHtml(content);
     }
 
-
-
+    onTabChange(event: any) {
+        if (event.tab.textLabel === 'Geo Location Maps') {
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+        }
+    }
 
 }
