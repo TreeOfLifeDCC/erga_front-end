@@ -160,4 +160,97 @@ export class ApiService {
         return this.http.post(url, payload, {responseType: 'blob'});
     }
 
+
+
+    // getAllPublications(offset, limit, filter?) {
+    //     url = 'https://portal.darwintreeoflife.org/statuses_update/';
+    //     const filters = [];
+    //     let url = `${url}articles?offset=${offset}&limit=${limit}`;
+    //     for (const key of filter) {
+    //         if (['Genome Note', 'Research Article'].indexOf(key) !== -1) {
+    //             filters.push(`articleType=${key}`);
+    //         } else if (['2020', '2021', '2022', '2023', '2024'].indexOf(key) !== -1) {
+    //             filters.push(`pubYear=${key}`);
+    //         } else {
+    //             filters.push(`journalTitle=${key}`);
+    //         }
+    //     }
+    //     for (const key of filters) {
+    //         url = `${url}&${key}`;
+    //     }
+    //     return this.http.get<any>(url);
+    // }
+
+    getPublicationsData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
+            filterValue: string[], index_name: string) {
+
+        const offset = pageIndex * pageSize;
+        // let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
+        let url = `http://127.0.0.1:8000/${index_name}?limit=${pageSize}&offset=${offset}`;
+        if (searchValue) {
+            url += `&search=${searchValue}`;
+        }
+        if (sortActive && sortDirection) {
+            url += `&sort=${sortActive}:${sortDirection}`;
+        }
+        if (filterValue.length !== 0) {
+            let filterStr = '&filter=';
+            let filterItem;
+            for (let i = 0; i < filterValue.length; i++) {
+                console.log(filterValue[i])
+                const filterName = filterValue[i].split('-')[0]
+                const filterVal = filterValue[i].split('-')[1]
+                console.log(filterName)
+                console.log(filterVal)
+                if (filterName == 'article_type'){
+                    filterItem = `articleType:${filterVal}`
+                } else if (filterName == 'pub_year') {
+                    filterItem = `pubYear:${filterVal}`;
+                } else if (filterName == 'journal_title') {
+                    filterItem = `journalTitle:${filterVal}`;
+                }
+                filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
+            }
+            url += filterStr;
+        }
+
+
+        // will not reload the page, but will update query params
+        this.router.navigate([],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: {
+                    'filter': filterValue,
+                    'sortActive': sortActive,
+                    'sortDirection': sortDirection,
+                    'searchValue': searchValue,
+                    'pageIndex': pageIndex,
+                    'pageSize': pageSize
+                },
+                queryParamsHandling: 'merge',
+            });
+
+        return this.http.get<any>(url);
+    }
+
+
+    getAllPublications(offset: number, limit: number, filter?: any) {
+        const base_url = 'http://localhost:8000/';
+        const filters = [];
+        let url = `${base_url}articles?offset=${offset}&limit=${limit}`;
+        for (const key of filter) {
+            if (['Genome Note', 'Research Article'].indexOf(key) !== -1) {
+                filters.push(`articleType=${key}`);
+            } else if (['2020', '2021', '2022', '2023', '2024'].indexOf(key) !== -1) {
+                filters.push(`pubYear=${key}`);
+            } else {
+                filters.push(`journalTitle=${key}`);
+            }
+        }
+        for (const key of filters) {
+            url = `${url}&${key}`;
+        }
+        return this.http.get<any>(url);
+    }
+
 }

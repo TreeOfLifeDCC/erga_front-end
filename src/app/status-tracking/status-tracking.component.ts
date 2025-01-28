@@ -9,7 +9,6 @@ import {MatList, MatListItem} from "@angular/material/list";
 import {FlexModule} from "@angular/flex-layout";
 import {MatLine} from "@angular/material/core";
 import {MatChip, MatChipSet} from "@angular/material/chips";
-import {NgForOf} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
