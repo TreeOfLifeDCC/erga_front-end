@@ -158,9 +158,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     @Input() loader = '../../assets/200.gif';
     isLoading: boolean;
     url: SafeResourceUrl;
-    hideLoader(){
-        this.isLoading = false;
-    }
+
+    isMapLoading: boolean = true;
 
     @ViewChild("tabgroup", { static: false }) tabgroup: MatTabGroup;
 
@@ -374,11 +373,21 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         return this.sanitizer.bypassSecurityTrustHtml(content);
     }
 
+    onMapLoad() {
+        this.isMapLoading = false;
+    }
+    onMapError() {
+        console.error('Error loading occurrences map image.');
+        this.isMapLoading = false;
+    }
     onTabChange(event: any) {
         if (event.tab.textLabel === 'Geo Location Maps') {
             setTimeout(() => {
                 window.dispatchEvent(new Event('resize'));
             }, 100);
+        }
+        if (event.tab.textLabel === 'Occurrences Map') {
+            this.isMapLoading = true;
         }
     }
 
