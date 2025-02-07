@@ -676,42 +676,40 @@
             <mat-tab label="Geo Location Maps">
                 <mat-tab-group>
                     <mat-tab label="Sampling Map" *ngIf="geoLocation">
-                        <!-- Geo Section -->
-                        <hr>
                         <div class="col-md-12" *ngIf="geoLocation">
                             <app-mapcluster [orgGeoList]="orgGeoList" [specGeoList]="specGeoList"></app-mapcluster>
                         </div>
-                        <hr>
                     </mat-tab>
                     <mat-tab label="Occurrences Map" *ngIf="nbnatlas">
-                        <hr>
-                        <div style="display: flex; justify-content: center; align-items: center;">
+                        <div *ngIf="isMapLoading" class="loading-container">
+                            <div class="spinner-wrapper">
+                                <mat-spinner></mat-spinner>
+                                <p>Loading map...</p>
+                            </div>
+                        </div>
+                        <div *ngIf="!isMapLoading" class="map-button-container">
                             <a href="{{nbnatlasMapUrl}}" class="btn btn-success custom-green-btn" target="_blank">
                                 Open interactive map in new window
                             </a>
                         </div>
-
-                        <div class="col-md-12" style=" display: block; margin-left: 100px; margin-right: auto;">
-                            <div [ngStyle]="{height:height+'px',width:width+'px'}" *ngIf="isLoading" class="loading" >
+                        <div class="col-md-12" style="display: block; margin-left: 100px; margin-right: auto;">
+                            <div *ngIf="isLoading" class="loading">
                                 <img style="margin-left: 280px;" [src]="loader" />
                             </div>
-                            <div  *ngIf="url">
+                            <div *ngIf="url">
                                 <br>
                                 <div style="display: flex; justify-content: center; align-items: center;">
-                                    <img [src]='url' (load)="hideLoader()">
+                                    <img [src]='url' (load)="onMapLoad()" (error)="onMapError()">
                                 </div>
-
                                 <p style="text-align: center; font-size: 14px; margin-top: 10px;">
                                     The National Biodiversity Network records are shown on the map above
                                     (See <a href="https://nbnatlas.org/help/nbn-atlas-terms-use/" target="_blank">terms and conditions</a>).
                                 </p>
-
                                 <a href="https://nbnatlas.org/" target="_blank">
-                                    <img src="assets/NBNPower.gif" style="display: block; margin: 0 auto;">
+                                    <img src="assets/NBNPower.gif" class="nbn-logo">
                                 </a>
                             </div>
                         </div>
-                        <hr>
                     </mat-tab>
                 </mat-tab-group>
             </mat-tab>
