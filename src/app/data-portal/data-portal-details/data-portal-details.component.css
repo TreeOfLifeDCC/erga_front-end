@@ -202,3 +202,27 @@ mat-chip {
 .text-center {
     text-align: center!important;
 }
+
+.map-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.spinner-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nbn-logo {
+    display: block;
+    margin: 0 auto 20px;
+}
