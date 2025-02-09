@@ -10,7 +10,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
 import {RouterLink} from "@angular/router";
 import {MatIconButton} from "@angular/material/button";
-import {ExtendedModule, FlexModule} from "@angular/flex-layout";
+import {ExtendedModule, FlexModule} from "@ngbracket/ngx-layout";
 
 @Component({
     selector: 'app-header',

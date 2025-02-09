@@ -2,34 +2,18 @@
     display: flex; /* or inline-flex */
     flex-flow: row wrap;
     justify-content: space-evenly;
-    gap: 5px 5px;
+    gap: 5px;
 }
 
-.item1 {
-    flex-grow: 3;
-}
-
-.item2 {
-    flex-grow: 25;
-}
-
-.item3 {
-    flex-grow: 1;
-}
-
-.item0 {
-    flex-grow: 1;
-}
+.item0 { flex-grow: 1; }
+.item2 { flex-grow: 25; }
+.item3 { flex-grow: 1; }
 
 dl {
     display: flex;
     flex-wrap: wrap;
 }
-
-dt {
-    width: 20%;
-}
-
+dt { width: 20%; }
 dd {
     margin-left: auto;
     width: 80%;
@@ -39,9 +23,13 @@ table {
     width: 100%;
 }
 
-.mat-form-field {
-    font-size: 14px;
+.card-contents {
     width: 100%;
+}
+
+.searchField {
+    width: 100%;
+    margin-top: 10px;
 }
 
 h1 {
@@ -52,8 +40,8 @@ h1 {
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 56px;
     right: 0;
+    bottom: 56px;
     background: rgba(0, 0, 0, 0.15);
     z-index: 1;
     display: flex;
@@ -199,10 +187,6 @@ mat-chip {
     border-color: #28a745;
 }
 
-.text-center {
-    text-align: center!important;
-}
-
 .map-button-container {
     display: flex;
     justify-content: center;
@@ -225,4 +209,174 @@ mat-chip {
 .nbn-logo {
     display: block;
     margin: 0 auto 20px;
+}
+
+.filter-container {
+    width: 150px;
+    margin-right: 20px;
+}
+
+.filter-actions-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.example-card {
+    margin: 5px;
+    margin-bottom: 15px;
+    background-color: #8FBC45;
+}
+
+.mat-card-title {
+    font-size: 14px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.toggle-icon {
+    cursor: pointer;
+}
+
+.example-viewport {
+    width: 100%;
+    overflow-y: auto;
+    display: block;
+}
+
+.example-item {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-content {
+    border-radius: 4px;
+}
+
+.filter-content button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    color: black;
+    width: 100%;
+    padding: 18px 18px;
+    background-color: white;
+    cursor: pointer;
+    border: none;
+    border-top: 1px solid #dcdcdc;
+    font-family: Arial, sans-serif;
+}
+
+.filter-content button:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.filter-content button:hover {
+    background-color: #e0e0e0;
+}
+
+.filter-content .badge {
+    background-color: #007c82;
+    color: white;
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    line-height: 1;
+    border-radius: 12px;
+}
+
+.filter-content button.active-filter {
+    color: #fff;
+    background-color: #4BBEFD;
+}
+
+.table-container {
+    padding-left: 20px;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+}
+
+.filters-label {
+    font-size: 20px;
+    color: black;
+    align-self: center;
+}
+
+.clear-filters-button {
+    margin-left: 5px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #4BBEFD;
+    color: white !important;
+}
+
+.selected-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.selected-filter,
+.clear-filters-button {
+    font-weight: normal !important;
+}
+
+.selected-filter {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 5px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #8FBC45;
+    padding: 10px 20px;
+    color: white !important;
+}
+
+.selected-filter .filter-text {
+    order: 1;
+    margin-left: 8px;
+}
+
+.selected-filter .filter-close-icon {
+    order: 2;
+    margin-left: 8px;
+}
+
+.active-filters {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.main-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.left-panel {
+    width: 270px;
+}
+
+.right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
