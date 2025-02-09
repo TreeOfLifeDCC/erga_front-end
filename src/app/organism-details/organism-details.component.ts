@@ -19,7 +19,7 @@ import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatChip} from "@angular/material/chips";
 import {MatAnchor} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
-import {FlexLayoutModule} from "@angular/flex-layout";
+import {FlexLayoutModule} from "@ngbracket/ngx-layout";
 
 @Component({
     selector: 'app-organism-details',

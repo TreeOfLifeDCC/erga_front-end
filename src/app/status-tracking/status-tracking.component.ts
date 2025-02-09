@@ -6,7 +6,7 @@ import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
 import {MatList, MatListItem} from "@angular/material/list";
-import {FlexModule} from "@angular/flex-layout";
+import {FlexModule} from "@ngbracket/ngx-layout";
 import {MatLine} from "@angular/material/core";
 import {MatChip, MatChipSet} from "@angular/material/chips";
 import {MatIcon} from "@angular/material/icon";
