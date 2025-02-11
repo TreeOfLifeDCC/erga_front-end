@@ -43,22 +43,28 @@ export class ApiService {
             for (let i = 0; i < filterValue.length; i++) {
                 if (project_names.indexOf(filterValue[i]) !== -1) {
                     filterValue[i] === 'DToL' ? filterItem = 'project_name:dtol' : filterItem = `project_name:${filterValue[i]}`;
-                } else if (filterValue[i].includes('-')) {
+                } else if (filterValue[i].includes('-') && !filterValue[i].startsWith('experimentType')) {
                     if (filterValue[i].startsWith('symbionts')) {
                         filterItem = filterValue[i].replace('-', ':');
                     } else {
                         filterItem = filterValue[i].split(' - ')[0].toLowerCase().split(' ').join('_');
                         if (filterItem === 'assemblies') {
                             filterItem = 'assemblies_status:Done';
+                        }else if (filterItem === 'genome_notes') {
+                            filterItem = 'genome_notes:Submitted';
                         } else
                             filterItem = `${filterItem}:Done`;
                     }
+                } else if (filterValue[i].includes('_') && filterValue[i].startsWith('experimentType')) {
+                    filterItem = filterValue[i].replace('_', ':');
+
                 } else {
                     filterItem = `${currentClass}:${filterValue[i]}`;
                 }
                 filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
 
             }
+
             url += filterStr;
         }
         if (phylogeny_filters.length !== 0) {
@@ -121,9 +127,12 @@ export class ApiService {
                         filterItem = item.replace('-', ':');
                     } else {
                         filterItem = item.split(' - ')[0].toLowerCase().replace(/\s+/g, '_');
-                        filterItem = (filterItem === 'assemblies') ? 'assemblies_status:Done' :
-                            (filterItem === 'genome_notes') ? 'genome_notes:Submitted' :
-                                `${filterItem}:Done`;
+                        if (filterItem === 'assemblies') {
+                            filterItem = 'assemblies_status:Done';
+                        }else if (filterItem === 'genome_notes') {
+                            filterItem = 'genome_notes:Submitted';
+                        } else
+                            filterItem = `${filterItem}:Done`;
                     }
                 } else if (item.includes('_') && item.startsWith('experimentType')) {
                     filterItem = item.replace('_', ':');
@@ -149,6 +158,58 @@ export class ApiService {
             downloadOption
         };
         return this.http.post(url, payload, {responseType: 'blob'});
+    }
+
+    getPublicationsData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
+            filterValue: string[], index_name: string) {
+
+        const offset = pageIndex * pageSize;
+        let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
+        // let url = `http://127.0.0.1:8000/${index_name}?limit=${pageSize}&offset=${offset}`;
+        if (searchValue) {
+            url += `&search=${searchValue}`;
+        }
+        if (sortActive && sortDirection) {
+            url += `&sort=${sortActive}:${sortDirection}`;
+        }
+        if (filterValue.length !== 0) {
+            let filterStr = '&filter=';
+            let filterItem;
+            for (let i = 0; i < filterValue.length; i++) {
+                console.log(filterValue[i])
+                const filterName = filterValue[i].split('-')[0]
+                const filterVal = filterValue[i].split('-')[1]
+                console.log(filterName)
+                console.log(filterVal)
+                if (filterName == 'article_type'){
+                    filterItem = `articleType:${filterVal}`
+                } else if (filterName == 'pub_year') {
+                    filterItem = `pubYear:${filterVal}`;
+                } else if (filterName == 'journal_title') {
+                    filterItem = `journalTitle:${filterVal}`;
+                }
+                filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
+            }
+            url += filterStr;
+        }
+
+
+        // will not reload the page, but will update query params
+        this.router.navigate([],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: {
+                    'filter': filterValue,
+                    'sortActive': sortActive,
+                    'sortDirection': sortDirection,
+                    'searchValue': searchValue,
+                    'pageIndex': pageIndex,
+                    'pageSize': pageSize
+                },
+                queryParamsHandling: 'merge',
+            });
+
+        return this.http.get<any>(url);
     }
 
 }

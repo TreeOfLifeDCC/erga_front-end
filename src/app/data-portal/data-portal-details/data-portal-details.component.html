@@ -424,53 +424,43 @@
                                    showFirstLastButtons>
                     </mat-paginator>
                 </ng-container>
-
             </mat-tab>
-            <mat-tab label="Genome Note" *ngIf="showGenomeNote">
-                <h1>Published Genome Note</h1>
-                <div class="example-loading-shade"
-                     *ngIf="isLoadingResults || isRateLimitReached">
-                    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-                    <div class="example-rate-limit-reached"
-                         *ngIf="isRateLimitReached">
-                        Something went wrong, please try again!
+
+            @if(showGenomeNote){
+                <mat-tab label="Publications">
+                    <!-- Genome Notes Section -->
+                    <div class="goat-box">
+                        <hr>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header class="page-header">
+                                <h1>Published Genome Note</h1>
+                            </mat-expansion-panel-header>
+                            @for(gen of organismData?.genome_notes; track $index){
+                                <div class="genome-card">
+                                    <h2 class="title" [innerHTML]="sanitizeHTML(gen.title)"></h2>
+                                    <div class="content">
+                                        <img class="image" src="{{gen.figureURI}}" alt="Genome Image" (click)="openPopup(gen.figureURI)">
+                                        <div class="text">
+                                            <p>{{gen.abstract}}</p>
+                                            <a href="{{gen.url}}" class="read-btn" target="_blank">Read the Genome Note in full</a>
+                                        </div>
+                                    </div>
+                                    <p class="caption">{{gen.caption}}</p>
+                                    <p class="cite">{{gen.citeURL}}</p>
+                                </div>
+                            }
+                        </mat-expansion-panel>
                     </div>
-                </div>
-                <br>
 
-                <mat-card class="example-card">
-                    <mat-card-header>
-                        <mat-card-title>{{ getGenomeNoteData(organismData.genome_notes, 'title') }}</mat-card-title>
-                    </mat-card-header>
-                    <img mat-card-image
-                         src="{{getGenomeNoteData(organismData.genome_notes, 'figureURI')}}"
-                         alt="Figure 1">
-                    <mat-card-content>
-                        <p>
-                            {{ getGenomeNoteData(organismData.genome_notes, 'caption') }}
-                        </p>
-                        <p>
-                            {{ getGenomeNoteData(organismData.genome_notes, 'abstract') }}
-                        </p>
-                    </mat-card-content>
-                    <mat-card-actions>
-                        <div fxLayout="column">
-                            <div>
-                                <a mat-button
-                                   href="{{getGenomeNoteData(organismData.genome_notes, 'url')}}"
-                                   style="background-color: limegreen; color: black; margin-bottom: 5px">
-                                    Read the Genome Note in full here
-                                </a>
-                            </div>
-                            <div>
-                                {{ getGenomeNoteData(organismData.genome_notes, 'citeURL') }}
-                            </div>
+                    <!-- popup Modal -->
+                    <div class="popup-overlay" *ngIf="popupImage" (click)="closePopup()">
+                        <div class="popup-content">
+                            <img [src]="popupImage" class="popup-image">
                         </div>
+                    </div>
+                </mat-tab>
+            }
 
-                    </mat-card-actions>
-                </mat-card>
-
-            </mat-tab>
             <mat-tab label="Symbionts"
                      *ngIf="organismData?.symbionts_records && organismData?.symbionts_records.length"
                      class=tab-width>

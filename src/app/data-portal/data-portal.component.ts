@@ -79,6 +79,7 @@ import {FormsModule} from "@angular/forms";
 })
 export class DataPortalComponent implements OnInit, AfterViewInit {
     symbiontsFilters: any[] = [];
+    experimentTypeFilters: any[] = [];
     displayedColumns: string[] = ['organism', 'commonName', 'commonNameSource', 'currentStatus', 'externalReferences'];
     data: any;
     searchValue: string;
@@ -91,7 +92,10 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     aggregations: any;
     isPhylogenyFilterProcessing = false; // Flag to prevent double-clicking
     activeFilters = new Array<string>();
-    showAll = false;
+    showAllFilters: { [key: string]: boolean } = {
+        projects: false,
+        experimentTypes: false,
+    };
 
     currentStyle: string;
     currentClass = 'kingdom';
@@ -102,7 +106,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     timer: any;
     phylogenyFilters: string[] = [];
     queryParams: any = {};
-    preventSimpleClick = false;
     genomelength = 0;
     tolqc_length = 0;
     result: any;
@@ -185,6 +188,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                     // would prevent users from re-triggering requests.
                     this.resultsLength = data.count;
                     this.aggregations = data.aggregations;
+                    console.log(this.aggregations)
 
                     // symbionts
                     this.symbiontsFilters = [];
@@ -202,6 +206,19 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                         this.symbiontsFilters = this.merge(this.symbiontsFilters,
                             this.aggregations.symbionts_assemblies_status.buckets,
                             'symbionts_assemblies_status');
+                    }
+
+                    // experiment Type
+                    this.experimentTypeFilters = [];
+                    if (this.aggregations?.experiment.library_construction_protocol.buckets.length > 0) {
+                        this.experimentTypeFilters = this.merge(this.experimentTypeFilters,
+                            this.aggregations?.experiment.library_construction_protocol.buckets,
+                            'experimentType');
+                    }
+
+                    // remove empty experiment types
+                    if (this.experimentTypeFilters.length > 0) {
+                        this.experimentTypeFilters = this.experimentTypeFilters.filter(bucket => bucket.key !== '')
                     }
 
 
@@ -270,8 +287,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.router.navigate([]);
     }
 
-    toggleProjects(): void {
-        this.showAll = !this.showAll;
+    toggleFilter(key: string): void {
+        this.showAllFilters[key] = !this.showAllFilters[key];
     }
 
     merge = (first: any[], second: any[], filterLabel: string) => {
@@ -316,8 +333,13 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         }
     }
 
-    onFilterClick(filterName:String , filterValue: string, phylogenyFilter: boolean = false) {
-        // phylogeny filter selection
+    onFilterClick(filterValue: string, phylogenyFilter: boolean = false) {
+        //reset showAllFilters
+        this.showAllFilters = {
+            projects: false,
+            experimentTypes: false,
+        };
+
         if (phylogenyFilter) {
             if (this.isPhylogenyFilterProcessing) {
                 return;
@@ -330,7 +352,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             this.currentClass = this.classes[index];
 
             // update url with the value of the phylogeny current class
-            this.updateQueryParams('phylogenyCurrentClass')
+            this.updateQueryParams('phylogenyCurrentClass');
 
             // Replace current parameters with new parameters.
             this.replaceUrlQueryParams();
@@ -342,17 +364,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             }, 500);
         } else{
             clearTimeout(this.timer);
-            if (filterName.startsWith('symbionts_') || filterName.startsWith('metagenomes_')){
-                filterValue = `${filterName}-${filterValue}`;
-            }
             const index = this.activeFilters.indexOf(filterValue);
-            console.log(index)
-
             index !== -1 ? this.activeFilters.splice(index, 1) : this.activeFilters.push(filterValue);
-            console.log(this.activeFilters)
             this.filterChanged.emit();
         }
     }
+
 
     checkStyle(filterValue: string) {
         if (this.activeFilters.includes(filterValue)) {
