@@ -426,6 +426,46 @@
                 </ng-container>
 
             </mat-tab>
+
+            <!-- Koosum added -->
+
+            @if(showGenomeNote){
+                <mat-tab label="Publications">
+                    <!-- Genome Notes Section -->
+                    <div class="goat-box">
+                        <hr>
+                        <mat-expansion-panel [expanded]="true">
+                            <mat-expansion-panel-header class="page-header">
+                                <h1>Published Genome Note</h1>
+                            </mat-expansion-panel-header>
+                            @for(gen of organismData?.genome_notes; track $index){
+                                <div class="genome-card">
+                                    <h2 class="title" [innerHTML]="sanitizeHTML(gen.title)"></h2>
+                                    <div class="content">
+                                        <img class="image" src="{{gen.figureURI}}" alt="Genome Image" (click)="openPopup(gen.figureURI)">
+                                        <div class="text">
+                                            <p>{{gen.abstract}}</p>
+                                            <a href="{{gen.url}}" class="read-btn" target="_blank">Read the Genome Note in full</a>
+                                        </div>
+                                    </div>
+                                    <p class="caption">{{gen.caption}}</p>
+                                    <p class="cite">{{gen.citeURL}}</p>
+                                </div>
+                            }
+                        </mat-expansion-panel>
+                    </div>
+
+                    <!-- popup Modal -->
+                    <div class="popup-overlay" *ngIf="popupImage" (click)="closePopup()">
+                        <div class="popup-content">
+                            <img [src]="popupImage" class="popup-image">
+                        </div>
+                    </div>
+                </mat-tab>
+            }
+
+            <!-- koosum end -->
+
             <mat-tab label="Genome Note" *ngIf="showGenomeNote">
                 <h1>Published Genome Note</h1>
                 <div class="example-loading-shade"

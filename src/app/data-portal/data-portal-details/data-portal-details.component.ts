@@ -6,6 +6,7 @@ import {merge, of as observableOf} from "rxjs";
 import {catchError, map, startWith, switchMap} from "rxjs/operators";
 import {keyframes} from "@angular/animations";
 import {MatPaginator} from "@angular/material/paginator";
+import { MatExpansionModule } from '@angular/material/expansion';
 import {
     MatCell,
     MatCellDef,
@@ -37,6 +38,8 @@ import {MatChip} from "@angular/material/chips";
 import {NgForOf, NgIf} from "@angular/common";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatTableExporterModule} from "mat-table-exporter";
+import {MatExpansionPanel} from "@angular/material/expansion";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 @Component({
     selector: 'app-data-portal-details',
@@ -74,7 +77,9 @@ import {MatTableExporterModule} from "mat-table-exporter";
         NgForOf,
         MatLabel,
         MatFormField,
-        MatTableExporterModule
+        MatTableExporterModule,
+        MatExpansionModule,
+        MatExpansionPanel
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -102,7 +107,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     };
 
     specialColumns = ['fastq_ftp', 'submitted_ftp', 'sra_ftp']
-
+    popupImage: string | null = null;
     metadataData: any;
     metadataDataLength: number;
     annotationData: any;
@@ -149,7 +154,9 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     @ViewChild('filesPaginator') filesPaginator: MatPaginator;
     @ViewChild('filesSort') filesSort: MatSort;
 
-    constructor(private route: ActivatedRoute, private _apiService: ApiService) {
+    constructor(private route: ActivatedRoute,
+                private _apiService: ApiService,
+                private sanitizer: DomSanitizer) {
     }
 
     ngOnInit(): void {
@@ -302,8 +309,17 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         return data.hasOwnProperty('nagoya_protocol');
     }
 
+    openPopup(imageUrl: string) {
+        this.popupImage = imageUrl;
+    }
 
+    closePopup() {
+        this.popupImage = null;
+    }
 
+    sanitizeHTML(content: string): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(content);
+    }
 
 
 
