@@ -164,8 +164,8 @@ export class ApiService {
             filterValue: string[], index_name: string) {
 
         const offset = pageIndex * pageSize;
-        // let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
-        let url = `http://127.0.0.1:8000/${index_name}?limit=${pageSize}&offset=${offset}`;
+        let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
+        // let url = `http://127.0.0.1:8000/${index_name}?limit=${pageSize}&offset=${offset}`;
         if (searchValue) {
             url += `&search=${searchValue}`;
         }
