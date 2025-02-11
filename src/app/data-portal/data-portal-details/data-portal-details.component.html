@@ -424,10 +424,7 @@
                                    showFirstLastButtons>
                     </mat-paginator>
                 </ng-container>
-
             </mat-tab>
-
-            <!-- Koosum added -->
 
             @if(showGenomeNote){
                 <mat-tab label="Publications">
@@ -464,53 +461,6 @@
                 </mat-tab>
             }
 
-            <!-- koosum end -->
-
-            <mat-tab label="Genome Note" *ngIf="showGenomeNote">
-                <h1>Published Genome Note</h1>
-                <div class="example-loading-shade"
-                     *ngIf="isLoadingResults || isRateLimitReached">
-                    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-                    <div class="example-rate-limit-reached"
-                         *ngIf="isRateLimitReached">
-                        Something went wrong, please try again!
-                    </div>
-                </div>
-                <br>
-
-                <mat-card class="example-card">
-                    <mat-card-header>
-                        <mat-card-title>{{ getGenomeNoteData(organismData.genome_notes, 'title') }}</mat-card-title>
-                    </mat-card-header>
-                    <img mat-card-image
-                         src="{{getGenomeNoteData(organismData.genome_notes, 'figureURI')}}"
-                         alt="Figure 1">
-                    <mat-card-content>
-                        <p>
-                            {{ getGenomeNoteData(organismData.genome_notes, 'caption') }}
-                        </p>
-                        <p>
-                            {{ getGenomeNoteData(organismData.genome_notes, 'abstract') }}
-                        </p>
-                    </mat-card-content>
-                    <mat-card-actions>
-                        <div fxLayout="column">
-                            <div>
-                                <a mat-button
-                                   href="{{getGenomeNoteData(organismData.genome_notes, 'url')}}"
-                                   style="background-color: limegreen; color: black; margin-bottom: 5px">
-                                    Read the Genome Note in full here
-                                </a>
-                            </div>
-                            <div>
-                                {{ getGenomeNoteData(organismData.genome_notes, 'citeURL') }}
-                            </div>
-                        </div>
-
-                    </mat-card-actions>
-                </mat-card>
-
-            </mat-tab>
             <mat-tab label="Symbionts"
                      *ngIf="organismData?.symbionts_records && organismData?.symbionts_records.length"
                      class=tab-width>
