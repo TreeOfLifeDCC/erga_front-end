@@ -86,7 +86,7 @@ export class MapClusterComponent implements AfterViewInit {
 
   getLatLong(): any {
     if (!this.orgGeoList || this.orgGeoList.length === 0) {
-      console.warn('orgGeoList is undefined or empty.');
+      console.warn('orgGeoList is undefined or empty');
       return;
     }
 
@@ -112,7 +112,7 @@ export class MapClusterComponent implements AfterViewInit {
     }
 
     if (!this.specGeoList || this.specGeoList.length === 0) {
-      console.warn('specGeoList is undefined or empty.');
+      console.warn('specGeoList is undefined or empty');
     }
 
     let specGeoSize = this.specGeoList.length
