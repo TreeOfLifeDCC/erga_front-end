@@ -163,6 +163,12 @@ export class ApiService {
     getPublicationsData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
             filterValue: string[], index_name: string) {
 
+        const sortActiveESField: { [index: string]: any } = {
+            'title': 'title.keyword',
+            'study_id': 'study_id.keyword',
+            'organism_name': 'organism_name.keyword'
+        }
+
         const offset = pageIndex * pageSize;
         let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
         // let url = `http://127.0.0.1:8000/${index_name}?limit=${pageSize}&offset=${offset}`;
@@ -170,17 +176,14 @@ export class ApiService {
             url += `&search=${searchValue}`;
         }
         if (sortActive && sortDirection) {
-            url += `&sort=${sortActive}:${sortDirection}`;
+            url += `&sort=${sortActive in sortActiveESField ?  sortActiveESField[sortActive]: sortActive}:${sortDirection}`;
         }
         if (filterValue.length !== 0) {
             let filterStr = '&filter=';
             let filterItem;
             for (let i = 0; i < filterValue.length; i++) {
-                console.log(filterValue[i])
                 const filterName = filterValue[i].split('-')[0]
                 const filterVal = filterValue[i].split('-')[1]
-                console.log(filterName)
-                console.log(filterVal)
                 if (filterName == 'article_type'){
                     filterItem = `articleType:${filterVal}`
                 } else if (filterName == 'pub_year') {
@@ -193,14 +196,13 @@ export class ApiService {
             url += filterStr;
         }
 
-
         // will not reload the page, but will update query params
         this.router.navigate([],
             {
                 relativeTo: this.activatedRoute,
                 queryParams: {
                     'filter': filterValue,
-                    'sortActive': sortActive,
+                    'sortActive': sortActive in sortActiveESField ?  sortActiveESField[sortActive]: sortActive,
                     'sortDirection': sortDirection,
                     'searchValue': searchValue,
                     'pageIndex': pageIndex,
