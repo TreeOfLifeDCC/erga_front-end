@@ -157,7 +157,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                     this.isLoadingResults = true;
                     return this._apiService.getData(this.paginator.pageIndex,
                         this.paginator.pageSize, this.searchValue, this.sort.active, this.sort.direction, this.activeFilters,
-                        this.currentClass, this.phylogenyFilters, 'tracking_status_index_test'
+                        this.currentClass, this.phylogenyFilters, 'tracking_status'
                     ).pipe(catchError(() => observableOf(null)));
                 }),
                 map(data => {
