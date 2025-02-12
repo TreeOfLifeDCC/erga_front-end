@@ -72,7 +72,7 @@ import { TruncatePipe } from './truncate.pipe';
   standalone: true
 })
 export class PublicationsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['title', 'journal_name', 'year', 'study_id', 'organism_name'];
+  displayedColumns: string[] = ['title', 'journalTitle', 'pubYear', 'study_id', 'organism_name'];
   data: any;
   searchValue: string;
   searchChanged = new EventEmitter<any>();
