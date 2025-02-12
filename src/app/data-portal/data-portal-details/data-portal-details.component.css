@@ -284,17 +284,12 @@ mat-chip {
     background-color: white;
     cursor: pointer;
     border: none;
-    #border-top: 1px solid #dcdcdc;
     font-family: Arial, sans-serif;
 }
 
 .filter-content button:last-child {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-}
-
-.filter-content button:hover {
-    #background-color: #e0e0e0;
 }
 
 .filter-content .badge {
