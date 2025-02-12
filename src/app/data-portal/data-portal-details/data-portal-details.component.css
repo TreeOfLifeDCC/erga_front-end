@@ -226,16 +226,28 @@ mat-chip {
 .example-card {
     margin: 5px;
     margin-bottom: 15px;
-    background-color: #8FBC45;
 }
 
-.mat-card-title {
-    font-size: 14px;
+.example-card .mat-mdc-card-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 8px;
+}
+
+.example-card .mat-mdc-card-title {
+    width: 100% !important;
+    text-align: left !important;
+    margin: 0 !important;
+    align-self: flex-start !important;
+    font-size: 18px !important;
 }
 
 .header-content {
     display: flex;
-    align-items: center;
+    text-align: left !important;
+    align-items: flex-start;
     justify-content: space-between;
     width: 100%;
 }
@@ -272,7 +284,7 @@ mat-chip {
     background-color: white;
     cursor: pointer;
     border: none;
-    border-top: 1px solid #dcdcdc;
+    #border-top: 1px solid #dcdcdc;
     font-family: Arial, sans-serif;
 }
 
@@ -282,22 +294,26 @@ mat-chip {
 }
 
 .filter-content button:hover {
-    background-color: #e0e0e0;
+    #background-color: #e0e0e0;
 }
 
 .filter-content .badge {
-    background-color: #007c82;
-    color: white;
+    background-color: #e0e0e0;
+    color: black;
     display: inline-block;
     font-size: 10px;
     padding: 2px 6px;
-    line-height: 1;
     border-radius: 12px;
 }
 
 .filter-content button.active-filter {
-    color: #fff;
-    background-color: #4BBEFD;
+    color: black;
+    background-color: rgb(168, 186, 168);
+}
+
+.filter-content button.active-filter .badge {
+    background-color: #e0e0e0 !important;
+    color: black !important;
 }
 
 .table-container {
@@ -317,17 +333,18 @@ mat-chip {
 }
 
 .clear-filters-button {
-    margin-left: 5px;
+    margin-left: 3px;
     font-size: 14px;
     border-radius: 4px;
-    background-color: #4BBEFD;
-    color: white !important;
+    background-color: #f08080;
+    color: black;
 }
 
 .selected-filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 3px;
+    background-color: white;
 }
 
 .selected-filter,
@@ -342,9 +359,9 @@ mat-chip {
     margin-left: 5px;
     font-size: 14px;
     border-radius: 4px;
-    background-color: #8FBC45;
     padding: 10px 20px;
-    color: white !important;
+    color: black !important;
+    background-color: #e0f0ea;
 }
 
 .selected-filter .filter-text {
