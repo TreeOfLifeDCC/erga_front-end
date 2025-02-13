@@ -148,15 +148,12 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     dataSourceSymbiontsAssembliesCount: number;
     displayedColumnsAssemblies = ['accession', 'assembly_name', 'description', 'version'];
 
-
     specDisplayedColumns = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
-
 
     @ViewChild('relatedSymbiontsPaginator') symPaginator: MatPaginator | undefined;
 
     @ViewChild('assembliesSymbiontsPaginator') asSymPaginator: MatPaginator | undefined;
 
-    resultsLength = 0;
     isLoadingResults = true;
     isRateLimitReached = false;
 
@@ -221,6 +218,38 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
     filterKeys: ("sex" | "organismPart" | "trackingSystem")[] = ['sex', 'organismPart', 'trackingSystem'];
 
+    codes = {
+        m: 'mammals',
+        d: 'dicots',
+        i: 'insects',
+        u: 'algae',
+        p: 'protists',
+        x: 'molluscs',
+        t: 'other-animal-phyla',
+        q: 'arthropods',
+        k: 'chordates',
+        f: 'fish',
+        a: 'amphibians',
+        b: 'birds',
+        e: 'echinoderms',
+        w: 'annelids',
+        j: 'jellyfish',
+        h: 'platyhelminths',
+        n: 'nematodes',
+        v: 'vascular-plants',
+        l: 'monocots',
+        c: 'non-vascular-plants',
+        g: 'fungi',
+        o: 'sponges',
+        r: 'reptiles',
+        s: 'sharks',
+        y: 'bacteria',
+        z: 'archea'
+    };
+
+    INSDC_ID: string = '';
+    currentStatus: string ='';
+
     @ViewChild("tabgroup", { static: false }) tabgroup: MatTabGroup;
 
     @ViewChild('metadataPaginator') metadataPaginator: MatPaginator;
@@ -279,6 +308,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.isRateLimitReached = data === null;
 
                 this.organismData = data.results[0]['_source'];
+                console.log('DATA', this.organismData);
                 this.metadataData = new MatTableDataSource(this.organismData['records']);
 
                 this.orgGeoList = this.transformGeoList(this.metadataData.filteredData);
@@ -297,6 +327,9 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.nbnatlasMapUrl = 'https://records.nbnatlas.org/occurrences/search?q=lsid:' +
                         this.nbnatlas.split('/')[4] + '+&nbn_loading=true&fq=-occurrence_status%3A%22absent%22#tab_mapView';
                 }
+
+                this.INSDC_ID = this.organismData['experiment'][0]['study_accession'];
+                this.currentStatus = this.organismData['currentStatus'];
 
                 this.metadataDataLength = data.results[0]['_source']['records'].length;
 
@@ -585,6 +618,27 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
     getSelectedFilterCount(): number {
         return Object.keys(this.getSelectedFilterList()).length;
+    }
+
+    generateTolidLink(data: any): string {
+        const organismName = data.organism.split(' ').join('_');
+
+        if (typeof data.tolid === 'string' && data.tolid.length > 0) {
+            const clade = this.codes[data.tolid.charAt(0) as keyof typeof this.codes];
+            return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
+        }
+
+        else if (Array.isArray(data.tolid) && data.tolid.length > 0 && typeof data.tolid[0] === 'string') {
+            const clade = this.codes[data.tolid[0].charAt(0) as keyof typeof this.codes];
+            return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
+        }
+
+        return '';
+    }
+
+    checkTolidExists(data: { tolid: string | any[] | null | undefined; show_tolqc: boolean; } | undefined) {
+        return data != undefined && data.tolid != undefined && data.tolid != null && data.tolid.length > 0 &&
+            data.show_tolqc === true;
     }
 
 }
