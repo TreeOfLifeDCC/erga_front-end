@@ -14,10 +14,10 @@
                     </ng-container>
                     <ng-container *ngIf="organismData?.tolid">
                         <dt><b>ToL ID:</b></dt>
-                        <dd class="d-flex align-items-center">
+                        <dd style="display: flex; gap: 10px;">
                             <span>{{ organismData?.tolid }}</span>
                             <ng-container *ngIf="checkTolidExists(organismData)">
-                                <a class="badge goat-color2" target="_blank" href="{{generateTolidLink(organismData)}}">
+                                <a class="badge organism_data" target="_blank" href="{{generateTolidLink(organismData)}}">
                                     ToL QC
                                 </a>
                             </ng-container>
@@ -29,8 +29,8 @@
                     </ng-container>
                     <ng-container *ngIf="currentStatus">
                         <dt><b>Current Status:</b></dt>
-                        <dd class="d-flex align-items-center">
-                            <a class="badge goat-color3" target="_blank">
+                        <dd>
+                            <a class="badge organism_data" target="_blank">
                                 {{ currentStatus }}
                             </a>
                         </dd>
@@ -62,7 +62,7 @@
                     Download metadata
                 </button>
 
-                <mat-form-field class="searchField">
+                <mat-form-field style="width: 100%; margin-top: 10px;">
                     <mat-label>Filter</mat-label>
                     <input matInput (keyup)="applyFilter($event, metadataData)"
                            placeholder="Ex. Mia" #input>
@@ -142,27 +142,34 @@
                     </div>
 
                     <div class="right-panel">
-                        <div class="active-filters">
-                            <div *ngIf="getSelectedFilterCount() > 0">
-                                <h1 class="filters-label">Filters:</h1>
-                            </div>
-                            <div class="selected-filters">
+                        <div class="filters_div">
+                            <mat-chip-set>
                                 <div *ngFor="let key of filterKeys">
                                     <ng-container *ngFor="let value of activeFilters[key]">
-                                        <button mat-button (click)="clearFilter(key, value)" class="selected-filter">
-                                            <span class="filter-text">{{ value }}</span>
-                                            <mat-icon class="filter-close-icon">highlight_off</mat-icon>
-                                        </button>
+                                        <div class="item4">
+                                            <mat-chip selected (click)="clearFilter(key, value)"
+                                                    style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                                <div style="display: flex; align-items: center;">
+                                                    <div style="margin-right: 3px"> {{ value }}</div>
+                                                    <mat-icon>close</mat-icon>
+                                                </div>
+                                            </mat-chip>
+                                        </div>
                                     </ng-container>
                                 </div>
-                            </div>
-                            <div *ngIf="getSelectedFilterCount() > 0">
-                                <button mat-button (click)="clearFilters()" class="clear-filters-button">
-                                    Remove all filters
-                                </button>
-                            </div>
+                                <div *ngIf="getSelectedFilterCount() > 0">
+                                    <div class="item4">
+                                        <mat-chip selected (click)="clearFilters()"
+                                                  style="cursor: pointer; padding: 0; background-color: #F08080;">
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="margin-right: 3px"> Remove all filters</div>
+                                                <mat-icon>close</mat-icon>
+                                            </div>
+                                        </mat-chip>
+                                    </div>
+                                </div>
+                            </mat-chip-set>
                         </div>
-
                         <div class="table-container">
                             <table #exporter="matTableExporter" #metadataSort="matSort" [dataSource]="metadataData" mat-table matSort matTableExporter>
 
@@ -768,7 +775,7 @@
                             </div>
                         </div>
                         <div *ngIf="!isMapLoading" class="map-button-container">
-                            <a href="{{nbnatlasMapUrl}}" class="btn btn-success custom-green-btn" target="_blank">
+                            <a href="{{nbnatlasMapUrl}}" class="btn btn-success map-btn" target="_blank">
                                 Open interactive map in new window
                             </a>
                         </div>

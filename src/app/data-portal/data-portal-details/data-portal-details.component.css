@@ -27,11 +27,6 @@ table {
     width: 100%;
 }
 
-.searchField {
-    width: 100%;
-    margin-top: 10px;
-}
-
 h1 {
     color: black;
 }
@@ -58,10 +53,6 @@ img {
     max-width: 800px;
 }
 
-mat-chip {
-    padding: 4px 9px !important;
-}
-
 .card-contents {
     width: 100%;
 }
@@ -71,8 +62,6 @@ mat-chip {
     margin-top: 10px;
 }
 
-
-/* css for Publications tab */
 .goat-box {
     padding: 10px;
 }
@@ -162,13 +151,7 @@ mat-chip {
     }
 }
 
-.card-header,
-.btn-success,
-.badge-success {
-    background-color: #8FBC45;
-}
-
-.custom-green-btn {
+.map-btn {
     background-color: #8FBC45;
     color: white;
     padding: 10px 20px;
@@ -183,14 +166,8 @@ mat-chip {
     transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
-.custom-green-btn:hover {
+.map-btn:hover {
     border-color: #28a745;
-}
-
-.map-button-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
 }
 
 .loading-container {
@@ -198,6 +175,12 @@ mat-chip {
     justify-content: center;
     align-items: center;
     height: 80vh;
+}
+
+.map-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
 }
 
 .spinner-wrapper {
@@ -246,7 +229,6 @@ mat-chip {
 
 .header-content {
     display: flex;
-    text-align: left !important;
     align-items: flex-start;
     justify-content: space-between;
     width: 100%;
@@ -315,67 +297,6 @@ mat-chip {
     padding-left: 20px;
 }
 
-.filter-buttons {
-    display: flex;
-    flex-direction: row;
-    font-size: 14px;
-}
-
-.filters-label {
-    font-size: 20px;
-    color: black;
-    align-self: center;
-}
-
-.clear-filters-button {
-    margin-left: 3px;
-    font-size: 14px;
-    border-radius: 4px;
-    background-color: #f08080;
-    color: black;
-}
-
-.selected-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    background-color: white;
-}
-
-.selected-filter,
-.clear-filters-button {
-    font-weight: normal !important;
-}
-
-.selected-filter {
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: 5px;
-    font-size: 14px;
-    border-radius: 4px;
-    padding: 10px 20px;
-    color: black !important;
-    background-color: #e0f0ea;
-}
-
-.selected-filter .filter-text {
-    order: 1;
-    margin-left: 8px;
-}
-
-.selected-filter .filter-close-icon {
-    order: 2;
-    margin-left: 8px;
-}
-
-.active-filters {
-    display: flex;
-    gap: 5px;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-}
-
 .main-container {
     display: flex;
     gap: 20px;
@@ -393,29 +314,12 @@ mat-chip {
     gap: 15px;
 }
 
-dd {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 50px;
-}
-
-.goat-color2 {
+.organism_data {
     display: inline-block;
     color: #fff;
-    background-color: #5cc45e;
-    padding: 2px 8px;
-    border-radius: 20px;
     text-decoration: none;
     font-size: 0.8rem;
-}
-
-.goat-color3 {
-    display: inline-block;
-    color: #fff;
-    background-color: #90bc45;
+    border-radius: 20px;
+    background-color: #A8BAA8;
     padding: 4px 12px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-size: 0.8rem;
 }
