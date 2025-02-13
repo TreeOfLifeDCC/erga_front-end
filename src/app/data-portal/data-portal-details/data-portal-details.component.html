@@ -14,7 +14,26 @@
                     </ng-container>
                     <ng-container *ngIf="organismData?.tolid">
                         <dt><b>ToL ID:</b></dt>
-                        <dd>{{ organismData?.tolid }}</dd>
+                        <dd class="d-flex align-items-center">
+                            <span>{{ organismData?.tolid }}</span>
+                            <ng-container *ngIf="checkTolidExists(organismData)">
+                                <a class="badge goat-color2" target="_blank" href="{{generateTolidLink(organismData)}}">
+                                    ToL QC
+                                </a>
+                            </ng-container>
+                        </dd>
+                    </ng-container>
+                    <ng-container *ngIf="INSDC_ID">
+                        <dt><b>INSDC ID:</b></dt>
+                        <dd>{{ INSDC_ID }}</dd>
+                    </ng-container>
+                    <ng-container *ngIf="currentStatus">
+                        <dt><b>Current Status:</b></dt>
+                        <dd class="d-flex align-items-center">
+                            <a class="badge goat-color3" target="_blank">
+                                {{ currentStatus }}
+                            </a>
+                        </dd>
                     </ng-container>
                     <ng-container *ngIf="organismData?.sex">
                         <dt><b>Sex:</b></dt>
@@ -753,7 +772,7 @@
                                 Open interactive map in new window
                             </a>
                         </div>
-                        <div class="col-md-12" style="display: block; margin-left: 100px; margin-right: auto;">
+                        <div class="col-md-12" style="display: block;">
                             <div *ngIf="isLoading" class="loading">
                                 <img style="margin-left: 280px;" [src]="loader" />
                             </div>
