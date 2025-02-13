@@ -392,3 +392,30 @@ mat-chip {
     flex-direction: column;
     gap: 15px;
 }
+
+dd {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 50px;
+}
+
+.goat-color2 {
+    display: inline-block;
+    color: #fff;
+    background-color: #5cc45e;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.goat-color3 {
+    display: inline-block;
+    color: #fff;
+    background-color: #90bc45;
+    padding: 4px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
