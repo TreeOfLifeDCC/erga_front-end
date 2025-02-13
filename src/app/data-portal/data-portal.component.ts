@@ -438,10 +438,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         }
     }
 
-    checkNbnAtlasExists(data: { nbnatlas: null | undefined; } | undefined): boolean {
-        return data !== undefined && data.nbnatlas !== undefined && data.nbnatlas !== null;
-    }
-
     checkNagoyaProtocol(data: any): boolean {
         return data.hasOwnProperty('nagoya_protocol');
     }
