@@ -2,34 +2,18 @@
     display: flex; /* or inline-flex */
     flex-flow: row wrap;
     justify-content: space-evenly;
-    gap: 5px 5px;
+    gap: 5px;
 }
 
-.item1 {
-    flex-grow: 3;
-}
-
-.item2 {
-    flex-grow: 25;
-}
-
-.item3 {
-    flex-grow: 1;
-}
-
-.item0 {
-    flex-grow: 1;
-}
+.item0 { flex-grow: 1; }
+.item2 { flex-grow: 25; }
+.item3 { flex-grow: 1; }
 
 dl {
     display: flex;
     flex-wrap: wrap;
 }
-
-dt {
-    width: 20%;
-}
-
+dt { width: 20%; }
 dd {
     margin-left: auto;
     width: 80%;
@@ -39,8 +23,7 @@ table {
     width: 100%;
 }
 
-.mat-form-field {
-    font-size: 14px;
+.card-contents {
     width: 100%;
 }
 
@@ -52,8 +35,8 @@ h1 {
     position: absolute;
     top: 0;
     left: 0;
-    bottom: 56px;
     right: 0;
+    bottom: 56px;
     background: rgba(0, 0, 0, 0.15);
     z-index: 1;
     display: flex;
@@ -70,10 +53,6 @@ img {
     max-width: 800px;
 }
 
-mat-chip {
-    padding: 4px 9px !important;
-}
-
 .card-contents {
     width: 100%;
 }
@@ -83,8 +62,6 @@ mat-chip {
     margin-top: 10px;
 }
 
-
-/* css for Publications tab */
 .goat-box {
     padding: 10px;
 }
@@ -172,4 +149,177 @@ mat-chip {
         opacity: 1;
         transform: scale(1);
     }
+}
+
+.map-btn {
+    background-color: #8FBC45;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid #8FBC45;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.map-btn:hover {
+    border-color: #28a745;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.map-button-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.spinner-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nbn-logo {
+    display: block;
+    margin: 0 auto 20px;
+}
+
+.filter-container {
+    width: 150px;
+    margin-right: 20px;
+}
+
+.filter-actions-container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.example-card {
+    margin: 5px;
+    margin-bottom: 15px;
+}
+
+.example-card .mat-mdc-card-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 8px;
+}
+
+.example-card .mat-mdc-card-title {
+    width: 100% !important;
+    text-align: left !important;
+    margin: 0 !important;
+    align-self: flex-start !important;
+    font-size: 18px !important;
+}
+
+.header-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.toggle-icon {
+    cursor: pointer;
+}
+
+.example-viewport {
+    width: 100%;
+    overflow-y: auto;
+    display: block;
+}
+
+.example-item {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-content {
+    border-radius: 4px;
+}
+
+.filter-content button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    color: black;
+    width: 100%;
+    padding: 18px 18px;
+    background-color: white;
+    cursor: pointer;
+    border: none;
+    font-family: Arial, sans-serif;
+}
+
+.filter-content button:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.filter-content .badge {
+    background-color: #e0e0e0;
+    color: black;
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 12px;
+}
+
+.filter-content button.active-filter {
+    color: black;
+    background-color: rgb(168, 186, 168);
+}
+
+.filter-content button.active-filter .badge {
+    background-color: #e0e0e0 !important;
+    color: black !important;
+}
+
+.table-container {
+    padding-left: 20px;
+}
+
+.main-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.left-panel {
+    width: 270px;
+}
+
+.right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.organism_data {
+    display: inline-block;
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    background-color: #A8BAA8;
+    padding: 4px 12px;
 }
