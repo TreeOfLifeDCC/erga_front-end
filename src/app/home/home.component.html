@@ -7,12 +7,12 @@
             <mat-card-title>Data Portal</mat-card-title>
             <mat-card-actions>
                 <mat-chip-set aria-label="Statistics">
-                    @for (key of projects_keys; track key; let idx = $index) {
+                    @for (key of projects_keys; track key) {
                         <mat-chip>
-                            {{ key }}
                             <button mat-button color="accent"
                                     [routerLink]="['/data_portal']"
-                                    [queryParams]="getQueryParams(idx, key)">
+                                    [queryParams]="getQueryParams(key)">
+                                <span style="color: black; font-weight: normal;">{{ key }}</span>
                                 {{ data?.projects[key] }}
                             </button>
                         </mat-chip>
@@ -25,12 +25,12 @@
             <mat-card-title>Status tracking</mat-card-title>
             <mat-card-actions>
                 <mat-chip-set aria-label="Statistics">
-                    @for (key of status_keys; track key; let idx = $index) {
+                    @for (key of status_keys; track key) {
                         <mat-chip>
-                            {{ key }}
                             <button mat-button color="accent"
                                     [routerLink]="['/data_portal']"
-                                    [queryParams]="getQueryParams(idx, key)">
+                                    [queryParams]="getQueryParams(key)">
+                                <span style="color: black; font-weight: normal;">{{ key }}</span>
                                 {{ data?.status[key] }}
                             </button>
                         </mat-chip>
@@ -45,12 +45,12 @@
             <mat-card-title>Phylogeny</mat-card-title>
             <mat-card-actions>
                 <mat-chip-set aria-label="Statistics">
-                    @for (key of phylogeny_keys; track key; let idx = $index) {
+                    @for (key of phylogeny_keys; track key) {
                         <mat-chip>
-                            {{ key }}
                             <button mat-button color="accent"
                                     [routerLink]="['/data_portal']"
-                                    [queryParams]="getQueryParams(idx, key)">
+                                    [queryParams]="getQueryParams(key)">
+                                <span style="color: black; font-weight: normal;">{{ key }}</span>
                                 {{ data?.phylogeny[key] }}
                             </button>
                         </mat-chip>
