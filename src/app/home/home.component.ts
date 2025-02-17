@@ -53,4 +53,8 @@ export class HomeComponent implements OnInit {
             return data[key];
     }
 
+    getQueryParams(idx: number, key: string) {
+        return { [idx]: key };
+    }
+
 }
