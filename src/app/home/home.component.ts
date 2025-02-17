@@ -53,8 +53,14 @@ export class HomeComponent implements OnInit {
             return data[key];
     }
 
-    getQueryParams(idx: number, key: string) {
-        return { [idx]: key };
+    getQueryParams(key: string) {
+        const mapping: { [original: string]: string } = {
+            'Symbionts Assemblies Submitted': 'symbionts_assemblies_status-Assemblies Submitted',
+            'Symbionts Submitted to BioSamples': 'symbionts_biosamples_status-Submitted to BioSamples'
+        };
+
+        const updated_key = mapping[key] || key;
+        return { 0: updated_key };
     }
 
 }
