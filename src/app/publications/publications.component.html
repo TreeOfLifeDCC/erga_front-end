@@ -151,7 +151,7 @@
                 </mat-form-field>
 
                 <div class="data-table-div">
-                    <table mat-table [dataSource]="data" class="data-table"
+                    <table mat-table [dataSource]="data"
                            matSort matSortActive="pubYear"
                            matSortDisableClear
                            matSortDirection="asc">
@@ -164,8 +164,13 @@
 <!--                                <a [href]="row['_source']['url']" [innerHTML]="row['_source']['title']"></a>-->
 <!--                            </td>-->
                             <td mat-cell *matCellDef="let row">
-                                <a [href]="row['_source']['url']" [title]="row['_source']['title']"
-                                   [innerHTML]="row['_source']['title'] | truncate:10">
+<!--                                <a [href]="row['_source']['url']" [title]="row['_source']['title']"-->
+<!--                                   [innerHTML]="row['_source']['title'] | truncate:10">-->
+<!--                                </a>-->
+
+                                <a mat-button
+                                   [href]="row['_source']['url']">
+                                    {{ row['_source']['title'] | truncate:10 }}
                                 </a>
                             </td>
 
@@ -197,7 +202,7 @@
                                 mat-sort-header disableClear>Study ID
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                <a href="https://www.ebi.ac.uk/ena/browser/view/{{row['_source']['study_id']}}">
+                                <a  mat-button href="https://www.ebi.ac.uk/ena/browser/view/{{row['_source']['study_id']}}">
                                     {{row['_source']['study_id']}}
                                 </a>
                             </td>
@@ -208,9 +213,7 @@
                                 mat-sort-header disableClear>Organism Name
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                <a [routerLink]="['/data/root/organism-details/', row['_source']['organism_name']]">
-                                    {{row['_source']['organism_name']}}
-                                </a>
+                               {{row['_source']['organism_name']}}
                             </td>
                         </ng-container>
 
@@ -237,9 +240,9 @@
         </div>
 
     </div>
-    <div class="item3">
+<!--    <div class="item3">-->
 
-    </div>
+<!--    </div>-->
 </div>
 <br>
 
