@@ -62,5 +62,3 @@ export const routes: Routes = [
         title: "Publications"
     },
 ]
-
-

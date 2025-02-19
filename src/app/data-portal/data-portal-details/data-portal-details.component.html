@@ -1,4 +1,3 @@
-<br>
 <div class="container">
     <div class="item0"></div>
     <!--  <div class="item1"></div>-->
@@ -15,7 +14,26 @@
                     </ng-container>
                     <ng-container *ngIf="organismData?.tolid">
                         <dt><b>ToL ID:</b></dt>
-                        <dd>{{ organismData?.tolid }}</dd>
+                        <dd style="display: flex; gap: 10px;">
+                            <span>{{ organismData?.tolid }}</span>
+                            <ng-container *ngIf="checkTolidExists(organismData)">
+                                <a class="badge organism_data" target="_blank" href="{{generateTolidLink(organismData)}}">
+                                    ToL QC
+                                </a>
+                            </ng-container>
+                        </dd>
+                    </ng-container>
+                    <ng-container *ngIf="INSDC_ID">
+                        <dt><b>INSDC ID:</b></dt>
+                        <dd>{{ INSDC_ID }}</dd>
+                    </ng-container>
+                    <ng-container *ngIf="currentStatus">
+                        <dt><b>Current Status:</b></dt>
+                        <dd>
+                            <a class="badge organism_data" target="_blank">
+                                {{ currentStatus }}
+                            </a>
+                        </dd>
                     </ng-container>
                     <ng-container *ngIf="organismData?.sex">
                         <dt><b>Sex:</b></dt>
@@ -25,7 +43,7 @@
             </mat-card-actions>
         </mat-card>
         <br>
-        <mat-tab-group>
+        <mat-tab-group (selectedTabChange)="onTabChange($event)">
             <mat-tab label="Metadata">
                 <div class="example-loading-shade"
                      *ngIf="isLoadingResults || isRateLimitReached">
@@ -44,102 +62,170 @@
                     Download metadata
                 </button>
 
-                <mat-form-field class="searchField">
+                <mat-form-field style="width: 100%; margin-top: 10px;">
                     <mat-label>Filter</mat-label>
-                    <input matInput (keyup)="applyFilter($event, 'metadata')"
+                    <input matInput (keyup)="applyFilter($event, metadataData)"
                            placeholder="Ex. Mia" #input>
                 </mat-form-field>
-                <table #exporter="matTableExporter" #metadataSort="matSort"
-                       [dataSource]="metadataData" mat-table
-                       matSort
-                       matTableExporter>
 
-                    <!-- ID Column -->
-                    <ng-container matColumnDef="accession">
-                        <th mat-header-cell *matHeaderCellDef> Accession</th>
-                        <td mat-cell *matCellDef="let row">
-                            <a mat-button
-                               href="https://www.ebi.ac.uk/biosamples/samples/{{row.accession}}">
-                                {{row.accession}}
-                            </a>
-                            <mat-chip
-                                    style="margin-bottom: 5px; background-color: yellow; color: black"
-                                    *ngIf="checkNagoyaProtocol(row)">
-                                <a mat-button
-                                   href="https://drive.google.com/file/d/1tkTdo-dI30YFokE2YpwmzP9onhrrEyhD/view?usp=drive_link">
-                                    Ethics and law</a>
-                            </mat-chip>
-                        </td>
-                    </ng-container>
+                <div class="main-container">
+                    <div class="left-panel">
+                        <mat-card class="example-card" appearance="raised">
+                            <mat-card-header>
+                                <div class="header-content">
+                                    <mat-card-title>Sex</mat-card-title>
+                                    <ng-container *ngIf="countedFilters?.['sex'] && countedFilters['sex'].length > (filtersLimit?.['sex'] ?? 0)">
+                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('sex')">
+                                            {{ expandedFilters['sex'] ? 'remove' : 'add' }}
+                                        </i>
+                                    </ng-container>
+                                </div>
+                            </mat-card-header>
+                            <mat-card class="filter-content">
+                                <cdk-virtual-scroll-viewport appendOnly [itemSize]="filterItemSize" [style.height.px]="filterHeight['sex']" class="example-viewport">
+                                    <div *cdkVirtualFor="let el of visibleFilters['sex']" class="example-item">
+                                        <button (click)="toggleFilter('sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('sex', el.id) }">
+                                            <span>{{ el.id }}</span>
+                                            <span class="badge">{{ el.value }}</span>
+                                        </button>
+                                    </div>
+                                </cdk-virtual-scroll-viewport>
+                            </mat-card>
+                        </mat-card>
 
-                    <!-- Progress Column -->
-                    <ng-container matColumnDef="organism">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            Organism
-                        </th>
-                        <td mat-cell
-                            *matCellDef="let row"> {{ row.organism.text }}
-                        </td>
-                    </ng-container>
+                        <mat-card class="example-card" appearance="raised">
+                            <mat-card-header>
+                                <div class="header-content">
+                                    <mat-card-title>Organism Part</mat-card-title>
+                                    <ng-container *ngIf="countedFilters?.['organismPart'] && countedFilters['organismPart'].length > (filtersLimit?.['organismPart'] ?? 0)">
+                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organismPart')">
+                                            {{ expandedFilters['organismPart'] ? 'remove' : 'add' }}
+                                        </i>
+                                    </ng-container>
+                                </div>
+                            </mat-card-header>
+                            <mat-card class="filter-content">
+                                <cdk-virtual-scroll-viewport appendOnly [itemSize]="filterItemSize" [style.height.px]="filterHeight['organismPart']" class="example-viewport">
+                                    <div *cdkVirtualFor="let el of visibleFilters['organismPart']" class="example-item">
+                                        <button (click)="toggleFilter('organismPart', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organismPart', el.id) }">
+                                            <span> {{ el.id }} </span>
+                                            <span class="badge">{{ el.value }}</span>
+                                        </button>
+                                    </div>
+                                </cdk-virtual-scroll-viewport>
+                            </mat-card>
+                        </mat-card>
 
-                    <!-- Name Column -->
-                    <ng-container matColumnDef="commonName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            Common Name
-                        </th>
-                        <td mat-cell
-                            *matCellDef="let row"> {{ row.commonName }}
-                        </td>
-                    </ng-container>
+                        <mat-card class="example-card" appearance="raised">
+                            <mat-card-header>
+                                <div class="header-content">
+                                    <mat-card-title>Tracking System</mat-card-title>
+                                    <ng-container *ngIf="countedFilters?.['trackingSystem'] && countedFilters['trackingSystem'].length > (filtersLimit?.['trackingSystem'] ?? 0)">
+                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('trackingSystem')">
+                                            {{ expandedFilters['trackingSystem'] ? 'remove' : 'add' }}
+                                        </i>
+                                    </ng-container>
+                                </div>
+                            </mat-card-header>
+                            <mat-card class="filter-content">
+                                <cdk-virtual-scroll-viewport appendOnly [itemSize]="filterItemSize" [style.height.px]="filterHeight['trackingSystem']"
+                                                             class="example-viewport">
+                                    <div *cdkVirtualFor="let el of visibleFilters['trackingSystem']" class="example-item">
+                                        <button (click)="toggleFilter('trackingSystem', el.id)" [ngClass]="{ 'active-filter': isFilterActive('trackingSystem', el.id) }">
+                                            <span> {{ el.id }} </span>
+                                            <span class="badge">{{ el.value }}</span>
+                                        </button>
+                                    </div>
+                                </cdk-virtual-scroll-viewport>
+                            </mat-card>
+                        </mat-card>
+                    </div>
 
-                    <!-- Fruit Column -->
-                    <ng-container matColumnDef="sex">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            Sex
-                        </th>
-                        <td mat-cell *matCellDef="let row"> {{ row.sex }}</td>
-                    </ng-container>
+                    <div class="right-panel">
+                        <div class="filters_div">
+                            <mat-chip-set>
+                                <div *ngFor="let key of filterKeys">
+                                    <ng-container *ngFor="let value of activeFilters[key]">
+                                        <div class="item4">
+                                            <mat-chip selected (click)="clearFilter(key, value)"
+                                                    style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                                <div style="display: flex; align-items: center;">
+                                                    <div style="margin-right: 3px"> {{ value }}</div>
+                                                    <mat-icon>close</mat-icon>
+                                                </div>
+                                            </mat-chip>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <div *ngIf="getSelectedFilterCount() > 0">
+                                    <div class="item4">
+                                        <mat-chip selected (click)="clearFilters()"
+                                                  style="cursor: pointer; padding: 0; background-color: #F08080;">
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="margin-right: 3px"> Remove all filters</div>
+                                                <mat-icon>close</mat-icon>
+                                            </div>
+                                        </mat-chip>
+                                    </div>
+                                </div>
+                            </mat-chip-set>
+                        </div>
+                        <div class="table-container">
+                            <table #exporter="matTableExporter" #metadataSort="matSort" [dataSource]="metadataData" mat-table matSort matTableExporter>
 
-                    <ng-container matColumnDef="organismPart">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            Organism Part
-                        </th>
-                        <td mat-cell
-                            *matCellDef="let row"> {{ row.organismPart }}
-                        </td>
-                    </ng-container>
+                                <ng-container matColumnDef="accession">
+                                    <th mat-header-cell *matHeaderCellDef>Accession</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <a style="text-decoration: none;" [routerLink]="['/organism/', row.accession]">{{ row.accession }}</a>
+                                        <mat-chip style="margin-bottom: 5px; background-color: yellow; color: black" *ngIf="checkNagoyaProtocol(row)">
+                                            <a mat-button href="https://drive.google.com/file/d/1tkTdo-dI30YFokE2YpwmzP9onhrrEyhD/view?usp=drive_link">
+                                                Ethics and law
+                                            </a>
+                                        </mat-chip>
+                                    </td>
+                                </ng-container>
 
-                    <ng-container matColumnDef="trackingSystem">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            Status
-                        </th>
-                        <td mat-cell *matCellDef="let row">
-                            <mat-chip selected
-                                      [style]="getStyle(row.trackingSystem)">
-                                {{ row.trackingSystem }}
-                            </mat-chip>
-                        </td>
-                    </ng-container>
+                                <ng-container matColumnDef="organism">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Organism</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.organism.text }}</td>
+                                </ng-container>
 
-                    <tr mat-header-row
-                        *matHeaderRowDef="metadataDisplayedColumns"></tr>
-                    <tr mat-row
-                        *matRowDef="let row; columns: metadataDisplayedColumns;"></tr>
+                                <ng-container matColumnDef="commonName">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Common Name</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.commonName }}</td>
+                                </ng-container>
 
-                    <!-- Row shown when there is no matching metadataData. -->
-                    <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="4">No data matching the
-                            filter "{{ input.value }}"
-                        </td>
-                    </tr>
-                </table>
+                                <ng-container matColumnDef="sex">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Sex</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.sex }}</td>
+                                </ng-container>
 
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
-                               aria-label="Select page of users"
-                               #metadataPaginator
-                               [length]="metadataDataLength"></mat-paginator>
+                                <ng-container matColumnDef="organismPart">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Organism Part</th>
+                                    <td mat-cell *matCellDef="let row">{{ row.organismPart }}</td>
+                                </ng-container>
 
+                                <ng-container matColumnDef="trackingSystem">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                    <td mat-cell *matCellDef="let row">
+                                        <mat-chip selected [style]="getStyle(row.trackingSystem)">{{ row.trackingSystem }}</mat-chip>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="metadataDisplayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: metadataDisplayedColumns;"></tr>
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+                                </tr>
+                            </table>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"
+                                           #metadataPaginator [length]="metadataDataLength">
+                            </mat-paginator>
+                        </div>
+                    </div>
+                </div>
             </mat-tab>
+
             <mat-tab label="Data"
                      *ngIf="annotationDataLength !== 0 || assembliesDataLength !== 0 || filesDataLength !== 0">
                 <div class="example-loading-shade"
@@ -162,7 +248,7 @@
                     <mat-form-field class="searchField">
                         <mat-label>Filter</mat-label>
                         <input matInput
-                               (keyup)="applyFilter($event, 'annotation')"
+                               (keyup)="applyFilter($event, annotationData)"
                                placeholder="Illumina" #input>
                     </mat-form-field>
                     <table mat-table [dataSource]="annotationData" matSort
@@ -299,11 +385,10 @@
                             color="accent">Download metadata
                     </button>
 
-
                     <mat-form-field class="searchField">
                         <mat-label>Filter</mat-label>
                         <input matInput
-                               (keyup)="applyFilter($event, 'assemblies')"
+                               (keyup)="applyFilter($event, assembliesData)"
                                placeholder="Illumina" #input>
                     </mat-form-field>
                     <table mat-table [dataSource]="assembliesData" matSort
@@ -384,7 +469,7 @@
 
                     <mat-form-field class="searchField">
                         <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter($event, 'files')"
+                        <input matInput (keyup)="applyFilter($event, filesData)"
                                placeholder="Illumina" #input>
                     </mat-form-field>
                     <table mat-table [dataSource]="filesData" matSort
@@ -673,6 +758,47 @@
                 <a mat-button href="{{goatDataLink}}"
                    style="background-color: limegreen; color: black; margin-top: 5px">
                     Read the GoaT info in full here</a>
+            </mat-tab>
+
+            <mat-tab label="Geo Location Maps">
+                <mat-tab-group>
+                    <mat-tab label="Sampling Map" *ngIf="geoLocation">
+                        <div class="col-md-12" *ngIf="geoLocation">
+                            <app-mapcluster [orgGeoList]="orgGeoList" [specGeoList]="specGeoList"></app-mapcluster>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Occurrences Map" *ngIf="nbnatlas">
+                        <div *ngIf="isMapLoading" class="loading-container">
+                            <div class="spinner-wrapper">
+                                <mat-spinner></mat-spinner>
+                                <p>Loading map...</p>
+                            </div>
+                        </div>
+                        <div *ngIf="!isMapLoading" class="map-button-container">
+                            <a href="{{nbnatlasMapUrl}}" class="btn btn-success map-btn" target="_blank">
+                                Open interactive map in new window
+                            </a>
+                        </div>
+                        <div class="col-md-12" style="display: block;">
+                            <div *ngIf="isLoading" class="loading">
+                                <img style="margin-left: 280px;" [src]="loader" />
+                            </div>
+                            <div *ngIf="url">
+                                <br>
+                                <div style="display: flex; justify-content: center; align-items: center;">
+                                    <img [src]='url' (load)="onMapLoad()" (error)="onMapError()">
+                                </div>
+                                <p style="text-align: center; font-size: 14px; margin-top: 10px;">
+                                    The National Biodiversity Network records are shown on the map above
+                                    (See <a href="https://nbnatlas.org/help/nbn-atlas-terms-use/" target="_blank">terms and conditions</a>).
+                                </p>
+                                <a href="https://nbnatlas.org/" target="_blank">
+                                    <img src="assets/NBNPower.gif" class="nbn-logo">
+                                </a>
+                            </div>
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
             </mat-tab>
         </mat-tab-group>
     </div>
