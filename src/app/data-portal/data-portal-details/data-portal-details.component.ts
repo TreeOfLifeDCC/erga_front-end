@@ -1,108 +1,58 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, RouterLink} from "@angular/router";
-import {ApiService} from "../../api.service";
-import {MatSort} from "@angular/material/sort";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {keyframes} from "@angular/animations";
-import {MatPaginator} from "@angular/material/paginator";
+import { Component, OnInit, AfterViewInit, ViewChild, Input } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ApiService } from '../../api.service';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { TitleCasePipe, NgIf, NgForOf, SlicePipe } from '@angular/common';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
+import { MatTableExporterModule } from 'mat-table-exporter';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-
-import {
-    MatCard,
-    MatCardActions,
-    MatCardContent,
-    MatCardHeader,
-    MatCardImage,
-    MatCardTitle
-} from "@angular/material/card";
-
+import { MatIconModule } from '@angular/material/icon';
+import { MapClusterComponent } from '../map-cluster/map-cluster.component';
+import {MatColumnDef, MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MatAnchor, MatButton} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
+import {MatFormField} from "@angular/material/form-field";
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatChip, MatChipSet} from "@angular/material/chips";
-import {NgForOf, NgIf} from "@angular/common";
-import {FlexLayoutModule} from "@ngbracket/ngx-layout";
-import {MatTableExporterModule} from "mat-table-exporter";
-import {MatExpansionPanel} from "@angular/material/expansion";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
-import {TitleCasePipe} from "@angular/common";
-import {MapClusterComponent} from "../map-cluster/map-cluster.component";
-import {SafeResourceUrl} from "@angular/platform-browser";
-import {MatExpansionPanelTitle} from "@angular/material/expansion";
-import {MatListOption, MatSelectionList} from "@angular/material/list";
-import {CdkFixedSizeVirtualScroll, CdkVirtualForOf, ScrollingModule} from "@angular/cdk/scrolling";
-import { MatIconModule } from '@angular/material/icon';
+import {MatCard, MatCardActions, MatCardHeader, MatCardTitle} from "@angular/material/card";
+import {MatInput} from "@angular/material/input";
+import { MatTableModule } from '@angular/material/table';
+
 
 @Component({
     selector: 'app-data-portal-details',
     templateUrl: './data-portal-details.component.html',
     standalone: true,
     imports: [
-        MatCardTitle,
-        MatCard,
-        MatCardActions,
-        MatTabGroup,
-        MatTab,
-        MatProgressSpinner,
-        MatButton,
-        MatInput,
-        MatTable,
-        MatSort,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatCell,
-        MatAnchor,
-        MatChip,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatRowDef,
-        MatRow,
-        MatNoDataRow,
-        MatPaginator,
         NgIf,
-        MatCardHeader,
-        MatCardContent,
-        MatCardImage,
         NgForOf,
-        MatLabel,
-        MatFormField,
         MatTableExporterModule,
         MatExpansionModule,
-        MatExpansionPanel,
-        MatTableExporterModule,
         RouterLink,
         MapClusterComponent,
-        MatExpansionPanel,
-        MatExpansionPanelTitle,
-        MatSelectionList,
-        MatListOption,
-        MatExpansionModule,
-        CdkFixedSizeVirtualScroll,
-        CdkVirtualForOf,
         TitleCasePipe,
-        ScrollingModule,
         FlexLayoutModule,
         MatIconModule,
-        MatChipSet
+        SlicePipe,
+        MatProgressSpinner,
+        MatTab,
+        MatTabGroup,
+        MatTable,
+        MatPaginator,
+        MatSort,
+        MatColumnDef,
+        MatFormField,
+        MatFormFieldModule,
+        MatChip,
+        MatChipSet,
+        MatCard,
+        MatCardHeader,
+        MatCardTitle,
+        MatCardActions,
+        MatInput,
+        MatTableModule
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -196,17 +146,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         trackingSystem: false
     };
 
-    visibleFilters: Record<string, any[]> = { sex: [], organismPart: [], trackingSystem: [] };
-
-    filterHeightDefault = 250;
-    filterHeightMax = 250;
-    filterItemSize = 50;
-    filterHeight: Record<string, number> = {
-        sex: this.filterHeightDefault,
-        organismPart: this.filterHeightDefault,
-        trackingSystem: this.filterHeightDefault
-    };
-
     filtersLimit: Record<string, number> = {
         sex: 5,
         organismPart: 5,
@@ -277,12 +216,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
             trackingSystem: []
         };
 
-        this.visibleFilters = {
-            sex: [],
-            organismPart: [],
-            trackingSystem: []
-        };
-
         this.countFilterFields();
         this.setupFilterPredicate();
     }
@@ -334,7 +267,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
                 this.metadataDataLength = data.results[0]['_source']['records'].length;
 
-                if (data.results[0]['_source']['annotation'] && data.results[0]['_source']['annotation'].lenght !== 0) {
+                if (data.results[0]['_source']['annotation'] && data.results[0]['_source']['annotation'].length !== 0) {
                     this.annotationData = new MatTableDataSource(data.results[0]['_source']['annotation']);
                     this.annotationDataLength = data.results[0]['_source']['annotation'].length;
                     this.annotationData.paginator = this.annotationPaginator;
@@ -344,7 +277,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.annotationDataLength = 0;
                 }
 
-                if (data.results[0]['_source']['assemblies'] && data.results[0]['_source']['assemblies'].lenght !== 0) {
+                if (data.results[0]['_source']['assemblies'] && data.results[0]['_source']['assemblies'].length !== 0) {
                     this.assembliesData = new MatTableDataSource(data.results[0]['_source']['assemblies']);
                     this.assembliesDataLength = data.results[0]['_source']['assemblies'].length;
                     this.assembliesData.paginator = this.assembliesPaginator;
@@ -354,7 +287,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.assembliesDataLength = 0;
                 }
 
-                if (data.results[0]['_source']['experiment'] && data.results[0]['_source']['experiment'].lenght !== 0) {
+                if (data.results[0]['_source']['experiment'] && data.results[0]['_source']['experiment'].length !== 0) {
                     this.filesData = new MatTableDataSource(data.results[0]['_source']['experiment']);
                     this.filesDataLength = data.results[0]['_source']['experiment'].length;
                     this.filesData.paginator = this.filesPaginator;
@@ -557,27 +490,10 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
             this.countedFilters[column] = columnValues;
         });
-
-        ['sex', 'organismPart', 'trackingSystem'].forEach(filterKey => {
-            this.updateVisibleFilters(filterKey);
-        });
-    }
-
-    updateVisibleFilters(filterKey: string) {
-        const filters = this.expandedFilters[filterKey]
-            ? this.countedFilters[filterKey]
-            : this.countedFilters[filterKey].slice(0, this.filtersLimit[filterKey]);
-
-        this.visibleFilters[filterKey] = filters;
-        this.filterHeight[filterKey] = Math.min(
-            filters.length * this.filterItemSize,
-            this.expandedFilters[filterKey] ? this.filterHeightMax : this.filterHeightDefault
-        );
     }
 
     toggleFilterView(filterKey: string): void {
         this.expandedFilters[filterKey] = !this.expandedFilters[filterKey];
-        this.updateVisibleFilters(filterKey);
     }
 
     isFilterActive(field: keyof typeof this.activeFilters, value: string): boolean {

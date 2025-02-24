@@ -8,13 +8,13 @@
             </mat-card-title>
             <mat-card-actions style="width: 100%">
                 <dl class="card-contents">
-                    <ng-container *ngIf="organismData?.commonName">
+                    <div class="card-row" *ngIf="organismData?.commonName">
                         <dt><b>Common name:</b></dt>
                         <dd>{{ organismData?.commonName }}</dd>
-                    </ng-container>
-                    <ng-container *ngIf="organismData?.tolid">
+                    </div>
+                    <div class="card-row" *ngIf="organismData?.tolid">
                         <dt><b>ToL ID:</b></dt>
-                        <dd style="display: flex; gap: 10px;">
+                        <dd style="display: flex; gap: 10px; align-items: center;">
                             <span>{{ organismData?.tolid }}</span>
                             <ng-container *ngIf="checkTolidExists(organismData)">
                                 <a class="badge organism_data" target="_blank" href="{{generateTolidLink(organismData)}}">
@@ -22,23 +22,21 @@
                                 </a>
                             </ng-container>
                         </dd>
-                    </ng-container>
-                    <ng-container *ngIf="INSDC_ID">
+                    </div>
+                    <div class="card-row" *ngIf="INSDC_ID">
                         <dt><b>INSDC ID:</b></dt>
                         <dd>{{ INSDC_ID }}</dd>
-                    </ng-container>
-                    <ng-container *ngIf="currentStatus">
+                    </div>
+                    <div class="card-row" *ngIf="currentStatus">
                         <dt><b>Current Status:</b></dt>
-                        <dd>
-                            <a class="badge organism_data" target="_blank">
-                                {{ currentStatus }}
-                            </a>
-                        </dd>
-                    </ng-container>
-                    <ng-container *ngIf="organismData?.sex">
+                        <a class="badge organism_data" target="_blank">
+                            {{ currentStatus }}
+                        </a>
+                    </div>
+                    <div class="card-row" *ngIf="organismData?.sex">
                         <dt><b>Sex:</b></dt>
                         <dd>{{ organismData?.sex }}</dd>
-                    </ng-container>
+                    </div>
                 </dl>
             </mat-card-actions>
         </mat-card>
@@ -82,14 +80,12 @@
                                 </div>
                             </mat-card-header>
                             <mat-card class="filter-content">
-                                <cdk-virtual-scroll-viewport appendOnly [itemSize]="filterItemSize" [style.height.px]="filterHeight['sex']" class="example-viewport">
-                                    <div *cdkVirtualFor="let el of visibleFilters['sex']" class="example-item">
-                                        <button (click)="toggleFilter('sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('sex', el.id) }">
-                                            <span>{{ el.id }}</span>
-                                            <span class="badge">{{ el.value }}</span>
-                                        </button>
-                                    </div>
-                                </cdk-virtual-scroll-viewport>
+                                <div *ngFor="let el of (expandedFilters['sex'] ? countedFilters['sex'] : countedFilters['sex'] | slice:0:filtersLimit['sex'])" class="example-item">
+                                    <button (click)="toggleFilter('sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('sex', el.id) }">
+                                        <span>{{ el.id }}</span>
+                                        <span class="badge">{{ el.value }}</span>
+                                    </button>
+                                </div>
                             </mat-card>
                         </mat-card>
 
@@ -105,14 +101,14 @@
                                 </div>
                             </mat-card-header>
                             <mat-card class="filter-content">
-                                <cdk-virtual-scroll-viewport appendOnly [itemSize]="filterItemSize" [style.height.px]="filterHeight['organismPart']" class="example-viewport">
-                                    <div *cdkVirtualFor="let el of visibleFilters['organismPart']" class="example-item">
+                                <div class="example-viewport">
+                                    <div *ngFor="let el of (expandedFilters['organismPart'] ? countedFilters['organismPart'] : countedFilters['organismPart'] | slice:0:filtersLimit['organismPart'])" class="example-item">
                                         <button (click)="toggleFilter('organismPart', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organismPart', el.id) }">
-                                            <span> {{ el.id }} </span>
+                                            <span>{{ el.id }}</span>
                                             <span class="badge">{{ el.value }}</span>
                                         </button>
                                     </div>
-                                </cdk-virtual-scroll-viewport>
+                                </div>
                             </mat-card>
                         </mat-card>
 
@@ -128,15 +124,14 @@
                                 </div>
                             </mat-card-header>
                             <mat-card class="filter-content">
-                                <cdk-virtual-scroll-viewport appendOnly [itemSize]="filterItemSize" [style.height.px]="filterHeight['trackingSystem']"
-                                                             class="example-viewport">
-                                    <div *cdkVirtualFor="let el of visibleFilters['trackingSystem']" class="example-item">
+                                <div class="example-viewport">
+                                    <div *ngFor="let el of (expandedFilters['trackingSystem'] ? countedFilters['trackingSystem'] : countedFilters['trackingSystem'] | slice:0:filtersLimit['trackingSystem'])" class="example-item">
                                         <button (click)="toggleFilter('trackingSystem', el.id)" [ngClass]="{ 'active-filter': isFilterActive('trackingSystem', el.id) }">
-                                            <span> {{ el.id }} </span>
+                                            <span>{{ el.id }}</span>
                                             <span class="badge">{{ el.value }}</span>
                                         </button>
                                     </div>
-                                </cdk-virtual-scroll-viewport>
+                                </div>
                             </mat-card>
                         </mat-card>
                     </div>
@@ -775,7 +770,7 @@
                             </div>
                         </div>
                         <div *ngIf="!isMapLoading" class="map-button-container">
-                            <a href="{{nbnatlasMapUrl}}" class="btn btn-success map-btn" target="_blank">
+                            <a href="{{nbnatlasMapUrl}}" class="organism_data" target="_blank">
                                 Open interactive map in new window
                             </a>
                         </div>
