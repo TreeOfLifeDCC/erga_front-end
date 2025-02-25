@@ -11,7 +11,8 @@
                         <mat-chip>
                             <button mat-button color="accent"
                                     [routerLink]="['/data_portal']"
-                                    [queryParams]="getQueryParams(key)">
+                                    [queryParams]="getQueryParams(key)"
+                                    [state]="{ fromHome: true }">
                                 <span style="color: black; font-weight: normal;">{{ key }}</span>
                                 {{ data?.projects[key] }}
                             </button>
@@ -29,7 +30,8 @@
                         <mat-chip>
                             <button mat-button color="accent"
                                     [routerLink]="['/data_portal']"
-                                    [queryParams]="getQueryParams(key)">
+                                    [queryParams]="getQueryParams(key)"
+                                    [state]="{ fromHome: true }">
                                 <span style="color: black; font-weight: normal;">{{ key }}</span>
                                 {{ data?.status[key] }}
                             </button>
@@ -49,7 +51,8 @@
                         <mat-chip>
                             <button mat-button color="accent"
                                     [routerLink]="['/data_portal']"
-                                    [queryParams]="getQueryParams(key)">
+                                    [queryParams]="getQueryParams(key, 'phylogeny')"
+                                    [state]="{ fromHome: true }">
                                 <span style="color: black; font-weight: normal;">{{ key }}</span>
                                 {{ data?.phylogeny[key] }}
                             </button>
