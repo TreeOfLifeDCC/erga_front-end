@@ -20,6 +20,17 @@ import {MatCard, MatCardActions, MatCardHeader, MatCardTitle} from "@angular/mat
 import {MatInput} from "@angular/material/input";
 import { MatTableModule } from '@angular/material/table';
 
+interface FilterState {
+    activeFilters: { sex: string[]; organismPart: string[]; trackingSystem: string[] };
+    countedFilters: Record<string, { id: string; value: number }[]>;
+    expandedFilters: Record<string, boolean>;
+    filtersLimit: Record<string, number>;
+    searchTerm: string;
+    selectedFilters: Record<string, string[]>;
+    filterKeys: ("sex" | "organismPart" | "trackingSystem")[];
+    data: MatTableDataSource<any>;
+}
+
 
 @Component({
     selector: 'app-data-portal-details',
@@ -134,29 +145,27 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         trackingSystem: []
     };
 
-    countedFilters: Record<string, { id: string, value: number }[]> = {
-        sex: [],
-        organismPart: [],
-        trackingSystem: []
+    organismFilterState: FilterState = {
+        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
+        filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
+        searchTerm: '',
+        selectedFilters: {},
+        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
+        data: new MatTableDataSource<any>([])
     };
 
-    expandedFilters: Record<string, boolean> = {
-        sex: false,
-        organismPart: false,
-        trackingSystem: false
+    symbiontsFilterState: FilterState = {
+        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
+        filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
+        searchTerm: '',
+        selectedFilters: {},
+        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
+        data: new MatTableDataSource<any>([])
     };
-
-    filtersLimit: Record<string, number> = {
-        sex: 5,
-        organismPart: 5,
-        trackingSystem: 5,
-    };
-
-    searchTerm: string = '';
-
-    selectedFilters: Record<string, string | number | string[]> = {};
-
-    filterKeys: ("sex" | "organismPart" | "trackingSystem")[] = ['sex', 'organismPart', 'trackingSystem'];
 
     codes = {
         m: 'mammals',
@@ -210,14 +219,14 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.countedFilters = {
+        this.organismFilterState.countedFilters = {
             sex: [],
             organismPart: [],
             trackingSystem: []
         };
 
-        this.countFilterFields();
-        this.setupFilterPredicate();
+        this.countFilterFields('organism');
+        this.setupFilterPredicate('organism');
     }
 
     private transformGeoList(data: any[]): any[] {
@@ -242,7 +251,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.isRateLimitReached = data === null;
 
                 this.organismData = data.results[0]['_source'];
-                console.log('DATA', this.organismData);
                 this.metadataData = new MatTableDataSource(this.organismData['records']);
 
                 this.orgGeoList = this.transformGeoList(this.metadataData.filteredData);
@@ -333,24 +341,15 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.dataSourceSymbiontsAssembliesCount = 0;
                 }
 
-                this.countFilterFields();
-                this.setupFilterPredicate();
+
+                this.organismFilterState.data = this.metadataData;
+                this.symbiontsFilterState.data = this.dataSourceSymbiontsRecords;
+                this.countFilterFields('organism');
+                this.setupFilterPredicate('organism');
                 this.isDataLoaded = true;
 
             }
         );
-    }
-
-    applyFilter(event: Event, dataSource: MatTableDataSource<any>) {
-        this.searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
-
-        const combinedFilter = JSON.stringify({
-            search: this.searchTerm,
-            filters: this.activeFilters
-        });
-
-        dataSource.filter = combinedFilter;
-        this.applyFilters();
     }
 
     getHumanReadableName(key: string) {
@@ -424,119 +423,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    applyFilters() {
-        if (!this.metadataData) {
-            console.warn("applyFilters()");
-            return;
-        }
-
-        const combinedFilter = JSON.stringify({
-            search: this.searchTerm,
-            filters: this.activeFilters
-        });
-
-        this.metadataData.filter = combinedFilter;
-        this.countFilterFields();
-    }
-
-    toggleFilter(field: keyof typeof this.activeFilters, value: string) {
-        const index = this.activeFilters[field].indexOf(value);
-        if (index !== -1) {
-            this.activeFilters[field].splice(index, 1);
-        } else {
-            this.activeFilters[field].push(value);
-        }
-        this.selectedFilters = this.getSelectedFilterList();
-        this.applyFilters();
-    }
-
-    clearFilter(field: keyof typeof this.activeFilters, value: string): void {
-        this.activeFilters[field] = this.activeFilters[field].filter(v => v !== value);
-        this.selectedFilters = this.getSelectedFilterList();
-        this.applyFilters();
-    }
-
-    clearFilters(): void {
-        this.searchTerm = '';
-        this.activeFilters = {
-            sex: [],
-            organismPart: [],
-            trackingSystem: []
-        };
-        this.selectedFilters = {};
-        this.applyFilters();
-    }
-
-    countFilterFields() {
-        if (!this.metadataData || !this.metadataData.filteredData) {
-            return;
-        }
-
-        const filteredData = this.metadataData.filteredData;
-
-        ['sex', 'organismPart', 'trackingSystem'].forEach(column => {
-            const columnValues: { id: string, value: number }[] = [];
-            const uniqueValues: Record<string, number> = {};
-
-            filteredData.forEach((element: { [x: string]: string | number }) => {
-                const value = element[column] as string | number;
-                const valueStr = value ? value.toString() : "Unknown";
-                uniqueValues[valueStr] = (uniqueValues[valueStr] || 0) + 1;
-            });
-
-            for (const key in uniqueValues) {
-                columnValues.push({ id: key, value: uniqueValues[key] });
-            }
-
-            this.countedFilters[column] = columnValues;
-        });
-    }
-
-    toggleFilterView(filterKey: string): void {
-        this.expandedFilters[filterKey] = !this.expandedFilters[filterKey];
-    }
-
-    isFilterActive(field: keyof typeof this.activeFilters, value: string): boolean {
-        return this.activeFilters[field].includes(value);
-    }
-
-    setupFilterPredicate() {
-        if (!this.metadataData) {
-            console.warn("setupFilterPredicate()");
-            return;
-        }
-
-        this.metadataData.filterPredicate = (data: any, filter: string) => {
-            const parsedFilter = JSON.parse(filter);
-            const searchTerm = parsedFilter.search.toLowerCase();
-            const filters = parsedFilter.filters;
-
-            const matchesFilters = Object.keys(filters).every(key => {
-                return filters[key].length === 0 || filters[key].includes(data[key]);
-            });
-
-            const matchesSearch = Object.values(data).some(value =>
-                String(value).toLowerCase().includes(searchTerm)
-            );
-
-            return matchesFilters && matchesSearch;
-        };
-    }
-
-    getSelectedFilterList(): Record<string, string[]> {
-        return Object.keys(this.activeFilters).reduce((acc, key) => {
-            const values = this.activeFilters[key as keyof typeof this.activeFilters];
-            if (values.length > 0) {
-                acc[key] = values;
-            }
-            return acc;
-        }, {} as Record<string, string[]>);
-    }
-
-    getSelectedFilterCount(): number {
-        return Object.keys(this.getSelectedFilterList()).length;
-    }
-
     generateTolidLink(data: any): string {
         const organismName = data.organism.split(' ').join('_');
 
@@ -556,6 +442,143 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     checkTolidExists(data: { tolid: string | any[] | null | undefined; show_tolqc: boolean; } | undefined) {
         return data != undefined && data.tolid != undefined && data.tolid != null && data.tolid.length > 0 &&
             data.show_tolqc === true;
+    }
+
+    applySearchFilter(event: Event, dataSource: MatTableDataSource<any>) {
+        let searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
+        dataSource.filter = JSON.stringify({ search: searchTerm });
+    }
+
+    /* filters */
+
+    getFilterState(type: 'organism' | 'symbionts'): FilterState {
+        return type === 'organism' ? this.organismFilterState : this.symbiontsFilterState;
+    }
+
+    applyFilter(type: 'organism' | 'symbionts', event: Event, dataSource: MatTableDataSource<any>) {
+        const state = this.getFilterState(type);
+        state.searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
+
+        const combinedFilter = JSON.stringify({
+            search: state.searchTerm,
+            filters: state.activeFilters
+        });
+
+        dataSource.filter = combinedFilter;
+        this.applyFilters(type);
+    }
+
+    applyFilters(type: 'organism' | 'symbionts') {
+        const state = this.getFilterState(type);
+        if (!state.data) {
+            console.warn("applyFilters(): нет данных");
+            return;
+        }
+
+        const combinedFilter = JSON.stringify({
+            search: state.searchTerm,
+            filters: state.activeFilters
+        });
+
+        state.data.filter = combinedFilter;
+        this.countFilterFields(type);
+    }
+
+    toggleFilter(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string) {
+        const state = this.getFilterState(type);
+        const index = state.activeFilters[field].indexOf(value);
+
+        if (index !== -1) {
+            state.activeFilters[field].splice(index, 1);
+        } else {
+            state.activeFilters[field].push(value);
+        }
+
+        state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
+        this.applyFilters(type);
+    }
+
+    clearFilter(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string): void {
+        const state = this.getFilterState(type);
+        state.activeFilters[field] = state.activeFilters[field].filter(v => v !== value);
+        state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
+        this.applyFilters(type);
+    }
+
+    clearFilters(type: 'organism' | 'symbionts'): void {
+        const state = this.getFilterState(type);
+        state.searchTerm = '';
+        state.activeFilters = { sex: [], organismPart: [], trackingSystem: [] };
+        state.selectedFilters = {};
+        this.applyFilters(type);
+    }
+
+    countFilterFields(type: 'organism' | 'symbionts') {
+        const state = this.getFilterState(type);
+        if (!state.data) { return; }
+
+        state.filterKeys.forEach(column => {
+            const uniqueValues: Record<string, number> = {};
+
+            state.data.filteredData.forEach((element: { [x: string]: string | number }) => {
+                const value = element[column];
+                const valueStr = value ? value.toString() : "Unknown";
+                uniqueValues[valueStr] = (uniqueValues[valueStr] || 0) + 1;
+            });
+
+            state.countedFilters[column] = Object.keys(uniqueValues).map(key => ({
+                id: key,
+                value: uniqueValues[key]
+            }));
+        });
+    }
+
+    toggleFilterView(type: 'organism' | 'symbionts', filterKey: string): void {
+        const state = this.getFilterState(type);
+        state.expandedFilters[filterKey] = !state.expandedFilters[filterKey];
+    }
+
+    isFilterActive(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string): boolean {
+        return this.getFilterState(type).activeFilters[field].includes(value);
+    }
+
+    setupFilterPredicate(type: 'organism' | 'symbionts') {
+        const state = this.getFilterState(type);
+        if (!state.data) {
+            console.warn("setupFilterPredicate(): нет данных");
+            return;
+        }
+
+        state.data.filterPredicate = (data: any, filter: string) => {
+            const parsedFilter = JSON.parse(filter);
+            const searchTerm = parsedFilter.search.toLowerCase();
+            const filters = parsedFilter.filters;
+
+            const matchesFilters = Object.keys(filters).every(key =>
+                filters[key].length === 0 || filters[key].includes(data[key])
+            );
+
+            const matchesSearch = Object.values(data).some(value =>
+                String(value).toLowerCase().includes(searchTerm)
+            );
+
+            return matchesFilters && matchesSearch;
+        };
+    }
+
+    getSelectedFilterList(activeFilters: { [key: string]: string[] }): Record<string, string[]> {
+        return Object.keys(activeFilters).reduce((acc, key) => {
+            const values = activeFilters[key];
+            if (values.length > 0) {
+                acc[key] = values;
+            }
+            return acc;
+        }, {} as Record<string, string[]>);
+    }
+
+    getSelectedFilterCount(type: 'organism' | 'symbionts'): number {
+        const state = this.getFilterState(type);
+        return Object.keys(this.getSelectedFilterList(state.activeFilters)).length;
     }
 
 }

@@ -62,7 +62,7 @@
 
                 <mat-form-field style="width: 100%; margin-top: 10px;">
                     <mat-label>Filter</mat-label>
-                    <input matInput (keyup)="applyFilter($event, metadataData)"
+                    <input matInput (keyup)="applyFilter('organism', $event, metadataData)"
                            placeholder="Ex. Mia" #input>
                 </mat-form-field>
 
@@ -72,16 +72,16 @@
                             <mat-card-header>
                                 <div class="header-content">
                                     <mat-card-title>Sex</mat-card-title>
-                                    <ng-container *ngIf="countedFilters?.['sex'] && countedFilters['sex'].length > (filtersLimit?.['sex'] ?? 0)">
-                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('sex')">
-                                            {{ expandedFilters['sex'] ? 'remove' : 'add' }}
+                                    <ng-container *ngIf="organismFilterState.countedFilters?.['sex'] && organismFilterState.countedFilters['sex'].length > (organismFilterState.filtersLimit?.['sex'] ?? 0)">
+                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organism', 'sex')">
+                                            {{ organismFilterState.expandedFilters['sex'] ? 'remove' : 'add' }}
                                         </i>
                                     </ng-container>
                                 </div>
                             </mat-card-header>
                             <mat-card class="filter-content">
-                                <div *ngFor="let el of (expandedFilters['sex'] ? countedFilters['sex'] : countedFilters['sex'] | slice:0:filtersLimit['sex'])" class="example-item">
-                                    <button (click)="toggleFilter('sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('sex', el.id) }">
+                                <div *ngFor="let el of (organismFilterState.expandedFilters['sex'] ? organismFilterState.countedFilters['sex'] : organismFilterState.countedFilters['sex'] | slice:0:organismFilterState.filtersLimit['sex'])" class="example-item">
+                                    <button (click)="toggleFilter('organism','sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organism', 'sex', el.id) }">
                                         <span>{{ el.id }}</span>
                                         <span class="badge">{{ el.value }}</span>
                                     </button>
@@ -93,17 +93,17 @@
                             <mat-card-header>
                                 <div class="header-content">
                                     <mat-card-title>Organism Part</mat-card-title>
-                                    <ng-container *ngIf="countedFilters?.['organismPart'] && countedFilters['organismPart'].length > (filtersLimit?.['organismPart'] ?? 0)">
-                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organismPart')">
-                                            {{ expandedFilters['organismPart'] ? 'remove' : 'add' }}
+                                    <ng-container *ngIf="organismFilterState.countedFilters?.['organismPart'] && organismFilterState.countedFilters['organismPart'].length > (organismFilterState.filtersLimit?.['organismPart'] ?? 0)">
+                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organism', 'organismPart')">
+                                            {{ organismFilterState.expandedFilters['organismPart'] ? 'remove' : 'add' }}
                                         </i>
                                     </ng-container>
                                 </div>
                             </mat-card-header>
                             <mat-card class="filter-content">
                                 <div class="example-viewport">
-                                    <div *ngFor="let el of (expandedFilters['organismPart'] ? countedFilters['organismPart'] : countedFilters['organismPart'] | slice:0:filtersLimit['organismPart'])" class="example-item">
-                                        <button (click)="toggleFilter('organismPart', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organismPart', el.id) }">
+                                    <div *ngFor="let el of (organismFilterState.expandedFilters['organismPart'] ? organismFilterState.countedFilters['organismPart'] : organismFilterState.countedFilters['organismPart'] | slice:0:organismFilterState.filtersLimit['organismPart'])" class="example-item">
+                                        <button (click)="toggleFilter('organism', 'organismPart', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organism', 'organismPart', el.id) }">
                                             <span>{{ el.id }}</span>
                                             <span class="badge">{{ el.value }}</span>
                                         </button>
@@ -116,17 +116,17 @@
                             <mat-card-header>
                                 <div class="header-content">
                                     <mat-card-title>Tracking System</mat-card-title>
-                                    <ng-container *ngIf="countedFilters?.['trackingSystem'] && countedFilters['trackingSystem'].length > (filtersLimit?.['trackingSystem'] ?? 0)">
-                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('trackingSystem')">
-                                            {{ expandedFilters['trackingSystem'] ? 'remove' : 'add' }}
+                                    <ng-container *ngIf="organismFilterState.countedFilters?.['trackingSystem'] && organismFilterState.countedFilters['trackingSystem'].length > (organismFilterState.filtersLimit?.['trackingSystem'] ?? 0)">
+                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organism', 'trackingSystem')">
+                                            {{ organismFilterState.expandedFilters['trackingSystem'] ? 'remove' : 'add' }}
                                         </i>
                                     </ng-container>
                                 </div>
                             </mat-card-header>
                             <mat-card class="filter-content">
                                 <div class="example-viewport">
-                                    <div *ngFor="let el of (expandedFilters['trackingSystem'] ? countedFilters['trackingSystem'] : countedFilters['trackingSystem'] | slice:0:filtersLimit['trackingSystem'])" class="example-item">
-                                        <button (click)="toggleFilter('trackingSystem', el.id)" [ngClass]="{ 'active-filter': isFilterActive('trackingSystem', el.id) }">
+                                    <div *ngFor="let el of (organismFilterState.expandedFilters['trackingSystem'] ? organismFilterState.countedFilters['trackingSystem'] : organismFilterState.countedFilters['trackingSystem'] | slice:0:organismFilterState.filtersLimit['trackingSystem'])" class="example-item">
+                                        <button (click)="toggleFilter('organism', 'trackingSystem', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organism', 'trackingSystem', el.id) }">
                                             <span>{{ el.id }}</span>
                                             <span class="badge">{{ el.value }}</span>
                                         </button>
@@ -139,10 +139,10 @@
                     <div class="right-panel">
                         <div class="filters_div">
                             <mat-chip-set>
-                                <div *ngFor="let key of filterKeys">
-                                    <ng-container *ngFor="let value of activeFilters[key]">
+                                <div *ngFor="let key of organismFilterState.filterKeys">
+                                    <ng-container *ngFor="let value of organismFilterState.activeFilters[key]">
                                         <div class="item4">
-                                            <mat-chip selected (click)="clearFilter(key, value)"
+                                            <mat-chip selected (click)="clearFilter('organism', key, value)"
                                                     style="cursor: pointer; padding: 0; background-color: #e0efea;">
                                                 <div style="display: flex; align-items: center;">
                                                     <div style="margin-right: 3px"> {{ value }}</div>
@@ -152,9 +152,9 @@
                                         </div>
                                     </ng-container>
                                 </div>
-                                <div *ngIf="getSelectedFilterCount() > 0">
+                                <div *ngIf="getSelectedFilterCount('organism') > 0">
                                     <div class="item4">
-                                        <mat-chip selected (click)="clearFilters()"
+                                        <mat-chip selected (click)="clearFilters('organism')"
                                                   style="cursor: pointer; padding: 0; background-color: #F08080;">
                                             <div style="display: flex; align-items: center;">
                                                 <div style="margin-right: 3px"> Remove all filters</div>
@@ -243,7 +243,7 @@
                     <mat-form-field class="searchField">
                         <mat-label>Filter</mat-label>
                         <input matInput
-                               (keyup)="applyFilter($event, annotationData)"
+                               (keyup)="applySearchFilter($event, annotationData)"
                                placeholder="Illumina" #input>
                     </mat-form-field>
                     <table mat-table [dataSource]="annotationData" matSort
@@ -383,7 +383,7 @@
                     <mat-form-field class="searchField">
                         <mat-label>Filter</mat-label>
                         <input matInput
-                               (keyup)="applyFilter($event, assembliesData)"
+                               (keyup)="applySearchFilter($event, assembliesData)"
                                placeholder="Illumina" #input>
                     </mat-form-field>
                     <table mat-table [dataSource]="assembliesData" matSort
@@ -464,7 +464,7 @@
 
                     <mat-form-field class="searchField">
                         <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter($event, filesData)"
+                        <input matInput (keyup)="applySearchFilter($event, filesData)"
                                placeholder="Illumina" #input>
                     </mat-form-field>
                     <table mat-table [dataSource]="filesData" matSort
