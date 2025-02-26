@@ -9,17 +9,16 @@
                 <mat-chip-set aria-label="Statistics">
                     @for (key of projects_keys; track key) {
                         <mat-chip>
-                            {{ key }}
-                            <button mat-button color="accent">
-                                {{ data?.projects[key]}}
+                            <button mat-button color="accent"
+                                    [routerLink]="['/data_portal']"
+                                    [queryParams]="getQueryParams(key)">
+                                <span style="color: black; font-weight: normal;">{{ key }}</span>
+                                {{ data?.projects[key] }}
                             </button>
                         </mat-chip>
                     }
                 </mat-chip-set>
             </mat-card-actions>
-            <button mat-flat-button color="primary">
-                <a mat-button [routerLink]="['/data_portal']">Data portal</a>
-            </button>
         </mat-card>
         <br>
         <mat-card class="status_tracking">
@@ -28,18 +27,16 @@
                 <mat-chip-set aria-label="Statistics">
                     @for (key of status_keys; track key) {
                         <mat-chip>
-                            {{ key }}
-                            <button mat-button color="accent">
-                                {{ data?.status[key]}}
+                            <button mat-button color="accent"
+                                    [routerLink]="['/data_portal']"
+                                    [queryParams]="getQueryParams(key)">
+                                <span style="color: black; font-weight: normal;">{{ key }}</span>
+                                {{ data?.status[key] }}
                             </button>
                         </mat-chip>
                     }
                 </mat-chip-set>
             </mat-card-actions>
-            <button mat-flat-button color="primary">
-                <a mat-button [routerLink]="['/status_tracking']">Status
-                    Tracking</a>
-            </button>
         </mat-card>
     </div>
 
@@ -50,17 +47,16 @@
                 <mat-chip-set aria-label="Statistics">
                     @for (key of phylogeny_keys; track key) {
                         <mat-chip>
-                            {{ key }}
-                            <button mat-button color="accent">
-                                {{ data?.phylogeny[key]}}
+                            <button mat-button color="accent"
+                                    [routerLink]="['/data_portal']"
+                                    [queryParams]="getQueryParams(key, 'phylogeny')">
+                                <span style="color: black; font-weight: normal;">{{ key }}</span>
+                                {{ data?.phylogeny[key] }}
                             </button>
                         </mat-chip>
                     }
                 </mat-chip-set>
             </mat-card-actions>
-            <button mat-flat-button color="primary">
-                <a mat-button [routerLink]="['/phylogeny']">Phylogeny</a>
-            </button>
         </mat-card>
     </div>
 </div>
