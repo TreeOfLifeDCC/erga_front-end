@@ -24,7 +24,7 @@ import {
     MatRow, MatRowDef,
     MatTable
 } from "@angular/material/table";
-import {NavigationEnd, NavigationStart, RouterLink} from "@angular/router";
+import {NavigationEnd, RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
 import {MatTableExporterModule} from "mat-table-exporter";
@@ -32,7 +32,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatDivider} from "@angular/material/divider";
 import {MatProgressBar} from "@angular/material/progress-bar";
 import {FormsModule} from "@angular/forms";
-import { Location } from '@angular/common';
 
 
 @Component({
@@ -116,16 +115,10 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
-    private fromHome = false;
 
     constructor(private _apiService: ApiService, private dialog: MatDialog, private titleService: Title,
                 private router: Router,
-                private activatedRoute: ActivatedRoute, private location: Location) {
-
-                    if (history.state && history.state.fromHome) {
-                        this.fromHome = true;
-                    }
-
+                private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit(): void {
@@ -133,12 +126,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             if (event instanceof NavigationEnd) {
                 if (event.urlAfterRedirects === '/data_portal') {
                     this.refreshPage();
-                }
-            }
-
-            if (event instanceof NavigationStart && event.navigationTrigger === 'popstate') {
-                if (this.fromHome) {
-                    this.router.navigate(['/home']);
                 }
             }
         });
@@ -262,12 +249,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     replaceUrlQueryParams() {
-        const urlTree = this.router.createUrlTree([], {
+        this.router.navigate([], {
             relativeTo: this.activatedRoute,
-            queryParams: this.queryParams
+            queryParams: this.queryParams,
+            replaceUrl: true,
+            skipLocationChange: false
         });
-        const newUrl = this.router.serializeUrl(urlTree);
-        this.location.replaceState(newUrl);
     }
 
     removePhylogenyFilters() {
