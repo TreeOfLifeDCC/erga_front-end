@@ -118,12 +118,10 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
     constructor(private _apiService: ApiService, private dialog: MatDialog, private titleService: Title,
                 private router: Router,
-                private activatedRoute: ActivatedRoute,) {
+                private activatedRoute: ActivatedRoute) {
     }
 
-
     ngOnInit(): void {
-        // reload page if user clicks on menu link
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
                 if (event.urlAfterRedirects === '/data_portal') {
