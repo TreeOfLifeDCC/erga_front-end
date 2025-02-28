@@ -27,14 +27,12 @@ import {MatInput} from "@angular/material/input";
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatProgressBar} from '@angular/material/progress-bar';
 import {FormsModule} from "@angular/forms";
-import { TruncatePipe } from './truncate.pipe';
 
 @Component({
   selector: 'app-publications',
   templateUrl: './publications.component.html',
   styleUrl: './publications.component.css',
   imports: [
-      TruncatePipe,
       MatCard,
       MatCardTitle,
       MatCardActions,
