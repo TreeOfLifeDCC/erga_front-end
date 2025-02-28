@@ -154,7 +154,7 @@
                     <table mat-table [dataSource]="data" class="data-table"
                            matSort matSortActive="pubYear"
                            matSortDisableClear
-                           matSortDirection="asc">
+                           matSortDirection="desc">
                         <!-- Number Column -->
                         <ng-container matColumnDef="title">
                             <th mat-header-cell *matHeaderCellDef
@@ -163,8 +163,9 @@
                             <td mat-cell *matCellDef="let row">
                                 <a mat-button
                                    [href]="row['_source']['url']"
-                                   target="_blank" rel="noopener noreferrer"
-                                   [innerHTML]="row['_source']['title']">
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    <span [innerHTML]="row['_source']['title']"></span>
                                 </a>
                             </td>
                         </ng-container>
@@ -207,7 +208,10 @@
                                 mat-sort-header disableClear>Organism Name
                             </th>
                             <td mat-cell *matCellDef="let row">
-                                {{ row['_source']['organism_name'] }}
+                                <a mat-button
+                                   [routerLink]="['/data_portal', row['_source']['tax_id']]">
+                                    {{ row['_source']['organism_name'] }}
+                                </a>
                             </td>
                         </ng-container>
 
