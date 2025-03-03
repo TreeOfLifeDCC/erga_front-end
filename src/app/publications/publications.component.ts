@@ -27,14 +27,13 @@ import {MatInput} from "@angular/material/input";
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatProgressBar} from '@angular/material/progress-bar';
 import {FormsModule} from "@angular/forms";
-import { TruncatePipe } from './truncate.pipe';
+
 
 @Component({
   selector: 'app-publications',
   templateUrl: './publications.component.html',
   styleUrl: './publications.component.css',
   imports: [
-      TruncatePipe,
       MatCard,
       MatCardTitle,
       MatCardActions,
@@ -101,7 +100,7 @@ export class PublicationsComponent implements OnInit, AfterViewInit {
 
   constructor(private _apiService: ApiService,
               private router: Router,
-              private activatedRoute: ActivatedRoute,) { }
+              private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     // get url parameters
@@ -260,5 +259,7 @@ export class PublicationsComponent implements OnInit, AfterViewInit {
       return '-';
     }
   }
+
+
 
 }
