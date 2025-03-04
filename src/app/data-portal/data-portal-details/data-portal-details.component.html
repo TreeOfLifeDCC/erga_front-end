@@ -165,7 +165,7 @@
                                 </div>
                             </mat-chip-set>
                         </div>
-                        <div class="table-container">
+                        <div class="data-table-div">
                             <table #exporter="matTableExporter" #metadataSort="matSort" [dataSource]="metadataData" mat-table matSort matTableExporter>
 
                                 <ng-container matColumnDef="accession">
@@ -548,79 +548,186 @@
 
                     <h1 class="page-header">Related Symbionts</h1>
 
-                    <div class="table-container">
-                        <table mat-table
-                               [dataSource]="dataSourceSymbiontsRecords"
-                               matSort
-                               #relatedSymbiontsSort="matSort">
+                    <mat-form-field style="width: 100%; margin-top: 10px;">
+                        <mat-label>Filter</mat-label>
+                        <input matInput (keyup)="applyFilter('symbionts', $event, dataSourceSymbiontsRecords)"
+                               placeholder="Ex. Mia" #input>
+                    </mat-form-field>
 
-                            <ng-container matColumnDef="accession">
-                                <th mat-header-cell *matHeaderCellDef>
-                                    BioSample ID
-                                </th>
-                                <td mat-cell *matCellDef="let row"><a
-                                        mat-button
-                                        href="https://www.ebi.ac.uk/biosamples/samples/{{row.accession}}">
-                                    {{ row.accession }}</a></td>
-                            </ng-container>
+                    <div class="main-container">
+                        <div class="left-panel">
+                            <mat-card class="example-card" appearance="raised">
+                                <mat-card-header>
+                                    <div class="header-content">
+                                        <mat-card-title>Sex</mat-card-title>
+                                        <ng-container *ngIf="symbiontsFilterState.countedFilters?.['sex'] && symbiontsFilterState.countedFilters['sex'].length > (symbiontsFilterState.filtersLimit?.['sex'] ?? 0)">
+                                            <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('symbionts', 'sex')">
+                                                {{ symbiontsFilterState.expandedFilters['sex'] ? 'remove' : 'add' }}
+                                            </i>
+                                        </ng-container>
+                                    </div>
+                                </mat-card-header>
+                                <mat-card class="filter-content">
+                                    <div *ngFor="let el of (symbiontsFilterState.expandedFilters['sex'] ? symbiontsFilterState.countedFilters['sex'] : symbiontsFilterState.countedFilters['sex'] | slice:0:symbiontsFilterState.filtersLimit['sex'])" class="example-item">
+                                        <button (click)="toggleFilter('symbionts','sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('symbionts', 'sex', el.id) }">
+                                            <span>{{ el.id }}</span>
+                                            <span class="badge">{{ el.value }}</span>
+                                        </button>
+                                    </div>
+                                </mat-card>
+                            </mat-card>
 
-                            <ng-container matColumnDef="organism">
-                                <th mat-header-cell *matHeaderCellDef>
-                                    Organism
-                                </th>
-                                <td mat-cell
-                                    *matCellDef="let row"> {{ row.organism.text }}
-                                </td>
-                            </ng-container>
+                            <mat-card class="example-card" appearance="raised">
+                                <mat-card-header>
+                                    <div class="header-content">
+                                        <mat-card-title>Organism Part</mat-card-title>
+                                        <ng-container *ngIf="symbiontsFilterState.countedFilters?.['organismPart'] && symbiontsFilterState.countedFilters['organismPart'].length > (symbiontsFilterState.filtersLimit?.['organismPart'] ?? 0)">
+                                            <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('symbionts', 'organismPart')">
+                                                {{ symbiontsFilterState.expandedFilters['organismPart'] ? 'remove' : 'add' }}
+                                            </i>
+                                        </ng-container>
+                                    </div>
+                                </mat-card-header>
+                                <mat-card class="filter-content">
+                                    <div class="example-viewport">
+                                        <div *ngFor="let el of (symbiontsFilterState.expandedFilters['organismPart'] ? symbiontsFilterState.countedFilters['organismPart'] : symbiontsFilterState.countedFilters['organismPart'] | slice:0:symbiontsFilterState.filtersLimit['organismPart'])" class="example-item">
+                                            <button (click)="toggleFilter('symbionts', 'organismPart', el.id)" [ngClass]="{ 'active-filter': isFilterActive('symbionts', 'organismPart', el.id) }">
+                                                <span>{{ el.id }}</span>
+                                                <span class="badge">{{ el.value }}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </mat-card>
 
-                            <ng-container matColumnDef="commonName">
-                                <th mat-header-cell *matHeaderCellDef> Common
-                                    Name
-                                </th>
-                                <td mat-cell
-                                    *matCellDef="let row"> {{ row?.commonName }}
-                                </td>
-                            </ng-container>
+                            <mat-card class="example-card" appearance="raised">
+                                <mat-card-header>
+                                    <div class="header-content">
+                                        <mat-card-title>Tracking System</mat-card-title>
+                                        <ng-container *ngIf="symbiontsFilterState.countedFilters?.['trackingSystem'] && symbiontsFilterState.countedFilters['trackingSystem'].length > (symbiontsFilterState.filtersLimit?.['trackingSystem'] ?? 0)">
+                                            <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('symbionts', 'trackingSystem')">
+                                                {{ symbiontsFilterState.expandedFilters['trackingSystem'] ? 'remove' : 'add' }}
+                                            </i>
+                                        </ng-container>
+                                    </div>
+                                </mat-card-header>
+                                <mat-card class="filter-content">
+                                    <div class="example-viewport">
+                                        <div *ngFor="let el of (symbiontsFilterState.expandedFilters['trackingSystem'] ? symbiontsFilterState.countedFilters['trackingSystem'] : symbiontsFilterState.countedFilters['trackingSystem'] | slice:0:symbiontsFilterState.filtersLimit['trackingSystem'])" class="example-item">
+                                            <button (click)="toggleFilter('symbionts', 'trackingSystem', el.id)" [ngClass]="{ 'active-filter': isFilterActive('symbionts', 'trackingSystem', el.id) }">
+                                                <span>{{ el.id }}</span>
+                                                <span class="badge">{{ el.value }}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </mat-card>
+                        </div>
 
-                            <ng-container matColumnDef="sex">
-                                <th mat-header-cell *matHeaderCellDef> Sex</th>
-                                <td mat-cell
-                                    *matCellDef="let row"> {{ row?.sex }}
-                                </td>
-                            </ng-container>
+                        <div class="right-panel">
+                            <div class="filters_div">
+                                <mat-chip-set>
+                                    <div *ngFor="let key of symbiontsFilterState.filterKeys">
+                                        <ng-container *ngFor="let value of symbiontsFilterState.activeFilters[key]">
+                                            <div class="item4">
+                                                <mat-chip selected (click)="clearFilter('symbionts', key, value)"
+                                                          style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                                    <div style="display: flex; align-items: center;">
+                                                        <div style="margin-right: 3px"> {{ value }}</div>
+                                                        <mat-icon>close</mat-icon>
+                                                    </div>
+                                                </mat-chip>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                    <div *ngIf="getSelectedFilterCount('symbionts') > 0">
+                                        <div class="item4">
+                                            <mat-chip selected (click)="clearFilters('symbionts')"
+                                                      style="cursor: pointer; padding: 0; background-color: #F08080;">
+                                                <div style="display: flex; align-items: center;">
+                                                    <div style="margin-right: 3px"> Remove all filters</div>
+                                                    <mat-icon>close</mat-icon>
+                                                </div>
+                                            </mat-chip>
+                                        </div>
+                                    </div>
+                                </mat-chip-set>
+                            </div>
+                            <div class="data-table-div">
+                                <table mat-table
+                                       [dataSource]="dataSourceSymbiontsRecords"
+                                       matSort
+                                       #relatedSymbiontsSort="matSort">
 
-                            <ng-container matColumnDef="organismPart">
-                                <th mat-header-cell *matHeaderCellDef> Organism
-                                    part
-                                </th>
-                                <td mat-cell
-                                    *matCellDef="let row"> {{ row?.organismPart }}
-                                </td>
-                            </ng-container>
+                                    <ng-container matColumnDef="accession">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            BioSample ID
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <a style="text-decoration: none;" [routerLink]="['/organism/', row.accession]">{{ row.accession }}</a>
+                                        </td>
+                                    </ng-container>
 
-                            <ng-container matColumnDef="trackingSystem">
-                                <th mat-header-cell *matHeaderCellDef> Tracking
-                                    status
-                                </th>
-                                <td mat-cell *matCellDef="let row">
-                                    <mat-chip
-                                            [ngStyle]="{'background-color': 'gold'}">{{ row.trackingSystem }}
-                                    </mat-chip>
-                                </td>
-                            </ng-container>
+                                    <ng-container matColumnDef="organism">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Organism
+                                        </th>
+                                        <td mat-cell
+                                            *matCellDef="let row"> {{ row.organism.text }}
+                                        </td>
+                                    </ng-container>
 
-                            <tr mat-header-row
-                                *matHeaderRowDef="specDisplayedColumns"></tr>
-                            <tr mat-row
-                                *matRowDef="let row; columns: specDisplayedColumns;"></tr>
+                                    <ng-container matColumnDef="commonName">
+                                        <th mat-header-cell *matHeaderCellDef> Common
+                                            Name
+                                        </th>
+                                        <td mat-cell
+                                            *matCellDef="let row"> {{ row?.commonName }}
+                                        </td>
+                                    </ng-container>
 
-                        </table>
+                                    <ng-container matColumnDef="sex">
+                                        <th mat-header-cell *matHeaderCellDef> Sex</th>
+                                        <td mat-cell
+                                            *matCellDef="let row"> {{ row?.sex }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="organismPart">
+                                        <th mat-header-cell *matHeaderCellDef> Organism
+                                            part
+                                        </th>
+                                        <td mat-cell
+                                            *matCellDef="let row"> {{ row?.organismPart }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="trackingSystem">
+                                        <th mat-header-cell *matHeaderCellDef> Tracking
+                                            status
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <mat-chip
+                                                    [ngStyle]="{'background-color': 'gold'}">{{ row.trackingSystem }}
+                                            </mat-chip>
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row
+                                        *matHeaderRowDef="specDisplayedColumns"></tr>
+                                    <tr mat-row
+                                        *matRowDef="let row; columns: specDisplayedColumns;"></tr>
+
+                                </table>
+
+                                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                                               aria-label="Select page of symbionts"
+                                               #relatedSymbiontsPaginator
+                                               [length]="specSymbiontsTotalCount"></mat-paginator>
+                            </div>
+                        </div>
                     </div>
 
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
-                                   aria-label="Select page of symbionts"
-                                   #relatedSymbiontsPaginator
-                                   [length]="specSymbiontsTotalCount"></mat-paginator>
                 </div>
                 <br>
                 <br>
