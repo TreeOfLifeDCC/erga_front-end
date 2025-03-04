@@ -28,7 +28,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatProgressBar} from '@angular/material/progress-bar';
 import {FormsModule} from "@angular/forms";
 
-
 @Component({
   selector: 'app-publications',
   templateUrl: './publications.component.html',
