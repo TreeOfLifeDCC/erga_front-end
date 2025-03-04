@@ -5,14 +5,12 @@
 
 .container {
     display: flex; /* or inline-flex */
-    flex-flow: row wrap;
+    flex-flow: row ;
     justify-content: space-evenly;
     gap: 5px 5px;
 }
-
-
 .filters_div {
-    display: flex;
+    display: flex; /* or inline-flex */
     flex-flow: row wrap;
     justify-content: flex-start;
     padding-left: 15px;
@@ -52,15 +50,6 @@ table {
 }
 
 /* Column Widths */
-.mat-column-organism,
-.mat-column-commonName,
-.mat-column-biosamples,
-.mat-column-raw_data,
-.mat-column-assemblies_status,
-.mat-column-annotation_complete {
-    max-width: 60px;
-}
-
 .mat-column-number,
 .mat-column-state {
     max-width: 64px;
@@ -91,6 +80,44 @@ table {
     margin-top: 10px;
 }
 
+/*td {*/
+/*  text-align: center;*/
+/*}*/
+
+/*th.mat-header-cell {*/
+/*  text-align: center !important;*/
+/*}*/
+
+/*th.mat-sort-header {*/
+/*  text-align: center !important;*/
+/*}*/
+
+/*a {*/
+/*  color: white;*/
+/*}*/
+
+.mat-column-organism,
+.mat-column-commonName,
+.mat-column-commonNameSource,
+.mat-column-currentStatus,
+.mat-column-externalReferences {
+    max-width: 80px;
+}
+
+mat-chip-set {
+    padding-left: 15px;
+    padding-top: 4px;
+}
+
+button {
+    margin-left: 15px;
+}
+
+mat-form-field {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
 .vertical-center {
     margin: 0;
     position: absolute;
@@ -118,12 +145,3 @@ table {
 .main-card {
     min-width: 300px;
 }
-
-mat-chip {
-    padding: 4px 9px !important;
-}
-
-.download-btn {
-    padding-left: 10px;
-}
-
