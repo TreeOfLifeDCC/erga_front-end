@@ -139,12 +139,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
     isDataLoaded: boolean = false;
 
-    activeFilters: { sex: string[], organismPart: string[], trackingSystem: string[] } = {
-        sex: [],
-        organismPart: [],
-        trackingSystem: []
-    };
-
     organismFilterState: FilterState = {
         activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
         countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
@@ -224,9 +218,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
             organismPart: [],
             trackingSystem: []
         };
-
-        this.countFilterFields('organism');
-        this.setupFilterPredicate('organism');
     }
 
     private transformGeoList(data: any[]): any[] {
@@ -345,7 +336,9 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.organismFilterState.data = this.metadataData;
                 this.symbiontsFilterState.data = this.dataSourceSymbiontsRecords;
                 this.countFilterFields('organism');
+                this.countFilterFields('symbionts');
                 this.setupFilterPredicate('organism');
+                this.setupFilterPredicate('symbionts');
                 this.isDataLoaded = true;
 
             }
