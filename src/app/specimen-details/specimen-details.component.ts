@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {ApiService} from "../api.service";
 import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
-import {FlexLayoutModule} from "@angular/flex-layout";
+import {FlexLayoutModule} from "@ngbracket/ngx-layout";
 import {MatDivider} from "@angular/material/divider";
 
 @Component({

@@ -1,85 +1,69 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, RouterLink} from "@angular/router";
-import {ApiService} from "../../api.service";
-import {MatSort} from "@angular/material/sort";
-import {merge, of as observableOf} from "rxjs";
-import {catchError, map, startWith, switchMap} from "rxjs/operators";
-import {keyframes} from "@angular/animations";
-import {MatPaginator} from "@angular/material/paginator";
+import { Component, OnInit, AfterViewInit, ViewChild, Input } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ApiService } from '../../api.service';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { TitleCasePipe, NgIf, NgForOf, SlicePipe } from '@angular/common';
+import { FlexLayoutModule } from '@ngbracket/ngx-layout';
+import { MatTableExporterModule } from 'mat-table-exporter';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatNoDataRow,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatTableDataSource
-} from "@angular/material/table";
-import {
-    MatCard,
-    MatCardActions,
-    MatCardContent,
-    MatCardHeader,
-    MatCardImage,
-    MatCardTitle
-} from "@angular/material/card";
+import { MatIconModule } from '@angular/material/icon';
+import { MapClusterComponent } from '../map-cluster/map-cluster.component';
+import {MatColumnDef, MatTable, MatTableDataSource} from "@angular/material/table";
+import {MatSort} from "@angular/material/sort";
+import {MatPaginator} from "@angular/material/paginator";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MatAnchor, MatButton} from "@angular/material/button";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatFormField} from "@angular/material/form-field";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatChip, MatChipSet} from "@angular/material/chips";
+import {MatCard, MatCardActions, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatInput} from "@angular/material/input";
-import {MatChip} from "@angular/material/chips";
-import {NgForOf, NgIf} from "@angular/common";
-import {FlexLayoutModule} from "@angular/flex-layout";
-import {MatTableExporterModule} from "mat-table-exporter";
-import {MatExpansionPanel} from "@angular/material/expansion";
-import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import { MatTableModule } from '@angular/material/table';
+
+interface FilterState {
+    activeFilters: { sex: string[]; organismPart: string[]; trackingSystem: string[] };
+    countedFilters: Record<string, { id: string; value: number }[]>;
+    expandedFilters: Record<string, boolean>;
+    filtersLimit: Record<string, number>;
+    searchTerm: string;
+    selectedFilters: Record<string, string[]>;
+    filterKeys: ("sex" | "organismPart" | "trackingSystem")[];
+    data: MatTableDataSource<any>;
+}
+
 
 @Component({
     selector: 'app-data-portal-details',
     templateUrl: './data-portal-details.component.html',
     standalone: true,
     imports: [
-        MatCardTitle,
-        MatCard,
-        MatCardActions,
-        MatTabGroup,
-        MatTab,
-        MatProgressSpinner,
-        MatButton,
-        MatInput,
-        MatTable,
-        MatSort,
-        MatColumnDef,
-        MatHeaderCell,
-        MatHeaderCellDef,
-        MatCellDef,
-        MatCell,
-        MatAnchor,
-        MatChip,
-        MatHeaderRow,
-        MatHeaderRowDef,
-        MatRowDef,
-        MatRow,
-        MatNoDataRow,
-        MatPaginator,
         NgIf,
-        MatCardHeader,
-        MatCardContent,
-        MatCardImage,
-        FlexLayoutModule,
         NgForOf,
-        MatLabel,
-        MatFormField,
         MatTableExporterModule,
         MatExpansionModule,
-        MatExpansionPanel
+        RouterLink,
+        MapClusterComponent,
+        TitleCasePipe,
+        FlexLayoutModule,
+        MatIconModule,
+        SlicePipe,
+        MatProgressSpinner,
+        MatTab,
+        MatTabGroup,
+        MatTable,
+        MatPaginator,
+        MatSort,
+        MatColumnDef,
+        MatFormField,
+        MatFormFieldModule,
+        MatChip,
+        MatChipSet,
+        MatCard,
+        MatCardHeader,
+        MatCardTitle,
+        MatCardActions,
+        MatInput,
+        MatTableModule
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -126,21 +110,90 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     dataSourceSymbiontsAssembliesCount: number;
     displayedColumnsAssemblies = ['accession', 'assembly_name', 'description', 'version'];
 
-
     specDisplayedColumns = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
-
 
     @ViewChild('relatedSymbiontsPaginator') symPaginator: MatPaginator | undefined;
 
     @ViewChild('assembliesSymbiontsPaginator') asSymPaginator: MatPaginator | undefined;
 
-    resultsLength = 0;
     isLoadingResults = true;
     isRateLimitReached = false;
 
     showMetadata = false;
     showData = false;
     showGenomeNote = false;
+
+    geoLocation: boolean;
+    orgGeoList: any;
+    specGeoList: any;
+
+    nbnatlas: any;
+    nbnatlasMapUrl: string;
+    @Input() height = 200;
+    @Input() width = 200;
+    @Input() loader = '../../assets/200.gif';
+    isLoading: boolean;
+    url: SafeResourceUrl;
+
+    isMapLoading: boolean = true;
+
+    isDataLoaded: boolean = false;
+
+    organismFilterState: FilterState = {
+        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
+        filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
+        searchTerm: '',
+        selectedFilters: {},
+        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
+        data: new MatTableDataSource<any>([])
+    };
+
+    symbiontsFilterState: FilterState = {
+        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
+        filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
+        searchTerm: '',
+        selectedFilters: {},
+        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
+        data: new MatTableDataSource<any>([])
+    };
+
+    codes = {
+        m: 'mammals',
+        d: 'dicots',
+        i: 'insects',
+        u: 'algae',
+        p: 'protists',
+        x: 'molluscs',
+        t: 'other-animal-phyla',
+        q: 'arthropods',
+        k: 'chordates',
+        f: 'fish',
+        a: 'amphibians',
+        b: 'birds',
+        e: 'echinoderms',
+        w: 'annelids',
+        j: 'jellyfish',
+        h: 'platyhelminths',
+        n: 'nematodes',
+        v: 'vascular-plants',
+        l: 'monocots',
+        c: 'non-vascular-plants',
+        g: 'fungi',
+        o: 'sponges',
+        r: 'reptiles',
+        s: 'sharks',
+        y: 'bacteria',
+        z: 'archea'
+    };
+
+    INSDC_ID: string = '';
+    currentStatus: string ='';
+
+    @ViewChild("tabgroup", { static: false }) tabgroup: MatTabGroup;
 
     @ViewChild('metadataPaginator') metadataPaginator: MatPaginator;
     @ViewChild('metadataSort') metadataSort: MatSort;
@@ -160,6 +213,24 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.organismFilterState.countedFilters = {
+            sex: [],
+            organismPart: [],
+            trackingSystem: []
+        };
+    }
+
+    private transformGeoList(data: any[]): any[] {
+        return data.map(item => ({
+            commonName: item.commonName,
+            organism: item.organism.text,
+            lng: item.lon,
+            sex: item.sex,
+            locality: item.locality,
+            accession: item.accession,
+            organismPart: item.organismPart,
+            lat: item.lat
+        }));
     }
 
     ngAfterViewInit() {
@@ -171,10 +242,31 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.isRateLimitReached = data === null;
 
                 this.organismData = data.results[0]['_source'];
-                this.metadataData = new MatTableDataSource(data.results[0]['_source']['records']);
+                this.metadataData = new MatTableDataSource(this.organismData['records']);
+
+                this.orgGeoList = this.transformGeoList(this.metadataData.filteredData);
+                this.specGeoList = [];
+
+                if (this.orgGeoList !== undefined && this.orgGeoList.length !== 0) {
+                    this.geoLocation = true;
+                }
+
+                this.nbnatlas = this.organismData['nbnatlas'];
+
+                if (this.nbnatlas != null) {
+                    this.nbnatlasMapUrl = 'https://easymap.nbnatlas.org/Image?tvk=' +
+                        this.nbnatlas.split('/')[4] + '&ref=0&w=400&h=600&b0fill=6ecc39&title=0' ;
+                    this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.nbnatlasMapUrl);
+                    this.nbnatlasMapUrl = 'https://records.nbnatlas.org/occurrences/search?q=lsid:' +
+                        this.nbnatlas.split('/')[4] + '+&nbn_loading=true&fq=-occurrence_status%3A%22absent%22#tab_mapView';
+                }
+
+                this.INSDC_ID = this.organismData['experiment'][0]['study_accession'];
+                this.currentStatus = this.organismData['currentStatus'];
+
                 this.metadataDataLength = data.results[0]['_source']['records'].length;
 
-                if (data.results[0]['_source']['annotation'] && data.results[0]['_source']['annotation'].lenght !== 0) {
+                if (data.results[0]['_source']['annotation'] && data.results[0]['_source']['annotation'].length !== 0) {
                     this.annotationData = new MatTableDataSource(data.results[0]['_source']['annotation']);
                     this.annotationDataLength = data.results[0]['_source']['annotation'].length;
                     this.annotationData.paginator = this.annotationPaginator;
@@ -184,7 +276,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.annotationDataLength = 0;
                 }
 
-                if (data.results[0]['_source']['assemblies'] && data.results[0]['_source']['assemblies'].lenght !== 0) {
+                if (data.results[0]['_source']['assemblies'] && data.results[0]['_source']['assemblies'].length !== 0) {
                     this.assembliesData = new MatTableDataSource(data.results[0]['_source']['assemblies']);
                     this.assembliesDataLength = data.results[0]['_source']['assemblies'].length;
                     this.assembliesData.paginator = this.assembliesPaginator;
@@ -194,7 +286,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.assembliesDataLength = 0;
                 }
 
-                if (data.results[0]['_source']['experiment'] && data.results[0]['_source']['experiment'].lenght !== 0) {
+                if (data.results[0]['_source']['experiment'] && data.results[0]['_source']['experiment'].length !== 0) {
                     this.filesData = new MatTableDataSource(data.results[0]['_source']['experiment']);
                     this.filesDataLength = data.results[0]['_source']['experiment'].length;
                     this.filesData.paginator = this.filesPaginator;
@@ -213,10 +305,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.goatDataLength = 0;
                 }
 
-
                 this.metadataData.paginator = this.metadataPaginator;
                 this.metadataData.sort = this.metadataSort;
-
 
                 if (data.results[0]['_source']['records'].length > 0) {
                     this.showMetadata = true;
@@ -241,33 +331,18 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.dataSourceSymbiontsAssemblies = new MatTableDataSource();
                     this.dataSourceSymbiontsAssembliesCount = 0;
                 }
+
+
+                this.organismFilterState.data = this.metadataData;
+                this.symbiontsFilterState.data = this.dataSourceSymbiontsRecords;
+                this.countFilterFields('organism');
+                this.countFilterFields('symbionts');
+                this.setupFilterPredicate('organism');
+                this.setupFilterPredicate('symbionts');
+                this.isDataLoaded = true;
+
             }
         );
-    }
-
-    applyFilter(event: Event, dataSource: string) {
-        const filterValue = (event.target as HTMLInputElement).value;
-        if (dataSource === 'metadata') {
-            this.metadataData.filter = filterValue.trim().toLowerCase();
-            if (this.metadataData.paginator) {
-                this.metadataData.paginator.firstPage();
-            }
-        } else if (dataSource === 'annotation') {
-            this.annotationData.filter = filterValue.trim().toLowerCase();
-            if (this.annotationData.paginator) {
-                this.annotationData.paginator.firstPage();
-            }
-        } else if (dataSource === 'assemblies') {
-            this.assembliesData.filter = filterValue.trim().toLowerCase();
-            if (this.assembliesData.paginator) {
-                this.assembliesData.paginator.firstPage();
-            }
-        } else if (dataSource === 'files') {
-            this.filesData.filter = filterValue.trim().toLowerCase();
-            if (this.filesData.paginator) {
-                this.filesData.paginator.firstPage();
-            }
-        }
     }
 
     getHumanReadableName(key: string) {
@@ -321,7 +396,182 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         return this.sanitizer.bypassSecurityTrustHtml(content);
     }
 
+    onMapLoad() {
+        this.isMapLoading = false;
+    }
 
+    onMapError() {
+        console.error('Error loading occurrences map image.');
+        this.isMapLoading = false;
+    }
 
+    onTabChange(event: any) {
+        if (event.tab.textLabel === 'Geo Location Maps') {
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 100);
+        }
+        if (event.tab.textLabel === 'Occurrences Map') {
+            this.isMapLoading = true;
+        }
+    }
+
+    generateTolidLink(data: any): string {
+        const organismName = data.organism.split(' ').join('_');
+
+        if (typeof data.tolid === 'string' && data.tolid.length > 0) {
+            const clade = this.codes[data.tolid.charAt(0) as keyof typeof this.codes];
+            return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
+        }
+
+        else if (Array.isArray(data.tolid) && data.tolid.length > 0 && typeof data.tolid[0] === 'string') {
+            const clade = this.codes[data.tolid[0].charAt(0) as keyof typeof this.codes];
+            return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
+        }
+
+        return '';
+    }
+
+    checkTolidExists(data: { tolid: string | any[] | null | undefined; show_tolqc: boolean; } | undefined) {
+        return data != undefined && data.tolid != undefined && data.tolid != null && data.tolid.length > 0 &&
+            data.show_tolqc === true;
+    }
+
+    applySearchFilter(event: Event, dataSource: MatTableDataSource<any>) {
+        let searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
+        dataSource.filter = JSON.stringify({ search: searchTerm });
+    }
+
+    /* filters */
+
+    getFilterState(type: 'organism' | 'symbionts'): FilterState {
+        return type === 'organism' ? this.organismFilterState : this.symbiontsFilterState;
+    }
+
+    applyFilter(type: 'organism' | 'symbionts', event: Event, dataSource: MatTableDataSource<any>) {
+        const state = this.getFilterState(type);
+        state.searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
+
+        const combinedFilter = JSON.stringify({
+            search: state.searchTerm,
+            filters: state.activeFilters
+        });
+
+        dataSource.filter = combinedFilter;
+        this.applyFilters(type);
+    }
+
+    applyFilters(type: 'organism' | 'symbionts') {
+        const state = this.getFilterState(type);
+        if (!state.data) {
+            console.warn("applyFilters(): нет данных");
+            return;
+        }
+
+        const combinedFilter = JSON.stringify({
+            search: state.searchTerm,
+            filters: state.activeFilters
+        });
+
+        state.data.filter = combinedFilter;
+        this.countFilterFields(type);
+    }
+
+    toggleFilter(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string) {
+        const state = this.getFilterState(type);
+        const index = state.activeFilters[field].indexOf(value);
+
+        if (index !== -1) {
+            state.activeFilters[field].splice(index, 1);
+        } else {
+            state.activeFilters[field].push(value);
+        }
+
+        state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
+        this.applyFilters(type);
+    }
+
+    clearFilter(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string): void {
+        const state = this.getFilterState(type);
+        state.activeFilters[field] = state.activeFilters[field].filter(v => v !== value);
+        state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
+        this.applyFilters(type);
+    }
+
+    clearFilters(type: 'organism' | 'symbionts'): void {
+        const state = this.getFilterState(type);
+        state.searchTerm = '';
+        state.activeFilters = { sex: [], organismPart: [], trackingSystem: [] };
+        state.selectedFilters = {};
+        this.applyFilters(type);
+    }
+
+    countFilterFields(type: 'organism' | 'symbionts') {
+        const state = this.getFilterState(type);
+        if (!state.data) { return; }
+
+        state.filterKeys.forEach(column => {
+            const uniqueValues: Record<string, number> = {};
+
+            state.data.filteredData.forEach((element: { [x: string]: string | number }) => {
+                const value = element[column];
+                const valueStr = value ? value.toString() : "Unknown";
+                uniqueValues[valueStr] = (uniqueValues[valueStr] || 0) + 1;
+            });
+
+            state.countedFilters[column] = Object.keys(uniqueValues).map(key => ({
+                id: key,
+                value: uniqueValues[key]
+            }));
+        });
+    }
+
+    toggleFilterView(type: 'organism' | 'symbionts', filterKey: string): void {
+        const state = this.getFilterState(type);
+        state.expandedFilters[filterKey] = !state.expandedFilters[filterKey];
+    }
+
+    isFilterActive(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string): boolean {
+        return this.getFilterState(type).activeFilters[field].includes(value);
+    }
+
+    setupFilterPredicate(type: 'organism' | 'symbionts') {
+        const state = this.getFilterState(type);
+        if (!state.data) {
+            console.warn("setupFilterPredicate(): нет данных");
+            return;
+        }
+
+        state.data.filterPredicate = (data: any, filter: string) => {
+            const parsedFilter = JSON.parse(filter);
+            const searchTerm = parsedFilter.search.toLowerCase();
+            const filters = parsedFilter.filters;
+
+            const matchesFilters = Object.keys(filters).every(key =>
+                filters[key].length === 0 || filters[key].includes(data[key])
+            );
+
+            const matchesSearch = Object.values(data).some(value =>
+                String(value).toLowerCase().includes(searchTerm)
+            );
+
+            return matchesFilters && matchesSearch;
+        };
+    }
+
+    getSelectedFilterList(activeFilters: { [key: string]: string[] }): Record<string, string[]> {
+        return Object.keys(activeFilters).reduce((acc, key) => {
+            const values = activeFilters[key];
+            if (values.length > 0) {
+                acc[key] = values;
+            }
+            return acc;
+        }, {} as Record<string, string[]>);
+    }
+
+    getSelectedFilterCount(type: 'organism' | 'symbionts'): number {
+        const state = this.getFilterState(type);
+        return Object.keys(this.getSelectedFilterList(state.activeFilters)).length;
+    }
 
 }
