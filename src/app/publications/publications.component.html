@@ -151,15 +151,16 @@
                 </mat-form-field>
 
                 <div class="data-table-div">
-                    <table mat-table [dataSource]="data" class="data-table"
+                    <table mat-table [dataSource]="data"
                            matSort matSortActive="pubYear"
                            matSortDisableClear
                            matSortDirection="desc">
                         <!-- Number Column -->
                         <ng-container matColumnDef="title">
-                            <th mat-header-cell *matHeaderCellDef
+                            <th mat-header-cell *matHeaderCellDef style="width: 35%;"
                                 mat-sort-header disableClear>Title
                             </th>
+                            <!-- Title Column -->
                             <td mat-cell *matCellDef="let row">
                                 <a mat-button
                                    [href]="row['_source']['url']"
@@ -170,7 +171,7 @@
                             </td>
                         </ng-container>
 
-                        <!-- Title Column -->
+
                         <ng-container matColumnDef="journalTitle">
                             <th mat-header-cell *matHeaderCellDef
                                 mat-sort-header disableClear>Journal
@@ -195,9 +196,11 @@
                                 mat-sort-header disableClear>Study ID
                             </th>
                             <td mat-cell *matCellDef="let row">
+
                                 <a mat-button
                                    [href]="'https://www.ebi.ac.uk/ena/browser/view/' + row['_source']['study_id']"
                                    target="_blank" rel="noopener noreferrer">
+
                                     {{row['_source']['study_id']}}
                                 </a>
                             </td>
@@ -208,10 +211,12 @@
                                 mat-sort-header disableClear>Organism Name
                             </th>
                             <td mat-cell *matCellDef="let row">
+
                                 <a mat-button
                                    [routerLink]="['/data_portal', row['_source']['tax_id']]">
                                     {{ row['_source']['organism_name'] }}
                                 </a>
+
                             </td>
                         </ng-container>
 

@@ -99,7 +99,7 @@ export class PublicationsComponent implements OnInit, AfterViewInit {
 
   constructor(private _apiService: ApiService,
               private router: Router,
-              private activatedRoute: ActivatedRoute,) { }
+              private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     // get url parameters
@@ -258,5 +258,7 @@ export class PublicationsComponent implements OnInit, AfterViewInit {
       return '-';
     }
   }
+
+
 
 }
