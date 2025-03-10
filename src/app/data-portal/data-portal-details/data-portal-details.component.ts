@@ -8,26 +8,28 @@ import { MatTableExporterModule } from 'mat-table-exporter';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MapClusterComponent } from '../map-cluster/map-cluster.component';
-import {MatColumnDef, MatTable, MatTableDataSource} from "@angular/material/table";
-import {MatSort} from "@angular/material/sort";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatTab, MatTabGroup} from "@angular/material/tabs";
-import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {MatFormField} from "@angular/material/form-field";
+import { MatColumnDef, MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTab, MatTabGroup } from '@angular/material/tabs';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import {MatChip, MatChipSet} from "@angular/material/chips";
-import {MatCard, MatCardActions, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatInput} from "@angular/material/input";
+import { MatChip, MatChipSet } from '@angular/material/chips';
+import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { MatInput } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 
+type FilterKey = 'sex' | 'organismPart' | 'trackingSystem';
+
 interface FilterState {
-    activeFilters: { sex: string[]; organismPart: string[]; trackingSystem: string[] };
-    countedFilters: Record<string, { id: string; value: number }[]>;
-    expandedFilters: Record<string, boolean>;
-    filtersLimit: Record<string, number>;
+    activeFilters: { [key in FilterKey]: string[] };
+    countedFilters: Record<FilterKey, { id: string; value: number }[]>;
+    expandedFilters: Record<FilterKey, boolean>;
+    filtersLimit: Record<FilterKey, number>;
     searchTerm: string;
-    selectedFilters: Record<string, string[]>;
-    filterKeys: ("sex" | "organismPart" | "trackingSystem")[];
+    selectedFilters: Record<FilterKey, string[]>;
+    filterKeys: FilterKey[];
     data: MatTableDataSource<any>;
 }
 
@@ -71,10 +73,10 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     organismData: any;
     metadataDisplayedColumns: string[] = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
     annotationsDisplayedColumns: string[] = ['species', 'accession', 'annotation_gtf', 'annotation_gff3', 'proteins',
-        'transcripts', 'softmasked_genome', 'repeat_library', 'other_data', 'view_in_browser']
+        'transcripts', 'softmasked_genome', 'repeat_library', 'other_data', 'view_in_browser'];
     assembliesDisplayedColumns: string[] = ['accession', 'version', 'assembly_name', 'description'];
     filesDisplayedColumns: string[] = ['study_accession', 'sample_accession', 'experiment_accession', 'run_accession',
-        'tax_id', 'scientific_name', 'fastq_ftp', 'submitted_ftp', 'sra_ftp', 'library_construction_protocol']
+        'tax_id', 'scientific_name', 'fastq_ftp', 'submitted_ftp', 'sra_ftp', 'library_construction_protocol'];
     goatDisplayedColumns: string[] = ['name', 'value', 'count', 'aggregation_method', 'aggregation_source'];
 
     humanReadableColumns = {
@@ -90,7 +92,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         library_construction_protocol: 'Library Construction Protocol'
     };
 
-    specialColumns = ['fastq_ftp', 'submitted_ftp', 'sra_ftp']
+    specialColumns = ['fastq_ftp', 'submitted_ftp', 'sra_ftp'];
     popupImage: string | null = null;
     metadataData: any;
     metadataDataLength: number;
@@ -109,24 +111,19 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     dataSourceSymbiontsAssemblies: any;
     dataSourceSymbiontsAssembliesCount: number;
     displayedColumnsAssemblies = ['accession', 'assembly_name', 'description', 'version'];
-
     specDisplayedColumns = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
 
     @ViewChild('relatedSymbiontsPaginator') symPaginator: MatPaginator | undefined;
-
     @ViewChild('assembliesSymbiontsPaginator') asSymPaginator: MatPaginator | undefined;
 
     isLoadingResults = true;
     isRateLimitReached = false;
-
     showMetadata = false;
     showData = false;
     showGenomeNote = false;
-
     geoLocation: boolean;
     orgGeoList: any;
     specGeoList: any;
-
     nbnatlas: any;
     nbnatlasMapUrl: string;
     @Input() height = 200;
@@ -134,10 +131,14 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     @Input() loader = '../../assets/200.gif';
     isLoading: boolean;
     url: SafeResourceUrl;
-
     isMapLoading: boolean = true;
-
     isDataLoaded: boolean = false;
+
+    filterGroups: { key: FilterKey; title: string }[] = [
+        { key: 'sex', title: 'Sex' },
+        { key: 'organismPart', title: 'Organism Part' },
+        { key: 'trackingSystem', title: 'Tracking System' }
+    ];
 
     organismFilterState: FilterState = {
         activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
@@ -145,7 +146,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
         filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
         searchTerm: '',
-        selectedFilters: {},
+        selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
         filterKeys: ['sex', 'organismPart', 'trackingSystem'],
         data: new MatTableDataSource<any>([])
     };
@@ -156,7 +157,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
         filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
         searchTerm: '',
-        selectedFilters: {},
+        selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
         filterKeys: ['sex', 'organismPart', 'trackingSystem'],
         data: new MatTableDataSource<any>([])
     };
@@ -191,26 +192,21 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     };
 
     INSDC_ID: string = '';
-    currentStatus: string ='';
+    currentStatus: string = '';
 
     @ViewChild("tabgroup", { static: false }) tabgroup: MatTabGroup;
-
     @ViewChild('metadataPaginator') metadataPaginator: MatPaginator;
     @ViewChild('metadataSort') metadataSort: MatSort;
-
     @ViewChild('annotationPaginator') annotationPaginator: MatPaginator;
     @ViewChild('annotationSort') annotationSort: MatSort;
-
     @ViewChild('assembliesPaginator') assembliesPaginator: MatPaginator;
     @ViewChild('assembliesSort') assembliesSort: MatSort;
-
     @ViewChild('filesPaginator') filesPaginator: MatPaginator;
     @ViewChild('filesSort') filesSort: MatSort;
 
     constructor(private route: ActivatedRoute,
                 private _apiService: ApiService,
-                private sanitizer: DomSanitizer) {
-    }
+                private sanitizer: DomSanitizer) { }
 
     ngOnInit(): void {
         this.organismFilterState.countedFilters = {
@@ -245,9 +241,9 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.metadataData = new MatTableDataSource(this.organismData['records']);
 
                 this.orgGeoList = this.transformGeoList(this.metadataData.filteredData);
-                this.specGeoList = [];
 
-                if (this.orgGeoList !== undefined && this.orgGeoList.length !== 0) {
+                this.specGeoList = [];
+                if (this.orgGeoList && this.orgGeoList.length !== 0) {
                     this.geoLocation = true;
                 }
 
@@ -255,7 +251,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
                 if (this.nbnatlas != null) {
                     this.nbnatlasMapUrl = 'https://easymap.nbnatlas.org/Image?tvk=' +
-                        this.nbnatlas.split('/')[4] + '&ref=0&w=400&h=600&b0fill=6ecc39&title=0' ;
+                        this.nbnatlas.split('/')[4] + '&ref=0&w=400&h=600&b0fill=6ecc39&title=0';
                     this.url = this.sanitizer.bypassSecurityTrustResourceUrl(this.nbnatlasMapUrl);
                     this.nbnatlasMapUrl = 'https://records.nbnatlas.org/occurrences/search?q=lsid:' +
                         this.nbnatlas.split('/')[4] + '+&nbn_loading=true&fq=-occurrence_status%3A%22absent%22#tab_mapView';
@@ -296,9 +292,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.filesDataLength = 0;
                 }
 
-                if (data.results[0]['_source']['goat_info'] &&
-                    data.results[0]['_source']['goat_info'].hasOwnProperty('attributes')) {
-                    this.goatData = new MatTableDataSource(data.results[0]['_source']['goat_info']['attributes'])
+                if (data.results[0]['_source']['goat_info'] && data.results[0]['_source']['goat_info'].hasOwnProperty('attributes')) {
+                    this.goatData = new MatTableDataSource(data.results[0]['_source']['goat_info']['attributes']);
                     this.goatDataLength = data.results[0]._source.goat_info?.attributes?.length;
                     this.goatDataLink = data.results[0]['_source']['goat_info']['url'];
                 } else {
@@ -323,7 +318,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.specSymbiontsTotalCount = 0;
                 }
 
-
                 if (data.results[0]['_source']['symbionts_assemblies'] !== undefined && data.results[0]['_source']['symbionts_assemblies'].length) {
                     this.dataSourceSymbiontsAssemblies = new MatTableDataSource<any>(data.results[0]['_source']['symbionts_assemblies']);
                     this.dataSourceSymbiontsAssembliesCount = data.results[0]['_source']['symbionts_assemblies'] ? data.results[0]['_source']['symbionts_assemblies'].length : 0;
@@ -332,7 +326,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.dataSourceSymbiontsAssembliesCount = 0;
                 }
 
-
                 this.organismFilterState.data = this.metadataData;
                 this.symbiontsFilterState.data = this.dataSourceSymbiontsRecords;
                 this.countFilterFields('organism');
@@ -340,9 +333,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.setupFilterPredicate('organism');
                 this.setupFilterPredicate('symbionts');
                 this.isDataLoaded = true;
-
-            }
-        );
+        });
     }
 
     getHumanReadableName(key: string) {
@@ -355,8 +346,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
     getKeyFromSpecialColumns(key: string) {
         if (key) {
-            const length = key.split("/").length;
-            return key.split("/")[length - 1];
+            const parts = key.split("/");
+            return parts[parts.length - 1];
         } else {
             return null;
         }
@@ -367,17 +358,13 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     }
 
     getStyle(status: string) {
-        if (status === 'Assemblies - Submitted') {
-            return 'background-color: limegreen; color: black';
-        } else {
-            return 'background-color: yellow; color: black';
-        }
+        return status === 'Assemblies - Submitted'
+            ? 'background-color: limegreen; color: black'
+            : 'background-color: yellow; color: black';
     }
 
     getGenomeNoteData(data: any, key: string) {
-        if (data && data.length !== 0) {
-            return data[0][key];
-        }
+        return data && data.length !== 0 ? data[0][key] : undefined;
     }
 
     checkNagoyaProtocol(data: any): boolean {
@@ -418,31 +405,24 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
     generateTolidLink(data: any): string {
         const organismName = data.organism.split(' ').join('_');
-
         if (typeof data.tolid === 'string' && data.tolid.length > 0) {
             const clade = this.codes[data.tolid.charAt(0) as keyof typeof this.codes];
             return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
-        }
-
-        else if (Array.isArray(data.tolid) && data.tolid.length > 0 && typeof data.tolid[0] === 'string') {
+        } else if (Array.isArray(data.tolid) && data.tolid.length > 0 && typeof data.tolid[0] === 'string') {
             const clade = this.codes[data.tolid[0].charAt(0) as keyof typeof this.codes];
             return `https://tolqc.cog.sanger.ac.uk/darwin/${clade}/${organismName}`;
         }
-
         return '';
     }
 
     checkTolidExists(data: { tolid: string | any[] | null | undefined; show_tolqc: boolean; } | undefined) {
-        return data != undefined && data.tolid != undefined && data.tolid != null && data.tolid.length > 0 &&
-            data.show_tolqc === true;
+        return data && data.tolid && data.tolid.length > 0 && data.show_tolqc === true;
     }
 
     applySearchFilter(event: Event, dataSource: MatTableDataSource<any>) {
-        let searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
+        const searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
         dataSource.filter = JSON.stringify({ search: searchTerm });
     }
-
-    /* filters */
 
     getFilterState(type: 'organism' | 'symbionts'): FilterState {
         return type === 'organism' ? this.organismFilterState : this.symbiontsFilterState;
@@ -451,12 +431,10 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     applyFilter(type: 'organism' | 'symbionts', event: Event, dataSource: MatTableDataSource<any>) {
         const state = this.getFilterState(type);
         state.searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
-
         const combinedFilter = JSON.stringify({
             search: state.searchTerm,
             filters: state.activeFilters
         });
-
         dataSource.filter = combinedFilter;
         this.applyFilters(type);
     }
@@ -467,31 +445,27 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
             console.warn("applyFilters(): нет данных");
             return;
         }
-
         const combinedFilter = JSON.stringify({
             search: state.searchTerm,
             filters: state.activeFilters
         });
-
         state.data.filter = combinedFilter;
         this.countFilterFields(type);
     }
 
-    toggleFilter(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string) {
+    toggleFilter(type: 'organism' | 'symbionts', field: FilterKey, value: string) {
         const state = this.getFilterState(type);
         const index = state.activeFilters[field].indexOf(value);
-
         if (index !== -1) {
             state.activeFilters[field].splice(index, 1);
         } else {
             state.activeFilters[field].push(value);
         }
-
         state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
         this.applyFilters(type);
     }
 
-    clearFilter(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string): void {
+    clearFilter(type: 'organism' | 'symbionts', field: FilterKey, value: string): void {
         const state = this.getFilterState(type);
         state.activeFilters[field] = state.activeFilters[field].filter(v => v !== value);
         state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
@@ -502,23 +476,20 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         const state = this.getFilterState(type);
         state.searchTerm = '';
         state.activeFilters = { sex: [], organismPart: [], trackingSystem: [] };
-        state.selectedFilters = {};
+        state.selectedFilters = { sex: [], organismPart: [], trackingSystem: [] };
         this.applyFilters(type);
     }
 
     countFilterFields(type: 'organism' | 'symbionts') {
         const state = this.getFilterState(type);
         if (!state.data) { return; }
-
         state.filterKeys.forEach(column => {
             const uniqueValues: Record<string, number> = {};
-
             state.data.filteredData.forEach((element: { [x: string]: string | number }) => {
                 const value = element[column];
                 const valueStr = value ? value.toString() : "Unknown";
                 uniqueValues[valueStr] = (uniqueValues[valueStr] || 0) + 1;
             });
-
             state.countedFilters[column] = Object.keys(uniqueValues).map(key => ({
                 id: key,
                 value: uniqueValues[key]
@@ -526,12 +497,12 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         });
     }
 
-    toggleFilterView(type: 'organism' | 'symbionts', filterKey: string): void {
+    toggleFilterView(type: 'organism' | 'symbionts', filterKey: FilterKey): void {
         const state = this.getFilterState(type);
         state.expandedFilters[filterKey] = !state.expandedFilters[filterKey];
     }
 
-    isFilterActive(type: 'organism' | 'symbionts', field: keyof FilterState['activeFilters'], value: string): boolean {
+    isFilterActive(type: 'organism' | 'symbionts', field: FilterKey, value: string): boolean {
         return this.getFilterState(type).activeFilters[field].includes(value);
     }
 
@@ -541,37 +512,32 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
             console.warn("setupFilterPredicate(): нет данных");
             return;
         }
-
         state.data.filterPredicate = (data: any, filter: string) => {
             const parsedFilter = JSON.parse(filter);
             const searchTerm = parsedFilter.search.toLowerCase();
             const filters = parsedFilter.filters;
-
             const matchesFilters = Object.keys(filters).every(key =>
                 filters[key].length === 0 || filters[key].includes(data[key])
             );
-
             const matchesSearch = Object.values(data).some(value =>
                 String(value).toLowerCase().includes(searchTerm)
             );
-
             return matchesFilters && matchesSearch;
         };
     }
 
-    getSelectedFilterList(activeFilters: { [key: string]: string[] }): Record<string, string[]> {
+    getSelectedFilterList(activeFilters: { [key in FilterKey]: string[] }): Record<FilterKey, string[]> {
         return Object.keys(activeFilters).reduce((acc, key) => {
-            const values = activeFilters[key];
-            if (values.length > 0) {
-                acc[key] = values;
+            const k = key as FilterKey;
+            if (activeFilters[k].length > 0) {
+                acc[k] = activeFilters[k];
             }
             return acc;
-        }, {} as Record<string, string[]>);
+        }, {} as Record<FilterKey, string[]>);
     }
 
     getSelectedFilterCount(type: 'organism' | 'symbionts'): number {
         const state = this.getFilterState(type);
         return Object.keys(this.getSelectedFilterList(state.activeFilters)).length;
     }
-
 }

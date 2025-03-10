@@ -68,65 +68,21 @@
 
                 <div class="main-container">
                     <div class="left-panel">
-                        <mat-card class="example-card" appearance="raised">
+                        <mat-card class="example-card" appearance="raised" *ngFor="let group of filterGroups">
                             <mat-card-header>
                                 <div class="header-content">
-                                    <mat-card-title>Sex</mat-card-title>
-                                    <ng-container *ngIf="organismFilterState.countedFilters?.['sex'] && organismFilterState.countedFilters['sex'].length > (organismFilterState.filtersLimit?.['sex'] ?? 0)">
-                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organism', 'sex')">
-                                            {{ organismFilterState.expandedFilters['sex'] ? 'remove' : 'add' }}
-                                        </i>
-                                    </ng-container>
-                                </div>
-                            </mat-card-header>
-                            <mat-card class="filter-content">
-                                <div *ngFor="let el of (organismFilterState.expandedFilters['sex'] ? organismFilterState.countedFilters['sex'] : organismFilterState.countedFilters['sex'] | slice:0:organismFilterState.filtersLimit['sex'])" class="example-item">
-                                    <button (click)="toggleFilter('organism','sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organism', 'sex', el.id) }">
-                                        <span>{{ el.id }}</span>
-                                        <span class="badge">{{ el.value }}</span>
-                                    </button>
-                                </div>
-                            </mat-card>
-                        </mat-card>
-
-                        <mat-card class="example-card" appearance="raised">
-                            <mat-card-header>
-                                <div class="header-content">
-                                    <mat-card-title>Organism Part</mat-card-title>
-                                    <ng-container *ngIf="organismFilterState.countedFilters?.['organismPart'] && organismFilterState.countedFilters['organismPart'].length > (organismFilterState.filtersLimit?.['organismPart'] ?? 0)">
-                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organism', 'organismPart')">
-                                            {{ organismFilterState.expandedFilters['organismPart'] ? 'remove' : 'add' }}
+                                    <mat-card-title>{{ group.title }}</mat-card-title>
+                                    <ng-container *ngIf="organismFilterState.countedFilters[group.key] && organismFilterState.countedFilters[group.key].length > (organismFilterState.filtersLimit[group.key] || 0)">
+                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organism', group.key)">
+                                            {{ organismFilterState.expandedFilters[group.key] ? 'remove' : 'add' }}
                                         </i>
                                     </ng-container>
                                 </div>
                             </mat-card-header>
                             <mat-card class="filter-content">
                                 <div class="example-viewport">
-                                    <div *ngFor="let el of (organismFilterState.expandedFilters['organismPart'] ? organismFilterState.countedFilters['organismPart'] : organismFilterState.countedFilters['organismPart'] | slice:0:organismFilterState.filtersLimit['organismPart'])" class="example-item">
-                                        <button (click)="toggleFilter('organism', 'organismPart', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organism', 'organismPart', el.id) }">
-                                            <span>{{ el.id }}</span>
-                                            <span class="badge">{{ el.value }}</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </mat-card>
-                        </mat-card>
-
-                        <mat-card class="example-card" appearance="raised">
-                            <mat-card-header>
-                                <div class="header-content">
-                                    <mat-card-title>Tracking System</mat-card-title>
-                                    <ng-container *ngIf="organismFilterState.countedFilters?.['trackingSystem'] && organismFilterState.countedFilters['trackingSystem'].length > (organismFilterState.filtersLimit?.['trackingSystem'] ?? 0)">
-                                        <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('organism', 'trackingSystem')">
-                                            {{ organismFilterState.expandedFilters['trackingSystem'] ? 'remove' : 'add' }}
-                                        </i>
-                                    </ng-container>
-                                </div>
-                            </mat-card-header>
-                            <mat-card class="filter-content">
-                                <div class="example-viewport">
-                                    <div *ngFor="let el of (organismFilterState.expandedFilters['trackingSystem'] ? organismFilterState.countedFilters['trackingSystem'] : organismFilterState.countedFilters['trackingSystem'] | slice:0:organismFilterState.filtersLimit['trackingSystem'])" class="example-item">
-                                        <button (click)="toggleFilter('organism', 'trackingSystem', el.id)" [ngClass]="{ 'active-filter': isFilterActive('organism', 'trackingSystem', el.id) }">
+                                    <div *ngFor="let el of (organismFilterState.expandedFilters[group.key] ? organismFilterState.countedFilters[group.key] : (organismFilterState.countedFilters[group.key] | slice:0:organismFilterState.filtersLimit[group.key]))" class="example-item">
+                                        <button (click)="toggleFilter('organism', group.key, el.id)" [ngClass]="{'active-filter': isFilterActive('organism', group.key, el.id)}">
                                             <span>{{ el.id }}</span>
                                             <span class="badge">{{ el.value }}</span>
                                         </button>
@@ -556,65 +512,21 @@
 
                     <div class="main-container">
                         <div class="left-panel">
-                            <mat-card class="example-card" appearance="raised">
+                            <mat-card class="example-card" appearance="raised" *ngFor="let group of filterGroups">
                                 <mat-card-header>
                                     <div class="header-content">
-                                        <mat-card-title>Sex</mat-card-title>
-                                        <ng-container *ngIf="symbiontsFilterState.countedFilters?.['sex'] && symbiontsFilterState.countedFilters['sex'].length > (symbiontsFilterState.filtersLimit?.['sex'] ?? 0)">
-                                            <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('symbionts', 'sex')">
-                                                {{ symbiontsFilterState.expandedFilters['sex'] ? 'remove' : 'add' }}
-                                            </i>
-                                        </ng-container>
-                                    </div>
-                                </mat-card-header>
-                                <mat-card class="filter-content">
-                                    <div *ngFor="let el of (symbiontsFilterState.expandedFilters['sex'] ? symbiontsFilterState.countedFilters['sex'] : symbiontsFilterState.countedFilters['sex'] | slice:0:symbiontsFilterState.filtersLimit['sex'])" class="example-item">
-                                        <button (click)="toggleFilter('symbionts','sex', el.id)" [ngClass]="{ 'active-filter': isFilterActive('symbionts', 'sex', el.id) }">
-                                            <span>{{ el.id }}</span>
-                                            <span class="badge">{{ el.value }}</span>
-                                        </button>
-                                    </div>
-                                </mat-card>
-                            </mat-card>
-
-                            <mat-card class="example-card" appearance="raised">
-                                <mat-card-header>
-                                    <div class="header-content">
-                                        <mat-card-title>Organism Part</mat-card-title>
-                                        <ng-container *ngIf="symbiontsFilterState.countedFilters?.['organismPart'] && symbiontsFilterState.countedFilters['organismPart'].length > (symbiontsFilterState.filtersLimit?.['organismPart'] ?? 0)">
-                                            <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('symbionts', 'organismPart')">
-                                                {{ symbiontsFilterState.expandedFilters['organismPart'] ? 'remove' : 'add' }}
+                                        <mat-card-title>{{ group.title }}</mat-card-title>
+                                        <ng-container *ngIf="symbiontsFilterState.countedFilters[group.key] && symbiontsFilterState.countedFilters[group.key].length > (symbiontsFilterState.filtersLimit[group.key] || 0)">
+                                            <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('symbionts', group.key)">
+                                                {{ symbiontsFilterState.expandedFilters[group.key] ? 'remove' : 'add' }}
                                             </i>
                                         </ng-container>
                                     </div>
                                 </mat-card-header>
                                 <mat-card class="filter-content">
                                     <div class="example-viewport">
-                                        <div *ngFor="let el of (symbiontsFilterState.expandedFilters['organismPart'] ? symbiontsFilterState.countedFilters['organismPart'] : symbiontsFilterState.countedFilters['organismPart'] | slice:0:symbiontsFilterState.filtersLimit['organismPart'])" class="example-item">
-                                            <button (click)="toggleFilter('symbionts', 'organismPart', el.id)" [ngClass]="{ 'active-filter': isFilterActive('symbionts', 'organismPart', el.id) }">
-                                                <span>{{ el.id }}</span>
-                                                <span class="badge">{{ el.value }}</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </mat-card>
-                            </mat-card>
-
-                            <mat-card class="example-card" appearance="raised">
-                                <mat-card-header>
-                                    <div class="header-content">
-                                        <mat-card-title>Tracking System</mat-card-title>
-                                        <ng-container *ngIf="symbiontsFilterState.countedFilters?.['trackingSystem'] && symbiontsFilterState.countedFilters['trackingSystem'].length > (symbiontsFilterState.filtersLimit?.['trackingSystem'] ?? 0)">
-                                            <i class="material-icons" style="cursor: pointer" (click)="toggleFilterView('symbionts', 'trackingSystem')">
-                                                {{ symbiontsFilterState.expandedFilters['trackingSystem'] ? 'remove' : 'add' }}
-                                            </i>
-                                        </ng-container>
-                                    </div>
-                                </mat-card-header>
-                                <mat-card class="filter-content">
-                                    <div class="example-viewport">
-                                        <div *ngFor="let el of (symbiontsFilterState.expandedFilters['trackingSystem'] ? symbiontsFilterState.countedFilters['trackingSystem'] : symbiontsFilterState.countedFilters['trackingSystem'] | slice:0:symbiontsFilterState.filtersLimit['trackingSystem'])" class="example-item">
-                                            <button (click)="toggleFilter('symbionts', 'trackingSystem', el.id)" [ngClass]="{ 'active-filter': isFilterActive('symbionts', 'trackingSystem', el.id) }">
+                                        <div *ngFor="let el of (symbiontsFilterState.expandedFilters[group.key] ? symbiontsFilterState.countedFilters[group.key] : (symbiontsFilterState.countedFilters[group.key] | slice:0:symbiontsFilterState.filtersLimit[group.key]))" class="example-item">
+                                            <button (click)="toggleFilter('symbionts', group.key, el.id)" [ngClass]="{'active-filter': isFilterActive('symbionts', group.key, el.id)}">
                                                 <span>{{ el.id }}</span>
                                                 <span class="badge">{{ el.value }}</span>
                                             </button>
