@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, Input } from '@angular/core';
+import {Component, OnInit, AfterViewInit, ViewChild, Input, ElementRef} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiService } from '../../api.service';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
@@ -19,6 +19,8 @@ import { MatChip, MatChipSet } from '@angular/material/chips';
 import { MatCard, MatCardActions, MatCardHeader, MatCardTitle } from '@angular/material/card';
 import { MatInput } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import {MatButtonModule} from "@angular/material/button";
+import {FormsModule} from "@angular/forms";
 
 type FilterKey = 'sex' | 'organismPart' | 'trackingSystem';
 
@@ -65,7 +67,9 @@ interface FilterState {
         MatCardTitle,
         MatCardActions,
         MatInput,
-        MatTableModule
+        MatTableModule,
+        MatButtonModule,
+        FormsModule
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -121,7 +125,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     showMetadata = false;
     showData = false;
     showGenomeNote = false;
-    geoLocation: boolean;
+    geoLocation = false;
     orgGeoList: any;
     specGeoList: any;
     nbnatlas: any;
@@ -144,7 +148,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
         countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
         expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
-        filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
+        filtersLimit: { sex: 3, organismPart: 3, trackingSystem: 3 },
         searchTerm: '',
         selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
         filterKeys: ['sex', 'organismPart', 'trackingSystem'],
@@ -155,7 +159,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
         countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
         expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
-        filtersLimit: { sex: 5, organismPart: 5, trackingSystem: 5 },
+        filtersLimit: { sex: 3, organismPart: 3, trackingSystem: 3 },
         searchTerm: '',
         selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
         filterKeys: ['sex', 'organismPart', 'trackingSystem'],
@@ -203,6 +207,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     @ViewChild('assembliesSort') assembliesSort: MatSort;
     @ViewChild('filesPaginator') filesPaginator: MatPaginator;
     @ViewChild('filesSort') filesSort: MatSort;
+    @ViewChild('searchInput') searchInput: ElementRef<HTMLInputElement>;
 
     constructor(private route: ActivatedRoute,
                 private _apiService: ApiService,
@@ -244,7 +249,13 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
                 this.specGeoList = [];
                 if (this.orgGeoList && this.orgGeoList.length !== 0) {
-                    this.geoLocation = true;
+                    for (let i = 0; i < this.orgGeoList.length; i++) {
+                        const { lat, lng } = this.orgGeoList[i];
+                        if (lat !== 'not collected' && lat !== 'not provided' && lat !== null && lng !== null) {
+                            this.geoLocation = true;
+                            break;
+                        }
+                    }
                 }
 
                 this.nbnatlas = this.organismData['nbnatlas'];
@@ -442,7 +453,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     applyFilters(type: 'organism' | 'symbionts') {
         const state = this.getFilterState(type);
         if (!state.data) {
-            console.warn("applyFilters(): нет данных");
             return;
         }
         const combinedFilter = JSON.stringify({
@@ -509,7 +519,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     setupFilterPredicate(type: 'organism' | 'symbionts') {
         const state = this.getFilterState(type);
         if (!state.data) {
-            console.warn("setupFilterPredicate(): нет данных");
             return;
         }
         state.data.filterPredicate = (data: any, filter: string) => {

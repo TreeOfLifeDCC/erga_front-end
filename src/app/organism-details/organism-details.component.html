@@ -2,44 +2,46 @@
     <div class="content">
         <h1 class="page-header">{{data?.accession}}</h1>
 
-        <div class="data-pairs">
-            <div class="flex-pair">
-                <div class="label">BioSample ID:</div>
-                <div class="value">
-                    <a href="http://www.ebi.ac.uk/biosamples/samples/{{data?.accession}}" target="_blank">
-                        {{data?.accession}}
-                    </a>
+        <ng-container *ngIf="specimensDetails">
+            <div class="data-pairs">
+                <div class="flex-pair">
+                    <div class="label">BioSample ID:</div>
+                    <div class="value">
+                        <a href="http://www.ebi.ac.uk/biosamples/samples/{{data?.accession}}" target="_blank">
+                            {{data?.accession}}
+                        </a>
+                    </div>
+                </div>
+                <div class="flex-pair">
+                    <div class="label">Tracking Status:</div>
+                    <div class="value">{{data?.tracking_status}}</div>
+                </div>
+                <div class="flex-pair">
+                    <div class="label">Organism:</div>
+                    <div class="value">{{data?.organism.text}}</div>
+                </div>
+                <div class="flex-pair">
+                    <div class="label">Tax ID:</div>
+                    <div class="value">{{data?.taxId}}</div>
                 </div>
             </div>
-            <div class="flex-pair">
-                <div class="label">Tracking Status:</div>
-                <div class="value">{{data?.tracking_status}}</div>
-            </div>
-            <div class="flex-pair">
-                <div class="label">Organism:</div>
-                <div class="value">{{data?.organism.text}}</div>
-            </div>
-            <div class="flex-pair">
-                <div class="label">Tax ID:</div>
-                <div class="value">{{data?.taxId}}</div>
-            </div>
-        </div>
 
-        <!-- Custom Fields Section -->
-        <div class="data-pairs" *ngIf="data?.customFields?.length">
-            <hr>
-            <div *ngFor="let sample of data?.customFields" class="flex-pair">
-                <div class="label">{{sample?.name}}</div>
-                <div class="value">
-                    <a *ngIf="sample.ontologyTerms?.length > 0; else simple" href="{{sample.ontologyTerms[0]}}">
-                        {{sample?.value}}
-                    </a>
-                    <ng-template #simple>
-                        {{sample?.value}}
-                    </ng-template>
+            <!-- Custom Fields Section -->
+            <div class="data-pairs" *ngIf="data?.customFields?.length">
+                <hr>
+                <div *ngFor="let sample of data?.customFields" class="flex-pair">
+                    <div class="label">{{sample?.name}}</div>
+                    <div class="value">
+                        <a *ngIf="sample.ontologyTerms?.length > 0; else simple" href="{{sample.ontologyTerms[0]}}">
+                            {{sample?.value}}
+                        </a>
+                        <ng-template #simple>
+                            {{sample?.value}}
+                        </ng-template>
+                    </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
         <br>
 
         <div class="relationships" *ngIf="specimensDataLength">

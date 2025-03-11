@@ -60,6 +60,7 @@ export class OrganismDetailsComponent implements OnInit, AfterViewInit {
 
     @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
     @ViewChild(MatSort) sort: MatSort | undefined;
+    protected specimensDetails: boolean;
 
     constructor(private route: ActivatedRoute, private _apiService: ApiService) { }
 
@@ -71,7 +72,13 @@ export class OrganismDetailsComponent implements OnInit, AfterViewInit {
         const organismId = routeParams.get('organismId');
         this._apiService.getDetailsData(organismId, 'specimens').subscribe(
             data => {
-                this.data = data['results'][0]['_source'];
+                if (data && data.results && data.results.length > 0 && data.results[0]._source) {
+                    this.data = data.results[0]._source;
+                    this.specimensDetails = true;
+                } else {
+                    this.data = { accession: organismId };
+                    this.specimensDetails = false;
+                }
                 this.isLoadingResults = false;
                 this.isRateLimitReached = data === null;
 

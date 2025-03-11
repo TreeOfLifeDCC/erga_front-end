@@ -58,7 +58,7 @@ export class MapClusterComponent implements AfterViewInit {
     const latCoo = this.orgGeoList[0]?.lat;
     const lngCoo = this.orgGeoList[0]?.lng;
     let latlng = L.latLng(53.4862, -1.8904);
-    if (latCoo !== 'not collected' && latCoo !== 'not provided') {
+    if (latCoo && latCoo !== 'not collected' && latCoo !== 'not provided') {
       latlng = L.latLng(latCoo, lngCoo);
     }
 
