@@ -153,8 +153,8 @@ export class ApiService {
             sortValue: `${sortActive}:${sortDirection}`,
             filterValue: filterStr || '',
             currentClass,
-            phylogenyFilters: phylogenyStr,
-            indexName,
+            phylogeny_filters: phylogenyStr,
+            index_name: indexName,
             downloadOption
         };
         return this.http.post(url, payload, {responseType: 'blob'});
