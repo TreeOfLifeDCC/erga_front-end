@@ -497,8 +497,10 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
             const uniqueValues: Record<string, number> = {};
             state.data.filteredData.forEach((element: { [x: string]: string | number }) => {
                 const value = element[column];
-                const valueStr = value ? value.toString() : "Unknown";
-                uniqueValues[valueStr] = (uniqueValues[valueStr] || 0) + 1;
+                if (value) {
+                    const valueStr = value.toString();
+                    uniqueValues[valueStr] = (uniqueValues[valueStr] || 0) + 1;
+                }
             });
             state.countedFilters[column] = Object.keys(uniqueValues).map(key => ({
                 id: key,
