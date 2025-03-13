@@ -106,7 +106,18 @@ export class ApiService {
 
         const url = `https://portal.erga-biodiversity.eu/api/data-download`;
 
-        const projectNames = ['DToL', '25 genomes', 'ERGA', 'CBP', 'ASG'];
+        const projectNames =  ['DTOL',
+            'ERGA',
+            'Project Psyche',
+            'ERGA BGE',
+            'ERGA Pilot',
+            '25 genomes',
+            'ATLASea',
+            'CBP',
+            'ENDEMIXIT',
+            'ERGA Community Genomes',
+            'ERGA Swiss node'
+    ];
 
         // phylogeny
         const phylogenyStr = phylogenyFilters.length ? phylogenyFilters.join('-') : '';
