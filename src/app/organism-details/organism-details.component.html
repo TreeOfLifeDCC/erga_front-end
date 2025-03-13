@@ -2,93 +2,104 @@
     <div class="content">
         <h1 class="page-header">{{data?.accession}}</h1>
 
-        <ng-container *ngIf="specimensDetails">
-            <div class="data-pairs">
-                <div class="flex-pair">
-                    <div class="label">BioSample ID:</div>
-                    <div class="value">
-                        <a href="http://www.ebi.ac.uk/biosamples/samples/{{data?.accession}}" target="_blank">
-                            {{data?.accession}}
-                        </a>
+        @if (specimensDetails) {
+            <ng-container>
+                <div class="data-pairs">
+                    <div class="flex-pair">
+                        <div class="label">BioSample ID:</div>
+                        <div class="value">
+                            <a href="http://www.ebi.ac.uk/biosamples/samples/{{data?.accession}}" target="_blank">
+                                {{data?.accession}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="flex-pair">
+                        <div class="label">Tracking Status:</div>
+                        <div class="value">{{data?.tracking_status}}</div>
+                    </div>
+                    <div class="flex-pair">
+                        <div class="label">Organism:</div>
+                        <div class="value">{{data?.organism.text}}</div>
+                    </div>
+                    <div class="flex-pair">
+                        <div class="label">Tax ID:</div>
+                        <div class="value">{{data?.taxId}}</div>
                     </div>
                 </div>
-                <div class="flex-pair">
-                    <div class="label">Tracking Status:</div>
-                    <div class="value">{{data?.tracking_status}}</div>
-                </div>
-                <div class="flex-pair">
-                    <div class="label">Organism:</div>
-                    <div class="value">{{data?.organism.text}}</div>
-                </div>
-                <div class="flex-pair">
-                    <div class="label">Tax ID:</div>
-                    <div class="value">{{data?.taxId}}</div>
-                </div>
-            </div>
 
-            <!-- Custom Fields Section -->
-            <div class="data-pairs" *ngIf="data?.customFields?.length">
-                <hr>
-                <div *ngFor="let sample of data?.customFields" class="flex-pair">
-                    <div class="label">{{sample?.name}}</div>
-                    <div class="value">
-                        <a *ngIf="sample.ontologyTerms?.length > 0; else simple" href="{{sample.ontologyTerms[0]}}">
-                            {{sample?.value}}
-                        </a>
-                        <ng-template #simple>
-                            {{sample?.value}}
-                        </ng-template>
+                <!-- Custom Fields Section -->
+                @if (data?.customFields?.length) {
+                    <div class="data-pairs">
+                        <hr>
+                        @for (sample of data?.customFields; track $index;) {
+                            <div class="flex-pair">
+                                <div class="label">{{sample?.name}}</div>
+                                <div class="value">
+                                    @if (sample.ontologyTerms?.length > 0) {
+                                        <a href="{{sample.ontologyTerms[0]}}">
+                                            {{sample?.value}}
+                                        </a>
+                                    } @else {
+                                        {{sample?.value}}
+                                    }
+                                </div>
+                            </div>
+                        }
                     </div>
-                </div>
-            </div>
-        </ng-container>
+                }
+            </ng-container>
+        }
         <br>
 
-        <div class="relationships" *ngIf="specimensDataLength">
-            <hr>
-            <h1 class="table-header">Relationships</h1>
-            <div class="table-wrapper">
-                <table mat-table matTableExporter [dataSource]="specimensData" matSort class="relationships-table">
-                    <ng-container matColumnDef="source">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Source </mat-header-cell>
-                        <mat-cell *matCellDef="let element" class="txt-center">
-                            <a routerLink="/organism/{{element.source}}" target="_blank">
-                                {{element.source}}
-                            </a>
-                        </mat-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="type">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Relationships Type </mat-header-cell>
-                        <mat-cell *matCellDef="let element" class="txt-center">
-                            {{element.type}}
-                        </mat-cell>
-                    </ng-container>
-                    <ng-container matColumnDef="target">
-                        <mat-header-cell *matHeaderCellDef mat-sort-header> Target </mat-header-cell>
-                        <mat-cell *matCellDef="let element" class="txt-center">
-                            <a routerLink="/organism/{{element.target}}" target="_blank">
-                                {{element.target}}
-                            </a>
-                        </mat-cell>
-                    </ng-container>
-                    <mat-header-row *matHeaderRowDef="specimensDisplayedColumns"></mat-header-row>
-                    <mat-row *matRowDef="let row; columns: specimensDisplayedColumns;"></mat-row>
-                </table>
-                <mat-paginator style="width: 100%;" [pageSizeOptions]="[20, 30, 50]" showFirstLastButtons [length]="resultsLength"></mat-paginator>
+        @if (specimensDataLength) {
+            <div class="relationships">
+                <hr>
+                <h1 class="table-header">Relationships</h1>
+                <div class="table-wrapper">
+                    <table mat-table matTableExporter [dataSource]="specimensData" matSort class="relationships-table">
+                        <ng-container matColumnDef="source">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Source </mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="txt-center">
+                                <a routerLink="/organism/{{element.source}}" target="_blank">
+                                    {{element.source}}
+                                </a>
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="type">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Relationships Type </mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="txt-center">
+                                {{element.type}}
+                            </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="target">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Target </mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="txt-center">
+                                <a routerLink="/organism/{{element.target}}" target="_blank">
+                                    {{element.target}}
+                                </a>
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row *matHeaderRowDef="specimensDisplayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: specimensDisplayedColumns;"></mat-row>
+                    </table>
+                    <mat-paginator style="width: 100%;" [pageSizeOptions]="[20, 30, 50]" showFirstLastButtons [length]="resultsLength"></mat-paginator>
+                </div>
             </div>
-        </div>
+        }
 
-        <div class="images" *ngIf="data?.images">
-            <hr>
-            <div class="images-wrapper">
-                <app-image-slider
-                        [indicatorsVisible]="true"
-                        [animationSpeed]="400"
-                        [slides]="slides"
-                        [autoPlay]="false"
-                        [autoPlaySpeed]="5000"
-                ></app-image-slider>
+        @if (data?.images) {
+            <div class="images">
+                <hr>
+                <div class="images-wrapper">
+                    <app-image-slider
+                            [indicatorsVisible]="true"
+                            [animationSpeed]="400"
+                            [slides]="slides"
+                            [autoPlay]="false"
+                            [autoPlaySpeed]="5000"
+                    ></app-image-slider>
+                </div>
             </div>
-        </div>
+        }
     </div>
 </div>

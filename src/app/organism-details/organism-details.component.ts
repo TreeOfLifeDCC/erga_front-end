@@ -14,7 +14,6 @@ import {
 } from "@angular/material/table";
 import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
-import {NgForOf, NgIf} from "@angular/common";
 import {ImageSliderComponent} from "../image-slider/image-slider.component";
 
 @Component({
@@ -29,8 +28,6 @@ import {ImageSliderComponent} from "../image-slider/image-slider.component";
         MatProgressSpinner,
         RouterLink,
         MatTable,
-        NgIf,
-        NgForOf,
         MatHeaderCellDef,
         MatCellDef,
         MatHeaderRowDef,

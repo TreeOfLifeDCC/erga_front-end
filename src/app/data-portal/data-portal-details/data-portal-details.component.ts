@@ -2,7 +2,7 @@ import {Component, OnInit, AfterViewInit, ViewChild, Input, ElementRef} from '@a
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiService } from '../../api.service';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { TitleCasePipe, NgIf, NgForOf, SlicePipe } from '@angular/common';
+import { TitleCasePipe, SlicePipe } from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -41,8 +41,6 @@ interface FilterState {
     templateUrl: './data-portal-details.component.html',
     standalone: true,
     imports: [
-        NgIf,
-        NgForOf,
         MatTableExporterModule,
         MatExpansionModule,
         RouterLink,
