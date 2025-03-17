@@ -463,6 +463,11 @@
                                         }
                                     </mat-chip>
                                 }
+                                @if (row._source.nbnatlas) {
+                                    <mat-chip style="margin-left: 5px; margin-bottom: 5px; background-color: #FFc107; color: black">
+                                        <a mat-button href="{{row._source.nbnatlas}}">NBN Atlas</a>
+                                    </mat-chip>
+                                }
                             </td>
                         </ng-container>
 

@@ -9,7 +9,7 @@ import {GenomeNoteListComponent} from "./genome-note-list-component/genome-note-
 import {Title} from "@angular/platform-browser";
 import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
 import {MatList, MatListItem} from "@angular/material/list";
-import {FlexLayoutModule} from "@angular/flex-layout";
+import {FlexLayoutModule} from "@ngbracket/ngx-layout";
 import {MatChip, MatChipSet} from "@angular/material/chips";
 import {MatLine} from "@angular/material/core";
 import {MatIcon} from "@angular/material/icon";
@@ -27,7 +27,6 @@ import {
 import {NavigationEnd, RouterLink} from "@angular/router";
 import {MatAnchor, MatButton} from "@angular/material/button";
 import {MatInput} from "@angular/material/input";
-import {MatTableExporterModule} from "mat-table-exporter";
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDivider} from "@angular/material/divider";
 import {MatProgressBar} from "@angular/material/progress-bar";
@@ -70,7 +69,6 @@ import {FormsModule} from "@angular/forms";
         MatButton,
         MatInput,
         MatSortHeader,
-        MatTableExporterModule,
         MatDivider,
         MatProgressBar,
         FormsModule
@@ -441,7 +439,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     checkNagoyaProtocol(data: any): boolean {
         return data.hasOwnProperty('nagoya_protocol');
     }
-
 
     openGenomeNoteDialog(data: any, dialogType: string) {
         if (dialogType === 'genome_note') {const dialogRef = this.dialog.open(GenomeNoteListComponent, {
