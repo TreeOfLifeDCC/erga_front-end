@@ -141,8 +141,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.getDisplayedColumns();
         this.titleService.setTitle('Data Portal');
 
-        const queryParamMap = this.activatedRoute.snapshot['queryParamMap'];
-        // @ts-ignore
+        const queryParamMap: any = this.activatedRoute.snapshot['queryParamMap'];
         const params = queryParamMap['params'];
         if (Object.keys(params).length !== 0) {
             for (const key in params) {
@@ -239,7 +238,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                     }
 
                     if (this.phylogenyFilters && this.phylogenyFilters.length) {
-                        const index = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyFilters - '));
+                        const index = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
                         if (index > -1) {
                             this.queryParams[index] = `phylogenyFilters - [${this.phylogenyFilters}]`;
                         } else {
@@ -257,22 +256,22 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     replaceUrlQueryParams() {
-        const urlTree = this.router.createUrlTree([], {
+        this.router.navigate([], {
             relativeTo: this.activatedRoute,
-            queryParams: this.queryParams
+            queryParams: this.queryParams,
+            replaceUrl: true,
+            skipLocationChange: false
         });
-        const newUrl = this.router.serializeUrl(urlTree);
-        window.history.replaceState({}, '', newUrl);
     }
 
     removePhylogenyFilters() {
         // update url with the value of the phylogeny current class
-        const queryParamPhyloIndex = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyFilters - '));
+        const queryParamPhyloIndex = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
         if (queryParamPhyloIndex > -1) {
             this.queryParams.splice(queryParamPhyloIndex, 1);
         }
 
-        const queryParamCurrentClassIndex = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyCurrentClass - '));
+        const queryParamCurrentClassIndex = this.queryParams.findIndex((element: any) => element.includes('phylogenyCurrentClass - '));
         if (queryParamCurrentClassIndex > -1) {
             this.queryParams.splice(queryParamCurrentClassIndex, 1);
         }
@@ -342,6 +341,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     onFilterClick(filterValue: string, phylogenyFilter: boolean = false) {
+        //reset showAllFilters
+        this.showAllFilters = {
+            projects: false,
+            experimentTypes: false,
+        };
+
         if (phylogenyFilter) {
             if (this.isPhylogenyFilterProcessing) {
                 return;
@@ -398,7 +403,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
         // remove phylogenyFilters param from url
-        const index = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyFilters - '));
+        const index = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
         if (index > -1) {
             this.queryParams.splice(index, 1);
             // Replace current parameters with new parameters.

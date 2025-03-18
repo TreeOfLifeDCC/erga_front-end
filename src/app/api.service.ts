@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
     providedIn: 'root',
 })
 export class ApiService {
-    private router: any;
-    private activatedRoute: any;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,
+                private router: Router,
+                private activatedRoute: ActivatedRoute) {
+    }
 
     getData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
             filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string) {
@@ -71,6 +73,11 @@ export class ApiService {
         }
         url += `&current_class=${currentClass}`;
 
+        return this.http.get<any>(url);
+    }
+
+    getDetailsData(organismName: any, indexName: string) {
+        const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
         return this.http.get<any>(url);
     }
 
@@ -142,11 +149,6 @@ export class ApiService {
             downloadOption
         };
         return this.http.post(url, payload, {responseType: 'blob'});
-    }
-
-    getDetailsData(organismName: any, indexName: string) {
-        const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
-        return this.http.get<any>(url);
     }
 
     getPublicationsData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
