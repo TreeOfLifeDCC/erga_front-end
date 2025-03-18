@@ -30,7 +30,7 @@ import {MatInput} from "@angular/material/input";
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDivider} from "@angular/material/divider";
 import {MatProgressBar} from "@angular/material/progress-bar";
-import {FormsModule} from "@angular/forms";
+import {FormControl, FormGroup, FormsModule, Validators} from '@angular/forms';
 
 
 @Component({
@@ -113,6 +113,13 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
     @ViewChild('input', { static: true }) searchInput: ElementRef;
+    public downloadForm!: FormGroup;
+    dataColumnsDefination = [{ name: 'Organism', column: 'organism', selected: true },
+        { name: 'Common Name', column: 'commonName', selected: true },
+        { name: 'Common Name Source', column: 'commonNameSource', selected: true },
+        { name: 'Current Status', column: 'currentStatus', selected: true },
+        { name: 'External references', column: 'externalReferences', selected: true }];
+    columnschangedChanged = new EventEmitter<any>();
 
     constructor(private _apiService: ApiService, private dialog: MatDialog, private titleService: Title,
                 private router: Router,
@@ -128,10 +135,14 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
             }
         });
 
+        this.downloadForm = new FormGroup({
+            downloadOption: new FormControl('', [Validators.required]),
+        });
+        this.getDisplayedColumns();
         this.titleService.setTitle('Data Portal');
 
-        // get url parameters
-        const queryParamMap: any = this.activatedRoute.snapshot['queryParamMap'];
+        const queryParamMap = this.activatedRoute.snapshot['queryParamMap'];
+        // @ts-ignore
         const params = queryParamMap['params'];
         if (Object.keys(params).length !== 0) {
             for (const key in params) {
@@ -159,8 +170,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
         this.searchChanged.subscribe(() => (this.paginator.pageIndex = 0));
         this.filterChanged.subscribe(() => (this.paginator.pageIndex = 0));
-
-        merge(this.paginator.page, this.sort.sortChange, this.searchChanged, this.filterChanged)
+        this.columnschangedChanged.subscribe(() => (this.paginator.pageIndex = 0));
+        merge(this.paginator.page, this.sort.sortChange, this.searchChanged, this.filterChanged, this.columnschangedChanged)
             .pipe(
                 startWith({}),
                 switchMap(() => {
@@ -214,9 +225,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
 
                     // remove empty experiment types
                     if (this.experimentTypeFilters.length > 0) {
-                        this.experimentTypeFilters = this.experimentTypeFilters.filter(bucket => bucket.key !== '')
+                        this.experimentTypeFilters = this.experimentTypeFilters.filter(bucket => bucket.key !== '');
                     }
-
 
                     // get last phylogeny element for filter button
                     this.lastPhylogenyVal = this.phylogenyFilters.slice(-1)[0];
@@ -229,7 +239,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                     }
 
                     if (this.phylogenyFilters && this.phylogenyFilters.length) {
-                        const index = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
+                        const index = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyFilters - '));
                         if (index > -1) {
                             this.queryParams[index] = `phylogenyFilters - [${this.phylogenyFilters}]`;
                         } else {
@@ -247,21 +257,22 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     replaceUrlQueryParams() {
-        this.router.navigate([], {
+        const urlTree = this.router.createUrlTree([], {
             relativeTo: this.activatedRoute,
-            queryParams: this.queryParams,
-            replaceUrl: true,
-            skipLocationChange: false
+            queryParams: this.queryParams
         });
+        const newUrl = this.router.serializeUrl(urlTree);
+        window.history.replaceState({}, '', newUrl);
     }
 
     removePhylogenyFilters() {
         // update url with the value of the phylogeny current class
-        const queryParamPhyloIndex = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
+        const queryParamPhyloIndex = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyFilters - '));
         if (queryParamPhyloIndex > -1) {
             this.queryParams.splice(queryParamPhyloIndex, 1);
         }
-        const queryParamCurrentClassIndex = this.queryParams.findIndex((element: any) => element.includes('phylogenyCurrentClass - '));
+
+        const queryParamCurrentClassIndex = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyCurrentClass - '));
         if (queryParamCurrentClassIndex > -1) {
             this.queryParams.splice(queryParamCurrentClassIndex, 1);
         }
@@ -288,18 +299,19 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     merge = (first: any[], second: any[], filterLabel: string) => {
-        for (let i = 0; i < second.length; i++) {
-            second[i].label = filterLabel;
-            first.push(second[i]);
+        for (const item of second) {
+            item.label = filterLabel;
+            first.push(item);
         }
         return first;
     }
 
     getStatusCount(data: any) {
         if (data) {
-            for (let i = 0; i < data.length; ++i) {
-                if (data[i]['key'] === 'Done')
-                    return data[i]['doc_count'];
+            for (const item of data) {
+                if (item.key === 'Done') {
+                    return item.doc_count;
+                }
             }
         }
     }
@@ -330,12 +342,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     }
 
     onFilterClick(filterValue: string, phylogenyFilter: boolean = false) {
-        //reset showAllFilters
-        this.showAllFilters = {
-            projects: false,
-            experimentTypes: false,
-        };
-
         if (phylogenyFilter) {
             if (this.isPhylogenyFilterProcessing) {
                 return;
@@ -366,7 +372,6 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         }
     }
 
-
     checkStyle(filterValue: string) {
         if (this.activeFilters.includes(filterValue)) {
             return 'background-color: #A8BAA8';
@@ -393,7 +398,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         this.phylogenyFilters = [];
         this.currentClass = 'kingdom';
         // remove phylogenyFilters param from url
-        const index = this.queryParams.findIndex((element: any) => element.includes('phylogenyFilters - '));
+        const index = this.queryParams.findIndex((element: string | string[]) => element.includes('phylogenyFilters - '));
         if (index > -1) {
             this.queryParams.splice(index, 1);
             // Replace current parameters with new parameters.
@@ -484,4 +489,12 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         });
     }
 
+    getDisplayedColumns() {
+        this.displayedColumns = [];
+        this.dataColumnsDefination.forEach(obj => {
+            if (obj.selected) {
+                this.displayedColumns.push(obj.column);
+            }
+        });
+    }
 }
