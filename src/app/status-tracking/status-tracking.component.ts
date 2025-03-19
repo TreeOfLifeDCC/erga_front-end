@@ -397,7 +397,7 @@ export class StatusTrackingComponent implements OnInit, AfterViewInit {
                 a.click();
                 document.body.removeChild(a);
             },
-            error: error => {
+            error: (error: any) => {
                 console.error('Error downloading the CSV file:', error);
             },
             complete: () => {

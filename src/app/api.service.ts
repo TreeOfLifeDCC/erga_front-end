@@ -1,10 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
     providedIn: 'root',
-
 })
 export class ApiService {
 
@@ -14,9 +13,9 @@ export class ApiService {
     }
 
     getData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
-            filterValue: string[], currentClass: string, phylogeny_filters: string[], index_name: string) {
+            filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string) {
 
-        const project_names = [
+        const projectNames = [
             'DTOL',
             'ERGA',
             'Project Psyche',
@@ -30,7 +29,7 @@ export class ApiService {
             'ERGA Swiss node'
         ];
         const offset = pageIndex * pageSize;
-        let url = `https://portal.erga-biodiversity.eu/api/${index_name}?limit=${pageSize}&offset=${offset}`;
+        let url = `https://portal.erga-biodiversity.eu/api/${indexName}?limit=${pageSize}&offset=${offset}`;
         if (searchValue) {
             url += `&search=${searchValue}`;
         }
@@ -41,7 +40,7 @@ export class ApiService {
             let filterStr = '&filter=';
             let filterItem;
             for (let i = 0; i < filterValue.length; i++) {
-                if (project_names.indexOf(filterValue[i]) !== -1) {
+                if (projectNames.indexOf(filterValue[i]) !== -1) {
                     filterValue[i] === 'DToL' ? filterItem = 'project_name:dtol' : filterItem = `project_name:${filterValue[i]}`;
                 } else if (filterValue[i].includes('-') && !filterValue[i].startsWith('experimentType')) {
                     if (filterValue[i].startsWith('symbionts')) {
@@ -50,47 +49,29 @@ export class ApiService {
                         filterItem = filterValue[i].split(' - ')[0].toLowerCase().split(' ').join('_');
                         if (filterItem === 'assemblies') {
                             filterItem = 'assemblies_status:Done';
-                        }else if (filterItem === 'genome_notes') {
+                        } else if (filterItem === 'genome_notes') {
                             filterItem = 'genome_notes:Submitted';
-                        } else
+                        } else {
                             filterItem = `${filterItem}:Done`;
+                        }
                     }
                 } else if (filterValue[i].includes('_') && filterValue[i].startsWith('experimentType')) {
                     filterItem = filterValue[i].replace('_', ':');
-
                 } else {
                     filterItem = `${currentClass}:${filterValue[i]}`;
                 }
                 filterStr === '&filter=' ? filterStr += `${filterItem}` : filterStr += `,${filterItem}`;
-
             }
-
             url += filterStr;
         }
-        if (phylogeny_filters.length !== 0) {
+        if (phylogenyFilters.length !== 0) {
             let filterStr = '&phylogeny_filters=';
-            for (let i = 0; i < phylogeny_filters.length; i++) {
-                filterStr === '&phylogeny_filters=' ? filterStr += `${phylogeny_filters[i]}` : filterStr += `-${phylogeny_filters[i]}`;
+            for (let i = 0; i < phylogenyFilters.length; i++) {
+                filterStr === '&phylogeny_filters=' ? filterStr += `${phylogenyFilters[i]}` : filterStr += `-${phylogenyFilters[i]}`;
             }
-
             url += filterStr;
         }
         url += `&current_class=${currentClass}`;
-
-        // will not reload the page, but will update query params
-        this.router.navigate([],
-            {
-                relativeTo: this.activatedRoute,
-                queryParams: {
-                    'filter': filterValue,
-                    'sortActive': sortActive,
-                    'sortDirection': sortDirection,
-                    'searchValue': searchValue,
-                    'pageIndex': pageIndex,
-                    'pageSize': pageSize
-                },
-                queryParamsHandling: 'merge',
-            });
 
         return this.http.get<any>(url);
     }
@@ -99,7 +80,6 @@ export class ApiService {
         const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
         return this.http.get<any>(url);
     }
-
 
     downloadRecords(downloadOption: string, pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
                     filterValue: string[], currentClass: string, phylogenyFilters: string[], indexName: string,) {
@@ -117,7 +97,7 @@ export class ApiService {
             'ENDEMIXIT',
             'ERGA Community Genomes',
             'ERGA Swiss node'
-    ];
+        ];
 
         // phylogeny
         const phylogenyStr = phylogenyFilters.length ? phylogenyFilters.join('-') : '';
@@ -172,7 +152,7 @@ export class ApiService {
     }
 
     getPublicationsData(pageIndex: number, pageSize: number, searchValue: string, sortActive: string, sortDirection: string,
-            filterValue: string[], index_name: string) {
+                        filterValue: string[], index_name: string) {
 
         const sortActiveESField: { [index: string]: any } = {
             'title': 'title.keyword',
