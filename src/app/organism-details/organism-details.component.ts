@@ -2,7 +2,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {ApiService} from "../api.service";
 import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import { MatSort, MatSortHeader } from "@angular/material/sort";
 import {
     MatCell,
     MatCellDef, MatColumnDef, MatHeaderCell,
@@ -15,6 +15,7 @@ import {
 import {MatCard, MatCardActions, MatCardTitle} from "@angular/material/card";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {ImageSliderComponent} from "../image-slider/image-slider.component";
+import {MatAnchor} from "@angular/material/button";
 
 @Component({
     selector: 'app-organism-details',
@@ -38,16 +39,17 @@ import {ImageSliderComponent} from "../image-slider/image-slider.component";
         MatCell,
         MatHeaderRow,
         MatRow,
-        ImageSliderComponent
+        ImageSliderComponent,
+        MatAnchor,
+        MatSortHeader,
+        MatSort
     ],
     styleUrls: ['./organism-details.component.css']
 })
 export class OrganismDetailsComponent implements OnInit, AfterViewInit {
     data: any;
     specimensData: any;
-    specimensDataLength: number | undefined;
     specimensDisplayedColumns: string[] = ['source', 'type', 'target'];
-
     resultsLength = 0;
     isLoadingResults = true;
     isRateLimitReached = false;
@@ -80,13 +82,10 @@ export class OrganismDetailsComponent implements OnInit, AfterViewInit {
                 this.isRateLimitReached = data === null;
 
                 this.specimensData = new MatTableDataSource(this.data['relationships']);
-                if (this.data['relationships']) {
-                    this.specimensDataLength = this.data['relationships'].length;
-                } else {
-                    this.specimensDataLength = 0;
-                }
-                this.specimensData.paginator = this.paginator;
-                this.specimensData.sort = this.sort;
+                setTimeout(() => {
+                    this.specimensData.paginator = this.paginator;
+                    this.specimensData.sort = this.sort;
+                });
 
                 this.slides = this.generateSlides(this.data);
             }

@@ -63,3 +63,7 @@ hr {
     max-width: 750px;
     margin: 0 auto;
 }
+
+.biosampleId-btn {
+    background-color: #F5F5F5;
+}
