@@ -8,7 +8,9 @@
                     <div class="flex-pair">
                         <div class="label">BioSample ID:</div>
                         <div class="value">
-                            <a href="http://www.ebi.ac.uk/biosamples/samples/{{data?.accession}}" target="_blank">
+                            <a mat-button class="biosampleId-btn"
+                               [href]="'http://www.ebi.ac.uk/biosamples/samples/' + data?.accession"
+                               target="_blank">
                                 {{data?.accession}}
                             </a>
                         </div>
@@ -51,39 +53,46 @@
         }
         <br>
 
-        @if (specimensDataLength) {
-            <div class="relationships">
-                <hr>
-                <h1 class="table-header">Relationships</h1>
-                <div class="table-wrapper">
-                    <table mat-table matTableExporter [dataSource]="specimensData" matSort class="relationships-table">
-                        <ng-container matColumnDef="source">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Source </mat-header-cell>
-                            <mat-cell *matCellDef="let element" class="txt-center">
-                                <a routerLink="/organism/{{element.source}}" target="_blank">
-                                    {{element.source}}
-                                </a>
-                            </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="type">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Relationships Type </mat-header-cell>
-                            <mat-cell *matCellDef="let element" class="txt-center">
-                                {{element.type}}
-                            </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="target">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Target </mat-header-cell>
-                            <mat-cell *matCellDef="let element" class="txt-center">
-                                <a routerLink="/organism/{{element.target}}" target="_blank">
-                                    {{element.target}}
-                                </a>
-                            </mat-cell>
-                        </ng-container>
-                        <mat-header-row *matHeaderRowDef="specimensDisplayedColumns"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: specimensDisplayedColumns;"></mat-row>
-                    </table>
-                    <mat-paginator style="width: 100%;" [pageSizeOptions]="[20, 30, 50]" showFirstLastButtons [length]="resultsLength"></mat-paginator>
-                </div>
+        @if (data?.relationships?.length) {
+            <hr>
+            <h1 class="table-header">Relationships</h1>
+            <div class="table-wrapper">
+                <table mat-table [dataSource]="specimensData" matSort class="relationships-table">
+
+                    <ng-container matColumnDef="source">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Source</th>
+                        <td mat-cell *matCellDef="let element">
+                            <a mat-button
+                               [routerLink]="'/organism/' + element.source">
+                                {{element.source}}
+                            </a>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="type">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Relationships Type</th>
+                        <td mat-cell *matCellDef="let element"> {{ element.type }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="target">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Target</th>
+                        <td mat-cell *matCellDef="let element">
+                            <a mat-button
+                               [routerLink]="'/organism/' + element.target"
+                               target="_blank">
+                                {{element.target}}
+                            </a>
+                        </td>
+                    </ng-container>
+
+                    <thead>
+                    <tr mat-header-row *matHeaderRowDef="specimensDisplayedColumns"></tr>
+                    </thead>
+                    <tbody>
+                    <tr mat-row *matRowDef="let row; columns: specimensDisplayedColumns;"></tr>
+                    </tbody>
+                </table>
+                <mat-paginator pageSize="10" [length]="data['relationships']"></mat-paginator>
             </div>
         }
 
