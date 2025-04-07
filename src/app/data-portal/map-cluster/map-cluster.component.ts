@@ -68,7 +68,7 @@ export class MapClusterComponent implements AfterViewInit {
       layers: [this.tiles],
     });
 
-    this.markers = L.markerClusterGroup({
+    this.markers = (window as any).L.markerClusterGroup({
       spiderfyOnMaxZoom: false,
       showCoverageOnHover: false,
       zoomToBoundsOnClick: false,
