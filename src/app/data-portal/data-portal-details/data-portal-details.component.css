@@ -140,7 +140,7 @@ mat-chip {
 }
 
 
-/* Popup Overlay */
+/* Popup Overlay for viewing publication image*/
 .popup-overlay {
     position: fixed;
     top: 0;
