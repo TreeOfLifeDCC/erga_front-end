@@ -270,7 +270,7 @@
                                             <a mat-button
                                                href="{{row['annotation']['GTF']}}">GTF</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -284,7 +284,7 @@
                                         @if (row['annotation']['GFF3']) {
                                             <a mat-button href="{{row.annotation.GFF3}}">GFF3</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -297,7 +297,7 @@
                                         @if (row.proteins.FASTA) {
                                             <a mat-button href="{{row.proteins.FASTA}}">FASTA</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -310,7 +310,7 @@
                                         @if (row.transcripts.FASTA) {
                                             <a mat-button href="{{row.transcripts.FASTA}}">FASTA</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -324,7 +324,7 @@
                                             <a mat-button
                                                href="{{row.softmasked_genome.FASTA}}">FASTA</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -338,7 +338,7 @@
                                             <a mat-button
                                                href="{{row.repeat_library?.FASTA}}">FASTA</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -353,7 +353,7 @@
                                                href="{{row.other_data.ftp_dumps}}">FTP
                                                 Dumps</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -367,7 +367,7 @@
                                         @if (row.view_in_browser) {
                                             <a mat-button href="{{row.view_in_browser}}">Ensembl</a>
                                         } @else {
-                                            __
+                                            NA
                                         }
                                     </td>
                                 </ng-container>
@@ -515,7 +515,7 @@
                                                                href="{{generateUrl(file)}}">{{ getKeyFromSpecialColumns(file) }}</a>
                                                         }
                                                     }@else {
-                                                    __
+                                                    NA
                                                     }
 
 
@@ -872,8 +872,6 @@
                         <a mat-button href="{{goatDataLink}}"
                            style="background-color: limegreen; color: black; margin-top: 5px">
                             Read the GoaT info in full here</a>
-                    } @else {
-                        __
                     }
                 </mat-tab>
             }
