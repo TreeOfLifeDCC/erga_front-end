@@ -2,7 +2,7 @@ import {Component, OnInit, AfterViewInit, ViewChild, Input, ElementRef} from '@a
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiService } from '../../api.service';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
-import { TitleCasePipe, SlicePipe } from '@angular/common';
+import {TitleCasePipe, SlicePipe, JsonPipe} from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatTableExporterModule } from 'mat-table-exporter';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -67,7 +67,8 @@ interface FilterState {
         MatInput,
         MatTableModule,
         MatButtonModule,
-        FormsModule
+        FormsModule,
+        JsonPipe
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -548,5 +549,12 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     getSelectedFilterCount(type: 'organism' | 'symbionts'): number {
         const state = this.getFilterState(type);
         return Object.keys(this.getSelectedFilterList(state.activeFilters)).length;
+    }
+
+    generateUrl(link: string){
+        if (!link.startsWith('http')) {
+           return "https://" + link;
+        }
+        return link;
     }
 }

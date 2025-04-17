@@ -266,8 +266,12 @@
                                     </th>
                                     <!--            <td mat-cell *matCellDef="let row"> {{row.annotation.GTF}} </td>-->
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button
-                                           href="{{row['annotation']['GTF']}}">GTF</a>
+                                        @if (row['annotation']['GTF']) {
+                                            <a mat-button
+                                               href="{{row['annotation']['GTF']}}">GTF</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -277,7 +281,11 @@
                                         mat-sort-header> annotation GTF3
                                     </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button href="{{row.annotation.GFF3}}">GFF3</a>
+                                        @if (row['annotation']['GFF3']) {
+                                            <a mat-button href="{{row.annotation.GFF3}}">GFF3</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -286,7 +294,11 @@
                                         mat-sort-header> Proteins FASTA
                                     </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button href="{{row.proteins.FASTA}}">FASTA</a>
+                                        @if (row.proteins.FASTA) {
+                                            <a mat-button href="{{row.proteins.FASTA}}">FASTA</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -295,7 +307,11 @@
                                         mat-sort-header> Transcripts FASTA
                                     </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button href="{{row.transcripts.FASTA}}">FASTA</a>
+                                        @if (row.transcripts.FASTA) {
+                                            <a mat-button href="{{row.transcripts.FASTA}}">FASTA</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -304,8 +320,12 @@
                                         mat-sort-header> Softmasked Genome FASTA
                                     </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button
-                                           href="{{row.softmasked_genome.FASTA}}">FASTA</a>
+                                        @if (row.softmasked_genome.FASTA) {
+                                            <a mat-button
+                                               href="{{row.softmasked_genome.FASTA}}">FASTA</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -314,8 +334,12 @@
                                         mat-sort-header> Repeat Library FASTA
                                     </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button
-                                           href="{{row.repeat_library?.FASTA}}">FASTA</a>
+                                        @if (row.repeat_library?.FASTA) {
+                                            <a mat-button
+                                               href="{{row.repeat_library?.FASTA}}">FASTA</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -324,9 +348,13 @@
                                         mat-sort-header> Other Data FTP Dumps
                                     </th>
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button
-                                           href="{{row.other_data.ftp_dumps}}">FTP
-                                            Dumps</a>
+                                        @if (row.other_data.ftp_dumps) {
+                                            <a mat-button
+                                               href="{{row.other_data.ftp_dumps}}">FTP
+                                                Dumps</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -336,7 +364,11 @@
                                     </th>
                                     <!--            <td mat-cell *matCellDef="let row"> {{row.view_in_browser}} </td>-->
                                     <td mat-cell *matCellDef="let row">
-                                        <a mat-button href="{{row.view_in_browser}}">Ensembl</a>
+                                        @if (row.view_in_browser) {
+                                            <a mat-button href="{{row.view_in_browser}}">Ensembl</a>
+                                        } @else {
+                                            __
+                                        }
                                     </td>
                                 </ng-container>
 
@@ -477,8 +509,16 @@
                                             }
                                             @if (keyInSpecialColumns(column)) {
                                                 <ng-container>
-                                                    <a mat-button
-                                                       href="{{element.column}}">{{ getKeyFromSpecialColumns(element[column]) }}</a>
+                                                    @if (element[column] && element[column].split(';').length > 0){
+                                                        @for (file of element[column].split(';'); track file) {
+                                                            <a mat-button
+                                                               href="{{generateUrl(file)}}">{{ getKeyFromSpecialColumns(file) }}</a>
+                                                        }
+                                                    }@else {
+                                                    __
+                                                    }
+
+
                                                 </ng-container>
                                             }
                                             @if (!keyInSpecialColumns(column) && column !== 'study_accession') {
@@ -828,9 +868,13 @@
                             </td>
                         </tr>
                     </table>
-                    <a mat-button href="{{goatDataLink}}"
-                       style="background-color: limegreen; color: black; margin-top: 5px">
-                        Read the GoaT info in full here</a>
+                    @if (goatDataLink) {
+                        <a mat-button href="{{goatDataLink}}"
+                           style="background-color: limegreen; color: black; margin-top: 5px">
+                            Read the GoaT info in full here</a>
+                    } @else {
+                        __
+                    }
                 </mat-tab>
             }
 
