@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {
-    NgcCookieConsentService,
     NgcCookieConsentConfig
 } from 'ngx-cookieconsent';
 import {environment} from '../environments/environment';
@@ -65,7 +64,7 @@ export class AppComponent implements OnInit {
     title = 'erga_front-end';
     isHomeRoute: boolean = false;
 
-    constructor(private router: Router, private ccService: NgcCookieConsentService) {
+    constructor(private router: Router) {
     }
 
     ngOnInit() {
