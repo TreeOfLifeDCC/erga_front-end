@@ -267,7 +267,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                         this.nbnatlas.split('/')[4] + '+&nbn_loading=true&fq=-occurrence_status%3A%22absent%22#tab_mapView';
                 }
 
-                this.INSDC_ID = this.organismData['experiment'][0]['study_accession'];
+                this.INSDC_ID = (this.organismData['experiment']  && this.organismData['experiment'].length > 0 ) ? this.organismData['experiment'][0]['study_accession'] : '';
                 this.currentStatus = this.organismData['currentStatus'];
 
                 this.metadataDataLength = data.results[0]['_source']['records'].length;

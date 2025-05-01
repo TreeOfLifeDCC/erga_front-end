@@ -8,11 +8,3 @@ import {importProvidersFrom} from "@angular/core";
 bootstrapApplication(AppComponent, appConfig)
     .catch((err) => console.error(err));
 
-
-
-bootstrapApplication(AppComponent, {
-    providers: [
-        importProvidersFrom(NgcCookieConsentModule.forRoot(cookieConfig)),
-        ...appConfig.providers
-    ]
-}).catch(err => console.error(err));
