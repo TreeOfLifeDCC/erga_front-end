@@ -108,7 +108,7 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     tolqc_length = 0;
     result: any;
     displayProgressBar = false;
-
+    metagenomesFilters : any[] = [];
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -212,6 +212,23 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
                         this.symbiontsFilters = this.merge(this.symbiontsFilters,
                             this.aggregations.symbionts_assemblies_status.buckets,
                             'symbionts_assemblies_status');
+                    }
+
+                    this.metagenomesFilters = [];
+                    if (this.aggregations.metagenomes_biosamples_status.buckets.length > 0) {
+                        this.metagenomesFilters = this.merge(this.metagenomesFilters,
+                            this.aggregations.metagenomes_biosamples_status.buckets,
+                            'metagenomes_biosamples_status');
+                    }
+                    if (this.aggregations.metagenomes_raw_data_status.buckets.length > 0) {
+                        this.metagenomesFilters = this.merge(this.metagenomesFilters,
+                            this.aggregations.metagenomes_raw_data_status.buckets,
+                            'metagenomes_raw_data_status');
+                    }
+                    if (this.aggregations.metagenomes_assemblies_status.buckets.length > 0) {
+                        this.metagenomesFilters = this.merge(this.metagenomesFilters,
+                            this.aggregations.metagenomes_assemblies_status.buckets,
+                            'metagenomes_assemblies_status');
                     }
 
                     // experiment Type
@@ -388,6 +405,8 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
     displayActiveFilterName(filterName: string) {
         if (filterName && filterName.startsWith('symbionts_')) {
             return 'Symbionts-' + filterName.split('-')[1];
+        }else if(filterName && filterName.startsWith('metagenomes_')){
+            return 'Metagenomes-' + filterName.split('-')[1];
         }
         return filterName;
     }

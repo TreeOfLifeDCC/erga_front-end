@@ -803,6 +803,197 @@
                 </mat-tab>
             }
 
+            @if (organismData?.metagenomes_records && organismData?.metagenomes_records.length) {
+                <mat-tab label="Metagenomes" class=tab-width>
+                    @if (organismData?.metagenomes_records.length) {
+                        <div>
+                            <h1 class="page-header">Related Metagenomes</h1>
+                            <mat-form-field style="width: 100%; margin-top: 10px;">
+                                <mat-label>Filter</mat-label>
+                                <input matInput [(ngModel)]="metagenomesFilterState.searchTerm"
+                                       (keyup)="applyFilter('metagenomes', $event, dataSourceMetagenomesRecords)"
+                                       placeholder="Ex. Mia" #input>
+                            </mat-form-field>
+                            <div class="main-container">
+                                <div class="left-panel">
+                                    @for (group of filterGroups; track $index) {
+                                        <mat-card class="example-card">
+                                            <mat-card-header class="header-content">
+                                                <mat-card-title>{{ group.title }}</mat-card-title>
+                                                @if (metagenomesFilterState.countedFilters[group.key] && metagenomesFilterState.countedFilters[group.key].length > (metagenomesFilterState.filtersLimit[group.key] || 0)) {
+                                                    <i class="material-icons"
+                                                       style="cursor: pointer"
+                                                       (click)="toggleFilterView('metagenomes', group.key)">
+                                                        {{ metagenomesFilterState.expandedFilters[group.key] ? 'remove' : 'add' }}
+                                                    </i>
+                                                }
+                                            </mat-card-header>
+                                            <mat-card class="filter-content">
+                                                @for (el of metagenomesFilterState.expandedFilters[group.key] ? metagenomesFilterState.countedFilters[group.key] : (metagenomesFilterState.countedFilters[group.key] | slice:0:metagenomesFilterState.filtersLimit[group.key]); track $index) {
+                                                    <div class="example-item">
+                                                        <button (click)="toggleFilter('metagenomes', group.key, el.id)" [ngClass]="{'active-filter': isFilterActive('metagenomes', group.key, el.id)}">
+                                                            <span>{{ el.id }}</span>
+                                                            <span class="badge">{{ el.value }}</span>
+                                                        </button>
+                                                    </div>
+                                                }
+                                            </mat-card>
+                                        </mat-card>
+                                    }
+                                </div>
+
+                                <div class="right-panel">
+                                    <div class="filters_div">
+                                        <mat-chip-set>
+                                            @for (key of metagenomesFilterState.filterKeys; track $index;) {
+                                                <div>
+                                                    @for (value of metagenomesFilterState.activeFilters[key]; track $index;) {
+                                                        <ng-container>
+                                                            <div class="item4">
+                                                                <mat-chip selected (click)="clearFilter('metagenomes', key, value)"
+                                                                          style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <div style="margin-right: 3px"> {{ value }}</div>
+                                                                        <mat-icon>close</mat-icon>
+                                                                    </div>
+                                                                </mat-chip>
+                                                            </div>
+                                                        </ng-container>
+                                                    }
+                                                </div>
+                                            }
+                                            @if (getSelectedFilterCount('metagenomes') > 0) {
+                                                <div class="item4">
+                                                    <mat-chip selected (click)="clearFilters('metagenomes')"
+                                                              style="cursor: pointer; padding: 0; background-color: #F08080;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <div style="margin-right: 3px"> Remove all filters</div>
+                                                            <mat-icon>close</mat-icon>
+                                                        </div>
+                                                    </mat-chip>
+                                                </div>
+                                            }
+                                        </mat-chip-set>
+                                    </div>
+                                    <div class="data-table-div">
+                                            <table mat-table
+                                                   [dataSource]="dataSourceMetagenomesRecords"
+                                                   matSort
+                                                   #relatedMetagenomessSort="matSort">
+
+                                            <ng-container matColumnDef="accession">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> BioSample ID</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <a href="https://www.ebi.ac.uk/biosamples/samples/{{row.accession}}">
+                                                        {{ row.accession }}</a>
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="organism">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row.organism.text }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="commonName">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Common Name</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row?.commonName }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sex">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sex</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row?.sex }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="organismPart">
+                                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Organism part</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row?.organismPart }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="trackingSystem"
+                                                          class="column-width">
+                                                <th mat-header-cell *matHeaderCellDef
+                                                    mat-sort-header class="column-width"> Tracking status
+                                                </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-chip
+                                                            style="background-color: yellow; color: black">{{ row.trackingSystem }}
+                                                    </mat-chip>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row
+                                                *matHeaderRowDef="specDisplayedColumns"></tr>
+                                            <tr mat-row
+                                                *matRowDef="let row; columns: specDisplayedColumns;"></tr>
+                                            <tr class="mat-row" *matNoDataRow>
+                                                <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+                                            </tr>
+                                        </table>
+                                   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                                                       aria-label="Select page of symbionts"
+                                                       #relatedmetagenomesRecordsPaginator
+                                                       [length]="specMetagenomesTotalCount"></mat-paginator>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <br>
+                    <br>
+<!--                    @if (dataSourceMetagenomesAssemblies != 0) {-->
+<!--                        <div>-->
+<!--                            <h1 class="page-header">Related assemblies</h1>-->
+
+<!--                            <div class="table-container">-->
+<!--                                <table mat-table-->
+<!--                                       [dataSource]="dataSourceMetagenomesAssemblies"-->
+<!--                                       matSort>-->
+<!--                                    <ng-container matColumnDef="accession">-->
+<!--                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Accession</th>-->
+<!--                                        <td mat-cell *matCellDef="let row">-->
+<!--                                            <a class="no-underline" target="_blank"-->
+<!--                                               href="https://www.ebi.ac.uk/ena/browser/view/{{row.accession}}">{{ row.accession }}</a>-->
+<!--                                        </td>-->
+<!--                                    </ng-container>-->
+<!--                                    <ng-container matColumnDef="assembly_name">-->
+<!--                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Assembly Name</th>-->
+<!--                                        <td mat-cell *matCellDef="let row">{{ row.assembly_name }}-->
+<!--                                        </td>-->
+<!--                                    </ng-container>-->
+<!--                                    <ng-container matColumnDef="description">-->
+<!--                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Description</th>-->
+<!--                                        <td mat-cell *matCellDef="let row">{{ row.description }}-->
+<!--                                        </td>-->
+<!--                                    </ng-container>-->
+<!--                                    <ng-container matColumnDef="version"-->
+<!--                                                  class="column-width">-->
+<!--                                        <th mat-header-cell *matHeaderCellDef-->
+<!--                                            mat-sort-header class="column-width"> Version-->
+<!--                                        </th>-->
+<!--                                        <td mat-cell *matCellDef="let row">{{ row.version }}-->
+<!--                                        </td>-->
+<!--                                    </ng-container>-->
+<!--                                    <tr mat-header-row-->
+<!--                                        *matHeaderRowDef="dataSourceMetagenomesAssemblies"></tr>-->
+<!--                                    <tr mat-row-->
+<!--                                        *matRowDef="let row; columns: dataSourceMetagenomesAssemblies;"></tr>-->
+
+<!--                                </table>-->
+<!--                            </div>-->
+<!--                            <mat-paginator-->
+<!--                                           [pageSizeOptions]="[5,10, 20, 30]"-->
+<!--                                           showFirstLastButtons-->
+<!--                                           [length]="dataSourceMetagenomesAssembliesCount"-->
+<!--                                           style="width: 100%;"></mat-paginator>-->
+<!--                        </div>-->
+<!--                    }-->
+                </mat-tab>
+            }
+
+
             @if (goatDataLength !== 0) {
                 <mat-tab label="GoaT">
                     <br>

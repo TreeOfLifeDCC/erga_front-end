@@ -116,6 +116,18 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     displayedColumnsAssemblies = ['accession', 'assembly_name', 'description', 'version'];
     specDisplayedColumns = ['accession', 'organism', 'commonName', 'sex', 'organismPart', 'trackingSystem'];
 
+
+    dataSourceMetagenomesRecords: any;
+    specMetagenomesTotalCount: number;
+
+    dataSourceMetagenomesAssemblies: any;
+    dataSourceMetagenomesAssembliesCount: number;
+
+
+
+    @ViewChild('relatedmetagenomesRecordsPaginator') metagenomesRecordsPaginator: MatPaginator;
+    @ViewChild('assembliesmetagenomesPaginator') assembliesmetagenomesPaginator: MatPaginator ;
+
     @ViewChild('relatedSymbiontsPaginator') symPaginator: MatPaginator | undefined;
     @ViewChild('assembliesSymbiontsPaginator') asSymPaginator: MatPaginator | undefined;
 
@@ -164,6 +176,18 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         filterKeys: ['sex', 'organismPart', 'trackingSystem'],
         data: new MatTableDataSource<any>([])
     };
+
+    metagenomesFilterState: FilterState = {
+        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
+        filtersLimit: { sex: 3, organismPart: 3, trackingSystem: 3 },
+        searchTerm: '',
+        selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
+        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
+        data: new MatTableDataSource<any>([])
+    };
+
 
     codes = {
         m: 'mammals',
@@ -336,12 +360,37 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.dataSourceSymbiontsAssembliesCount = 0;
                 }
 
+                if (data.results[0]['_source']['metagenomes_records'] !== undefined && data.results[0]['_source']['metagenomes_records'].length) {
+                    this.dataSourceMetagenomesRecords = new MatTableDataSource<any>(data.results[0]['_source']['metagenomes_records']);
+                    this.specMetagenomesTotalCount = data.results[0]['_source']['metagenomes_records'].length;
+                    this.dataSourceMetagenomesRecords.paginator = this.metagenomesRecordsPaginator;
+                    // this.annotationData.sort = this.annotationSort;
+                } else {
+                    this.dataSourceMetagenomesRecords = new MatTableDataSource();
+                    this.specMetagenomesTotalCount = 0;
+                }
+
+                if (data.results[0]['_source']['metagenomes_assemblies'] !== undefined && data.results[0]['_source']['metagenomes_assemblies'].length) {
+                    this.dataSourceMetagenomesAssemblies = new MatTableDataSource<any>(data.results[0]['_source']['metagenomes_assemblies']);
+                    this.dataSourceMetagenomesAssembliesCount = data.results[0]['_source']['metagenomes_assemblies'] ? data.results[0]['_source']['metagenomes_assemblies'].length : 0;
+                } else {
+                    this.dataSourceMetagenomesAssemblies = new MatTableDataSource();
+                    this.dataSourceMetagenomesAssembliesCount = 0;
+                }
+
+
+
                 this.organismFilterState.data = this.metadataData;
                 this.symbiontsFilterState.data = this.dataSourceSymbiontsRecords;
+                this.metagenomesFilterState.data = this.dataSourceMetagenomesRecords;
+
                 this.countFilterFields('organism');
                 this.countFilterFields('symbionts');
                 this.setupFilterPredicate('organism');
                 this.setupFilterPredicate('symbionts');
+                this.setupFilterPredicate('metagenomes');
+                this.countFilterFields('metagenomes');
+
                 this.isDataLoaded = true;
         });
     }
@@ -434,11 +483,18 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         dataSource.filter = JSON.stringify({ search: searchTerm });
     }
 
-    getFilterState(type: 'organism' | 'symbionts'): FilterState {
-        return type === 'organism' ? this.organismFilterState : this.symbiontsFilterState;
+    // @ts-ignore
+    getFilterState(type: 'organism' | 'symbionts' | 'metagenomes'): FilterState {
+        if (type === 'organism'){
+            return this.organismFilterState;
+        }else  if (type === 'symbionts'){
+            return this.symbiontsFilterState;
+        }else if (type === 'metagenomes'){
+            return this.metagenomesFilterState;
+        }
     }
 
-    applyFilter(type: 'organism' | 'symbionts', event: Event, dataSource: MatTableDataSource<any>) {
+    applyFilter(type: 'organism' | 'symbionts' | 'metagenomes', event: Event, dataSource: MatTableDataSource<any>) {
         const state = this.getFilterState(type);
         state.searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
         const combinedFilter = JSON.stringify({
@@ -449,7 +505,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         this.applyFilters(type);
     }
 
-    applyFilters(type: 'organism' | 'symbionts') {
+    applyFilters(type: 'organism' | 'symbionts' | 'metagenomes') {
         const state = this.getFilterState(type);
         if (!state.data) {
             return;
@@ -462,7 +518,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         this.countFilterFields(type);
     }
 
-    toggleFilter(type: 'organism' | 'symbionts', field: FilterKey, value: string) {
+    toggleFilter(type: 'organism' | 'symbionts' | 'metagenomes', field: FilterKey, value: string) {
         const state = this.getFilterState(type);
         const index = state.activeFilters[field].indexOf(value);
         if (index !== -1) {
@@ -474,14 +530,14 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         this.applyFilters(type);
     }
 
-    clearFilter(type: 'organism' | 'symbionts', field: FilterKey, value: string): void {
+    clearFilter(type: 'organism' | 'symbionts' | 'metagenomes', field: FilterKey, value: string): void {
         const state = this.getFilterState(type);
         state.activeFilters[field] = state.activeFilters[field].filter(v => v !== value);
         state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
         this.applyFilters(type);
     }
 
-    clearFilters(type: 'organism' | 'symbionts'): void {
+    clearFilters(type: 'organism' | 'symbionts' | 'metagenomes'): void {
         const state = this.getFilterState(type);
         state.searchTerm = '';
         state.activeFilters = { sex: [], organismPart: [], trackingSystem: [] };
@@ -489,7 +545,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         this.applyFilters(type);
     }
 
-    countFilterFields(type: 'organism' | 'symbionts') {
+    countFilterFields(type: 'organism' | 'symbionts' | 'metagenomes') {
         const state = this.getFilterState(type);
         if (!state.data) { return; }
         state.filterKeys.forEach(column => {
@@ -508,16 +564,16 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         });
     }
 
-    toggleFilterView(type: 'organism' | 'symbionts', filterKey: FilterKey): void {
+    toggleFilterView(type: 'organism' | 'symbionts' | 'metagenomes', filterKey: FilterKey): void {
         const state = this.getFilterState(type);
         state.expandedFilters[filterKey] = !state.expandedFilters[filterKey];
     }
 
-    isFilterActive(type: 'organism' | 'symbionts', field: FilterKey, value: string): boolean {
+    isFilterActive(type: 'organism' | 'symbionts' | 'metagenomes', field: FilterKey, value: string): boolean {
         return this.getFilterState(type).activeFilters[field].includes(value);
     }
 
-    setupFilterPredicate(type: 'organism' | 'symbionts') {
+    setupFilterPredicate(type: 'organism' | 'symbionts' | 'metagenomes') {
         const state = this.getFilterState(type);
         if (!state.data) {
             return;
@@ -546,7 +602,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         }, {} as Record<FilterKey, string[]>);
     }
 
-    getSelectedFilterCount(type: 'organism' | 'symbionts'): number {
+    getSelectedFilterCount(type: 'organism' | 'symbionts' | 'metagenomes'): number {
         const state = this.getFilterState(type);
         return Object.keys(this.getSelectedFilterList(state.activeFilters)).length;
     }

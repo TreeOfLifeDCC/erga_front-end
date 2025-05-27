@@ -29,7 +29,7 @@ export class ApiService {
             'ERGA Swiss node'
         ];
         const offset = pageIndex * pageSize;
-        let url = `https://portal.erga-biodiversity.eu/api/${indexName}?limit=${pageSize}&offset=${offset}`;
+        let url = `http://localhost:8000/${indexName}?limit=${pageSize}&offset=${offset}`;
         if (searchValue) {
             url += `&search=${searchValue}`;
         }
@@ -43,7 +43,7 @@ export class ApiService {
                 if (projectNames.indexOf(filterValue[i]) !== -1) {
                     filterValue[i] === 'DToL' ? filterItem = 'project_name:dtol' : filterItem = `project_name:${filterValue[i]}`;
                 } else if (filterValue[i].includes('-') && !filterValue[i].startsWith('experimentType')) {
-                    if (filterValue[i].startsWith('symbionts')) {
+                    if (filterValue[i].startsWith('symbionts') || filterValue[i].startsWith('metagenomes')) {
                         filterItem = filterValue[i].replace('-', ':');
                     } else {
                         filterItem = filterValue[i].split(' - ')[0].toLowerCase().split(' ').join('_');
@@ -77,7 +77,7 @@ export class ApiService {
     }
 
     getDetailsData(organismName: any, indexName: string) {
-        const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
+        const url = `http://localhost:8000/${indexName}/${organismName}`;
         return this.http.get<any>(url);
     }
 
