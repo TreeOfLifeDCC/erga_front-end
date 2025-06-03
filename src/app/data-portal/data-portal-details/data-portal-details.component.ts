@@ -21,6 +21,8 @@ import { MatInput } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
+import {MatLine} from "@angular/material/core";
+import {MatList, MatListItem} from "@angular/material/list";
 
 type FilterKey = 'sex' | 'organismPart' | 'trackingSystem';
 
@@ -68,7 +70,10 @@ interface FilterState {
         MatTableModule,
         MatButtonModule,
         FormsModule,
-        JsonPipe
+        JsonPipe,
+        MatLine,
+        MatList,
+        MatListItem
     ],
     styleUrls: ['./data-portal-details.component.css']
 })
@@ -125,8 +130,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
 
 
-    @ViewChild('relatedmetagenomesRecordsPaginator') metagenomesRecordsPaginator: MatPaginator;
-    @ViewChild('assembliesmetagenomesPaginator') assembliesmetagenomesPaginator: MatPaginator ;
 
     @ViewChild('relatedSymbiontsPaginator') symPaginator: MatPaginator | undefined;
     @ViewChild('assembliesSymbiontsPaginator') asSymPaginator: MatPaginator | undefined;
@@ -139,6 +142,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     geoLocation = false;
     orgGeoList: any;
     specGeoList: any;
+    showMetagenomes= false;
     nbnatlas: any;
     nbnatlasMapUrl: string;
     @Input() height = 200;
@@ -149,44 +153,63 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     isMapLoading: boolean = true;
     isDataLoaded: boolean = false;
 
-    filterGroups: { key: FilterKey; title: string }[] = [
-        { key: 'sex', title: 'Sex' },
-        { key: 'organismPart', title: 'Organism Part' },
-        { key: 'trackingSystem', title: 'Tracking System' }
-    ];
-
-    organismFilterState: FilterState = {
-        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
-        filtersLimit: { sex: 3, organismPart: 3, trackingSystem: 3 },
-        searchTerm: '',
-        selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
-        data: new MatTableDataSource<any>([])
+    aggregations : any;
+    activeFilters:any = [];
+    searchText = '';
+    searchSymbiontsText = '';
+    searchRelatedmetaGenomesText='';
+    filters = {
+        sex: {},
+        trackingSystem: {},
+        organismPart: {}
     };
 
-    symbiontsFilterState: FilterState = {
-        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
-        filtersLimit: { sex: 3, organismPart: 3, trackingSystem: 3 },
-        searchTerm: '',
-        selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
-        data: new MatTableDataSource<any>([])
+    showAllFilters = {
+        metadataTab: {
+            sex: false,
+            organismPart: false,
+            trackingSystem: false,
+        },
+        symbiontsTab: {
+            sex: false,
+            organismPart: false,
+            trackingSystem: false,
+        },
+        metagenomesTab: {
+            sex: false,
+            organismPart: false,
+            trackingSystem: false,
+        }
     };
 
-    metagenomesFilterState: FilterState = {
-        activeFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        countedFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        expandedFilters: { sex: false, organismPart: false, trackingSystem: false },
-        filtersLimit: { sex: 3, organismPart: 3, trackingSystem: 3 },
-        searchTerm: '',
-        selectedFilters: { sex: [], organismPart: [], trackingSystem: [] },
-        filterKeys: ['sex', 'organismPart', 'trackingSystem'],
-        data: new MatTableDataSource<any>([])
+    metadataSexFilters: any = [];
+    metadataTrackingSystemFilters: any  = [];
+    metadataOrganismPartFilters: any= [];
+
+    symbiontsSexFilters: any = [];
+    symbiontsTrackingSystemFilters: any = [];
+    symbiontsOrganismPartFilters: any = [];
+
+    metagenomesSexFilters: any = [];
+    metagenomesTrackingSystemFilters: any = [];
+    metagenomesOrganismPartFilters: any = [];
+
+    filterJson = {
+        sex: '',
+        organismPart: '',
+        trackingSystem: '',
+        search: ''
     };
+    metagenomesRecordsTotalCount: number | undefined;
+    @ViewChild('metagenomesRecordsPaginator') metagenomesPaginator: MatPaginator  | undefined;
+    @ViewChild('metagenomesRecordsSort') metagenomesSort: MatSort  | undefined;
+    @ViewChild('assembliesMetagenomesPaginator') assembliesMetPaginator: MatPaginator  | undefined;
+    @ViewChild('assembliesMetagenomesSort') assembliesMetSort: MatSort | undefined;
+
+    @ViewChild('relatedSymbiontsSort') relatedSymbiontsSort: MatSort  | undefined;
+    @ViewChild('assembliesSymbiontsSort') assembliesSymbiontsSort: MatSort  | undefined;
+
+
 
 
     codes = {
@@ -237,11 +260,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 private sanitizer: DomSanitizer) { }
 
     ngOnInit(): void {
-        this.organismFilterState.countedFilters = {
-            sex: [],
-            organismPart: [],
-            trackingSystem: []
-        };
+
     }
 
     private transformGeoList(data: any[]): any[] {
@@ -260,12 +279,13 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         const routeParams = this.route.snapshot.paramMap;
         const organismId = routeParams.get('organismId');
-        this._apiService.getDetailsData(organismId, 'data_portal').subscribe(
+        this._apiService.getDetailsData(organismId, 'data_portal_test').subscribe(
             data => {
                 this.isLoadingResults = false;
                 this.isRateLimitReached = data === null;
-
+                this.aggregations = data.aggregations;
                 this.organismData = data.results[0]['_source'];
+                this.getFilters();
                 this.metadataData = new MatTableDataSource(this.organismData['records']);
 
                 this.orgGeoList = this.transformGeoList(this.metadataData.filteredData);
@@ -303,6 +323,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.annotationData.sort = this.annotationSort;
                     this.showData = true;
                 } else {
+                    this.annotationData = new MatTableDataSource();
                     this.annotationDataLength = 0;
                 }
 
@@ -313,6 +334,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.assembliesData.sort = this.assembliesSort;
                     this.showData = true;
                 } else {
+                    this.assembliesData = new MatTableDataSource();
                     this.assembliesDataLength = 0;
                 }
 
@@ -323,6 +345,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.filesData.sort = this.filesSort;
                     this.showData = true;
                 } else {
+                    this.filesData = new MatTableDataSource();
                     this.filesDataLength = 0;
                 }
 
@@ -344,6 +367,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                     this.showGenomeNote = true;
                 }
 
+
                 if (data.results[0]['_source']['symbionts_records'] !== undefined && data.results[0]['_source']['symbionts_records'].length) {
                     this.dataSourceSymbiontsRecords = new MatTableDataSource<any>(data.results[0]['_source']['symbionts_records']);
                     this.specSymbiontsTotalCount = data.results[0]['_source']['symbionts_records'] ? data.results[0]['_source']['symbionts_records'].length : 0;
@@ -363,10 +387,12 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 if (data.results[0]['_source']['metagenomes_records'] !== undefined && data.results[0]['_source']['metagenomes_records'].length) {
                     this.dataSourceMetagenomesRecords = new MatTableDataSource<any>(data.results[0]['_source']['metagenomes_records']);
                     this.specMetagenomesTotalCount = data.results[0]['_source']['metagenomes_records'].length;
-                    this.dataSourceMetagenomesRecords.paginator = this.metagenomesRecordsPaginator;
+                    // this.dataSourceMetagenomesRecords.paginator = this.metagenomesRecordsPaginator;
+                    this.showMetagenomes = true;
                     // this.annotationData.sort = this.annotationSort;
                 } else {
                     this.dataSourceMetagenomesRecords = new MatTableDataSource();
+                    // this.dataSourceMetagenomesRecords.paginator = this.metagenomesRecordsPaginator;
                     this.specMetagenomesTotalCount = 0;
                 }
 
@@ -380,27 +406,266 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
 
 
-                this.organismFilterState.data = this.metadataData;
-                this.symbiontsFilterState.data = this.dataSourceSymbiontsRecords;
-                this.metagenomesFilterState.data = this.dataSourceMetagenomesRecords;
 
-                this.countFilterFields('organism');
-                this.countFilterFields('symbionts');
-                this.setupFilterPredicate('organism');
-                this.setupFilterPredicate('symbionts');
-                this.setupFilterPredicate('metagenomes');
-                this.countFilterFields('metagenomes');
+                setTimeout(() => {
+                    this.assembliesData.paginator = this.assembliesPaginator;
+                    this.assembliesData.sort = this.assembliesSort;
+                    this.filesData.paginator = this.filesPaginator;
+                    this.filesData.sort = this.filesSort;
+
+                    this.dataSourceMetagenomesAssemblies.paginator = this.assembliesMetPaginator;
+                    this.dataSourceMetagenomesAssemblies.sort = this.assembliesMetSort;
+                    this.dataSourceMetagenomesRecords.paginator = this.metagenomesPaginator;
+                    this.dataSourceMetagenomesRecords.sort = this.metagenomesSort;
+
+                    this.metadataData.paginator = this.metadataPaginator;
+                    this.metadataData.sort = this.metadataSort;
+                    this.annotationData.paginator = this.annotationPaginator;
+                    this.annotationData.sort = this.annotationSort;
+                }, 50)
 
                 this.isDataLoaded = true;
         });
+
+
     }
 
+    getFilters() {
+        this.metadataSexFilters = this.aggregations.metadata_filters.sex_filter.buckets;
+        this.metadataTrackingSystemFilters = this.aggregations.metadata_filters.tracking_status_filter.buckets;
+        this.metadataOrganismPartFilters = this.aggregations.metadata_filters.organism_part_filter.buckets;
+
+        this.symbiontsSexFilters = this.aggregations.symbionts_filters.sex_filter.buckets;
+        this.symbiontsTrackingSystemFilters = this.aggregations.symbionts_filters.tracking_status_filter.buckets;
+        this.symbiontsOrganismPartFilters = this.aggregations.symbionts_filters.organism_part_filter.buckets;
+
+        this.metagenomesSexFilters = this.aggregations.metagenomes_filters.sex_filter.buckets;
+        this.metagenomesTrackingSystemFilters = this.aggregations.metagenomes_filters.tracking_status_filter.buckets;
+        this.metagenomesOrganismPartFilters = this.aggregations.metagenomes_filters.
+            organism_part_filter.buckets;
+    }
+
+    applyFilter(label: string, filterValue: string, dataSource: MatTableDataSource<any>, tabName: string): void {
+        // reset showAllFilters
+        this.showAllFilters = {
+            metadataTab: { sex: false, organismPart: false, trackingSystem: false },
+            symbiontsTab: { sex: false, organismPart: false, trackingSystem: false },
+            metagenomesTab: { sex: false, organismPart: false, trackingSystem: false }
+        };
+
+        // @ts-ignore
+        const index = this.activeFilters.indexOf(filterValue);
+        this.createFilterJson(label, filterValue, dataSource);
+        if (index !== -1) {
+            this.removeFilter(filterValue, dataSource, tabName);
+        } else {
+            if (label !== 'search') {
+                // @ts-ignore
+                this.activeFilters.push(filterValue);
+            }
+
+            dataSource.filter = JSON.stringify(this.filterJson);
+            if (tabName === 'metadataTab') {
+                this.generateFilters(dataSource.filteredData, 'metadata');
+            } else if (tabName === 'symbiontsTab') {
+                this.generateFilters(dataSource.filteredData, 'symbionts');
+            } else if (tabName === 'metagenomesTab') {
+                this.generateFilters(dataSource.filteredData, 'metagenomes');
+            }
+        }
+    }
+
+    generateFilters(data: any, filterType: string) {
+        const filters = {
+            sex: {},
+            trackingSystem: {},
+            organismPart: {},
+        };
+
+        // @ts-ignore
+        this[`${filterType}SexFilters`] = [];
+        // @ts-ignore
+        this[`${filterType}TrackingSystemFilters`] = [];
+        // @ts-ignore
+        this[`${filterType}OrganismPartFilters`] = [];
+
+        // generate filter counts
+        for (const item of data) {
+            if (item.sex != null) {
+                // @ts-ignore
+                filters.sex[item.sex] = (filters.sex[item.sex] || 0) + 1;
+            }
+            if (item.trackingSystem != null) {
+                // @ts-ignore
+                filters.trackingSystem[item.trackingSystem] = (filters.trackingSystem[item.trackingSystem] || 0) + 1;
+            }
+            if (item.organismPart != null) {
+                // @ts-ignore
+                filters.organismPart[item.organismPart] = (filters.organismPart[item.organismPart] || 0) + 1;
+            }
+        }
+
+        const createFilterArray = (filterObj: { [s: string]: unknown; } | ArrayLike<unknown>) =>
+            Object.entries(filterObj).map(([key, doc_count]) => ({key, doc_count}));
+
+        // @ts-ignore
+        this[`${filterType}SexFilters`] = createFilterArray(filters.sex);
+        // @ts-ignore
+        this[`${filterType}TrackingSystemFilters`] = createFilterArray(filters.trackingSystem);
+        // @ts-ignore
+        this[`${filterType}OrganismPartFilters`] = createFilterArray(filters.organismPart);
+    }
+
+
+    removeFilter(filter: string, dataSource: MatTableDataSource<any>, tabName: string) {
+        if (filter !== undefined) {
+            // @ts-ignore
+            const filterIndex = this.activeFilters.indexOf(filter);
+            if (this.activeFilters.length !== 0) {
+                this.spliceFilterArray(filter);
+                this.activeFilters.splice(filterIndex, 1);
+                dataSource.filter = JSON.stringify(this.filterJson);
+                if (tabName === 'metadataTab') {
+                    this.generateFilters(dataSource.filteredData, 'metadata');
+                } else if (tabName === 'symbiontsTab') {
+                    this.generateFilters(dataSource.filteredData, 'symbionts');
+                }else if (tabName === 'metagenomesTab') {
+                    this.generateFilters(dataSource.filteredData, 'metagenomes');
+                }
+
+            } else {
+                this.filterJson.sex = '';
+                this.filterJson.organismPart = '';
+                this.filterJson.trackingSystem = '';
+                dataSource.filter = JSON.stringify(this.filterJson);
+                // this.getBiosampleById();
+            }
+        }
+    }
+
+    spliceFilterArray(filter: string) {
+        if (this.filterJson.sex === filter) {
+            this.filterJson.sex = '';
+        } else if (this.filterJson.organismPart === filter) {
+            this.filterJson.organismPart = '';
+        } else if (this.filterJson.trackingSystem === filter) {
+            this.filterJson.trackingSystem = '';
+        }
+    }
+
+    symbiontsAssembliesSearch(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSourceSymbiontsAssemblies.filter = filterValue.trim().toLowerCase();
+    }
+
+    metagenomesAssembliesSearch(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.dataSourceMetagenomesAssemblies.filter = filterValue.trim().toLowerCase();
+    }
+
+    createFilterJson(key:any, value:any, dataSource:any) {
+        if (key === 'sex') {
+            this.filterJson.sex = value;
+        } else if (key === 'organismPart') {
+            this.filterJson.organismPart = value;
+        } else if (key === 'trackingSystem') {
+            this.filterJson.trackingSystem = value;
+        } else if (key === 'search') {
+            this.filterJson.search = value.toLowerCase();
+        }
+
+        dataSource.filterPredicate = (data:any, filter:any): boolean => {
+            const filterObj: {
+                sex: string,
+                organismPart: string,
+                trackingSystem: string,
+                search: string
+            } = JSON.parse(filter);
+
+            const sex = !filterObj.sex || data.sex === filterObj.sex;
+            const organismPart = !filterObj.organismPart || data.organismPart === filterObj.organismPart;
+            const trackingSystem = !filterObj.trackingSystem || data.trackingSystem === filterObj.trackingSystem;
+
+            // apply text search on fields
+            const searchText = filterObj.search?.toLowerCase() || '';
+            const searchMatch = !searchText ||
+                data.sex?.toLowerCase().includes(searchText) ||
+                data.organismPart?.toLowerCase().includes(searchText) ||
+                data.trackingSystem?.toLowerCase().includes(searchText) ||
+                data.accession?.toLowerCase().includes(searchText) ||
+                data.commonName?.toLowerCase().includes(searchText);
+
+            return sex && organismPart && trackingSystem && searchMatch;
+        };
+    }
+    getSearchResults(dataType: string) {
+
+        if (dataType === 'relatedOrganisms') {
+            this.applyFilter('search', this.searchText, this.metadataData, 'metadataTab');
+        }
+
+        if (dataType === 'relatedSymbionts') {
+            this.applyFilter('search', this.searchSymbiontsText, this.dataSourceSymbiontsRecords, 'symbiontsTab');
+        }
+        if (dataType === 'relatedMetaGenomes') {
+            this.applyFilter('search', this.searchRelatedmetaGenomesText, this.dataSourceMetagenomesRecords, 'metagenomesTab');
+        }
+
+    }
+
+
+
+    resetDataset(tabName: string){
+        this.activeFilters = [];
+        this.searchText = '';
+        this.searchSymbiontsText = '';
+        this.searchRelatedmetaGenomesText = '';
+        this.filterJson = {
+            sex: '',
+            organismPart: '',
+            trackingSystem: '',
+            search: ''
+        };
+        if (tabName === 'metadataTab' || tabName== 'Metadata') {
+            this.metadataData.filterPredicate = (data: any, filter: any) => true;
+            this.metadataData.filter = '';
+            this.generateFilters(this.metadataData.filteredData, 'metadata' );
+        } else if (tabName === 'symbiontsTab' || tabName== 'Symbionts') {
+            this.dataSourceSymbiontsRecords.filterPredicate = (data: any, filter:any) => true;
+            this.dataSourceSymbiontsRecords.filter = '';
+            this.generateFilters(this.dataSourceSymbiontsRecords.filteredData, 'symbionts');
+        } else if (tabName === 'metagenomesTab' || tabName== 'Metagenomes') {
+            this.dataSourceMetagenomesRecords.filterPredicate = (data: any, filter:any) => true;
+            this.dataSourceMetagenomesRecords.filter = '';
+            this.generateFilters(this.dataSourceMetagenomesRecords.filteredData, 'metagenomes');
+        }
+    }
+
+
+    toggleFilter(key1: string, key2: string): void {
+        // @ts-ignore
+        this.showAllFilters[key1][key2] = !this.showAllFilters[key1][key2];
+    }
+
+    // @ts-ignore
+    checkFilterIsActive(filter: string) {
+        // @ts-ignore
+        if (this.activeFilters.indexOf(filter) !== -1) {
+            return 'background-color: cornflowerblue; color: white;';
+            ;
+        }
+    }
     getHumanReadableName(key: string) {
         return this.humanReadableColumns[key as keyof typeof this.humanReadableColumns];
     }
 
     keyInSpecialColumns(key: string) {
         return this.specialColumns.indexOf(key) !== -1;
+    }
+
+
+    tabClick({$event}: { $event: any }) {
+        this.resetDataset($event.tab.textLabel);
     }
 
     getKeyFromSpecialColumns(key: string) {
@@ -483,114 +748,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         dataSource.filter = JSON.stringify({ search: searchTerm });
     }
 
-    // @ts-ignore
-    getFilterState(type: 'organism' | 'symbionts' | 'metagenomes'): FilterState {
-        if (type === 'organism'){
-            return this.organismFilterState;
-        }else  if (type === 'symbionts'){
-            return this.symbiontsFilterState;
-        }else if (type === 'metagenomes'){
-            return this.metagenomesFilterState;
-        }
-    }
-
-    applyFilter(type: 'organism' | 'symbionts' | 'metagenomes', event: Event, dataSource: MatTableDataSource<any>) {
-        const state = this.getFilterState(type);
-        state.searchTerm = (event.target as HTMLInputElement).value.trim().toLowerCase();
-        const combinedFilter = JSON.stringify({
-            search: state.searchTerm,
-            filters: state.activeFilters
-        });
-        dataSource.filter = combinedFilter;
-        this.applyFilters(type);
-    }
-
-    applyFilters(type: 'organism' | 'symbionts' | 'metagenomes') {
-        const state = this.getFilterState(type);
-        if (!state.data) {
-            return;
-        }
-        const combinedFilter = JSON.stringify({
-            search: state.searchTerm,
-            filters: state.activeFilters
-        });
-        state.data.filter = combinedFilter;
-        this.countFilterFields(type);
-    }
-
-    toggleFilter(type: 'organism' | 'symbionts' | 'metagenomes', field: FilterKey, value: string) {
-        const state = this.getFilterState(type);
-        const index = state.activeFilters[field].indexOf(value);
-        if (index !== -1) {
-            state.activeFilters[field].splice(index, 1);
-        } else {
-            state.activeFilters[field].push(value);
-        }
-        state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
-        this.applyFilters(type);
-    }
-
-    clearFilter(type: 'organism' | 'symbionts' | 'metagenomes', field: FilterKey, value: string): void {
-        const state = this.getFilterState(type);
-        state.activeFilters[field] = state.activeFilters[field].filter(v => v !== value);
-        state.selectedFilters = this.getSelectedFilterList(state.activeFilters);
-        this.applyFilters(type);
-    }
-
-    clearFilters(type: 'organism' | 'symbionts' | 'metagenomes'): void {
-        const state = this.getFilterState(type);
-        state.searchTerm = '';
-        state.activeFilters = { sex: [], organismPart: [], trackingSystem: [] };
-        state.selectedFilters = { sex: [], organismPart: [], trackingSystem: [] };
-        this.applyFilters(type);
-    }
-
-    countFilterFields(type: 'organism' | 'symbionts' | 'metagenomes') {
-        const state = this.getFilterState(type);
-        if (!state.data) { return; }
-        state.filterKeys.forEach(column => {
-            const uniqueValues: Record<string, number> = {};
-            state.data.filteredData.forEach((element: { [x: string]: string | number }) => {
-                const value = element[column];
-                if (value) {
-                    const valueStr = value.toString();
-                    uniqueValues[valueStr] = (uniqueValues[valueStr] || 0) + 1;
-                }
-            });
-            state.countedFilters[column] = Object.keys(uniqueValues).map(key => ({
-                id: key,
-                value: uniqueValues[key]
-            }));
-        });
-    }
-
-    toggleFilterView(type: 'organism' | 'symbionts' | 'metagenomes', filterKey: FilterKey): void {
-        const state = this.getFilterState(type);
-        state.expandedFilters[filterKey] = !state.expandedFilters[filterKey];
-    }
-
-    isFilterActive(type: 'organism' | 'symbionts' | 'metagenomes', field: FilterKey, value: string): boolean {
-        return this.getFilterState(type).activeFilters[field].includes(value);
-    }
-
-    setupFilterPredicate(type: 'organism' | 'symbionts' | 'metagenomes') {
-        const state = this.getFilterState(type);
-        if (!state.data) {
-            return;
-        }
-        state.data.filterPredicate = (data: any, filter: string) => {
-            const parsedFilter = JSON.parse(filter);
-            const searchTerm = parsedFilter.search.toLowerCase();
-            const filters = parsedFilter.filters;
-            const matchesFilters = Object.keys(filters).every(key =>
-                filters[key].length === 0 || filters[key].includes(data[key])
-            );
-            const matchesSearch = Object.values(data).some(value =>
-                String(value).toLowerCase().includes(searchTerm)
-            );
-            return matchesFilters && matchesSearch;
-        };
-    }
 
     getSelectedFilterList(activeFilters: { [key in FilterKey]: string[] }): Record<FilterKey, string[]> {
         return Object.keys(activeFilters).reduce((acc, key) => {
@@ -602,10 +759,17 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
         }, {} as Record<FilterKey, string[]>);
     }
 
-    getSelectedFilterCount(type: 'organism' | 'symbionts' | 'metagenomes'): number {
-        const state = this.getFilterState(type);
-        return Object.keys(this.getSelectedFilterList(state.activeFilters)).length;
+
+    assembliesSearch(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.assembliesData.filter = filterValue.trim().toLowerCase();
     }
+
+    filesSearch(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.filesData.filter = filterValue.trim().toLowerCase();
+    }
+
 
     generateUrl(link: string){
         if (!link.startsWith('http')) {

@@ -72,9 +72,9 @@ img {
     max-width: 800px;
 }
 
-mat-chip {
-    padding: 4px 9px !important;
-}
+/*mat-chip {*/
+/*    padding: 4px 9px !important;*/
+/*}*/
 
 .card-row {
     display: flex;
@@ -295,4 +295,21 @@ mat-chip {
 }
 .filter-content button.active-filter {
     background-color: rgb(168, 186, 168);
+}
+
+mat-chip-set {
+    padding-left: 15px;
+    padding-top: 4px;
+}
+
+.vertical-center {
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    margin:0;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
