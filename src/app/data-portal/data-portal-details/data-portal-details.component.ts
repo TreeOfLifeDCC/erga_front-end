@@ -651,7 +651,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     checkFilterIsActive(filter: string) {
         // @ts-ignore
         if (this.activeFilters.indexOf(filter) !== -1) {
-            return 'background-color: cornflowerblue; color: white;';
+            return 'background-color: #A8BAA8; color: white;';
             ;
         }
     }
