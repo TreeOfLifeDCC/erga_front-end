@@ -279,7 +279,7 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         const routeParams = this.route.snapshot.paramMap;
         const organismId = routeParams.get('organismId');
-        this._apiService.getDetailsData(organismId, 'data_portal_test').subscribe(
+        this._apiService.getDetailsData(organismId, 'data_portal').subscribe(
             data => {
                 this.isLoadingResults = false;
                 this.isRateLimitReached = data === null;
