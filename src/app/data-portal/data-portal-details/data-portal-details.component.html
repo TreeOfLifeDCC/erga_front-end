@@ -55,7 +55,7 @@
         <br>
     </div>
     <div class="item2">
-        <mat-tab-group (selectedTabChange)="onTabChange($event)">
+        <mat-tab-group (selectedTabChange)="tabClick({$event : $event});">
             <mat-tab label="Metadata">
                 @if (isLoadingResults || isRateLimitReached) {
                     <div class="example-loading-shade">
@@ -70,9 +70,9 @@
                     </div>
                 }
                 <br>
+
                 <h1>Related Organism</h1>
                 <br>
-
                 <button mat-raised-button
                         (click)="exporter.exportTable('csv', {fileName: 'related_organisms'})"
                         color="accent">
@@ -81,62 +81,173 @@
 
                 <mat-form-field style="width: 100%; margin-top: 10px;">
                     <mat-label>Filter</mat-label>
-                    <input matInput [(ngModel)]="organismFilterState.searchTerm"
-                           (keyup)="applyFilter('organism', $event, metadataData)"
-                           placeholder="Ex. Mia" #input>
+                    <input matInput
+                           placeholder="Ex. Mia" #input  [(ngModel)]='searchText'
+                           (keyup)="getSearchResults('relatedOrganisms')">
                 </mat-form-field>
 
                 <div class="main-container">
                     <div class="left-panel">
-                        @for (group of filterGroups; track $index) {
-                        <mat-card class="example-card">
-                            <mat-card-header class="header-content">
-                                <mat-card-title>{{ group.title }}</mat-card-title>
-                                @if (organismFilterState.countedFilters[group.key] && organismFilterState.countedFilters[group.key].length > (organismFilterState.filtersLimit[group.key] || 0)) {
-                                    <i class="material-icons"
-                                       style="cursor: pointer"
-                                       (click)="toggleFilterView('organism', group.key)">
-                                        {{ organismFilterState.expandedFilters[group.key] ? 'remove' : 'add' }}
-                                    </i>
-                                }
-                            </mat-card-header>
-                            <mat-card class="filter-content">
-                                @for (el of organismFilterState.expandedFilters[group.key] ? organismFilterState.countedFilters[group.key] : (organismFilterState.countedFilters[group.key] | slice:0:organismFilterState.filtersLimit[group.key]); track $index) {
-                                    <div class="example-item">
-                                        <button (click)="toggleFilter('organism', group.key, el.id)" [ngClass]="{'active-filter': isFilterActive('organism', group.key, el.id)}">
-                                            <span>{{ el.id }}</span>
-                                            <span class="badge">{{ el.value }}</span>
-                                        </button>
-                                    </div>
-                                }
+
+
+                        @if(metadataSexFilters && metadataSexFilters.length > 0){
+                            <mat-card  class="example-card">
+                                <mat-card-header class="header-content">
+                                    <mat-card-title> Sex
+                                    @if (metadataSexFilters.length > 3) {
+                                        <mat-icon
+                                                (click)="toggleFilter('metadataTab', 'sex')"
+                                                style="cursor: pointer; margin-left: auto;">
+                                            {{ showAllFilters['metadataTab']['sex'] ? 'remove' : 'add'  }}
+                                        </mat-icon>
+                                    }
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                    <mat-list role="list" style="width: 100%">
+                                        @for (filter of (showAllFilters['metagenomesTab']['sex'] ? metadataSexFilters : metadataSexFilters.slice(0, 3)); track $index ) {
+
+                                            @if (filter.key != '') {
+                                                    <mat-list-item role="listitem"
+                                                                   [style]="checkFilterIsActive(filter.key)"
+                                                                   (click)="applyFilter('sex',filter.key, metadataData,'metadataTab')"
+                                                                   style="cursor: pointer">
+
+                                                        <div fxLayout="row wrap"  fxFlexFill
+                                                             fxFlexAlign="center center" class="badge">
+                                                            <div fxFlex="1 1 auto">
+                                                                <h4 matLine
+                                                                    class="vertical-center">{{ filter.key }}</h4>
+                                                            </div>
+                                                            <div style="margin-left: auto">
+                                                                <mat-chip-set>
+                                                                    <mat-chip style="font-size: 8px">
+                                                                        {{filter.doc_count }}
+                                                                    </mat-chip>
+                                                                </mat-chip-set>
+                                                            </div>
+                                                        </div>
+                                                    </mat-list-item>
+                                            }
+
+                                        }
+                                    </mat-list>
+                                </mat-card-actions>
                             </mat-card>
-                        </mat-card>
+                        }
+                        @if(metadataOrganismPartFilters && metadataOrganismPartFilters.length > 0){
+                            <mat-card  class="example-card">
+                                <mat-card-header class="header-content">
+                                    <mat-card-title> Organism Part
+                                    @if (metadataOrganismPartFilters.length > 3) {
+                                        <mat-icon
+                                                (click)="toggleFilter('metadataTab', 'organismPart')"
+                                                style="cursor: pointer; margin-left: auto;">
+                                            {{ showAllFilters['metadataTab']['organismPart'] ? 'remove' : 'add'  }}
+                                        </mat-icon>
+                                    }
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                    <mat-list role="list" style="width: 100%">
+                                        @for (filter of (showAllFilters['metagenomesTab']['organismPart'] ?
+                                            metadataOrganismPartFilters : metadataOrganismPartFilters.slice(0, 3));
+                                            track $index ) {
+
+                                            @if (filter.key != '') {
+                                                <mat-list-item role="listitem"
+                                                               [style]="checkFilterIsActive(filter.key)"
+                                                               (click)="applyFilter('organismPart',filter.key,
+                                                               metadataData,'metadataTab')"
+                                                               style="cursor: pointer">
+                                                    <div fxLayout="row wrap"  fxFlexFill
+                                                         fxFlexAlign="center center" class="badge">
+                                                        <div fxFlex="1 1 auto">
+                                                            <h4 matLine
+                                                                class="vertical-center">{{ filter.key }}</h4>
+                                                        </div>
+                                                        <div style="margin-left: auto">
+                                                            <mat-chip-set>
+                                                                <mat-chip style="font-size: 8px">
+                                                                    {{filter.doc_count }}
+                                                                </mat-chip>
+                                                            </mat-chip-set>
+                                                        </div>
+                                                    </div>
+                                                </mat-list-item>
+                                            }
+
+                                        }
+                                    </mat-list>
+                                </mat-card-actions>
+                            </mat-card>
+                        }
+                        @if(metadataTrackingSystemFilters && metadataTrackingSystemFilters.length > 0){
+                            <mat-card  class="example-card">
+                                <mat-card-header class="header-content">
+                                    <mat-card-title> Tracking System
+                                        @if (metadataTrackingSystemFilters.length > 3) {
+                                            <mat-icon
+                                                    (click)="toggleFilter('metadataTab', 'trackingSystem')"
+                                                    style="cursor: pointer; margin-left: auto;">
+                                                {{ showAllFilters['metadataTab']['trackingSystem'] ? 'remove' : 'add'  }}
+                                            </mat-icon>
+                                        }
+                                    </mat-card-title>
+                                </mat-card-header>
+                                <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                    <mat-list role="list" style="width: 100%">
+                                        @for (filter of (showAllFilters['metagenomesTab']['trackingSystem'] ?
+                                            metadataTrackingSystemFilters : metadataTrackingSystemFilters.slice(0, 3));
+                                            track $index ) {
+
+                                            @if (filter.key != '') {
+                                                <mat-list-item role="listitem"
+                                                               [style]="checkFilterIsActive(filter.key)"
+                                                               (click)="applyFilter('trackingSystem',filter.key,
+                                                               metadataData,'metadataTab')"
+                                                               style="cursor: pointer">
+                                                    <div fxLayout="row wrap"  fxFlexFill
+                                                         fxFlexAlign="center center" class="badge">
+                                                    <div fxFlex="1 1 auto">
+                                                        <h4 matLine
+                                                            class="vertical-center">{{ filter.key }}</h4>
+                                                    </div>
+                                                    <div style="margin-left: auto">
+                                                        <mat-chip-set>
+                                                            <mat-chip style="font-size: 8px">
+                                                                {{filter.doc_count }}
+                                                            </mat-chip>
+                                                        </mat-chip-set>
+                                                    </div>
+                                                </div>
+                                                </mat-list-item>
+                                            }
+
+                                        }
+                                    </mat-list>
+                                </mat-card-actions>
+                            </mat-card>
                         }
                     </div>
 
                     <div class="right-panel">
                         <div class="filters_div">
                             <mat-chip-set>
-                                @for (key of organismFilterState.filterKeys; track $index;) {
-                                    <div>
-                                        @for (value of organismFilterState.activeFilters[key]; track $index;) {
-                                            <ng-container>
-                                                <div class="item4">
-                                                    <mat-chip selected (click)="clearFilter('organism', key, value)"
-                                                            style="cursor: pointer; padding: 0; background-color: #e0efea;">
-                                                        <div style="display: flex; align-items: center;">
-                                                            <div style="margin-right: 3px"> {{ value }}</div>
-                                                            <mat-icon>close</mat-icon>
-                                                        </div>
-                                                    </mat-chip>
-                                                </div>
-                                            </ng-container>
-                                        }
+                                @for (filter of activeFilters; track $index) {
+                                    <div class="item4">
+                                        <mat-chip selected (click)="removeFilter(filter, metadataData,'metadataTab')"
+                                                  style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="margin-right: 3px"> {{filter}}</div>
+                                                <mat-icon>close</mat-icon>
+                                            </div>
+                                        </mat-chip>
                                     </div>
                                 }
-                                @if (getSelectedFilterCount('organism') > 0) {
+                                @if(activeFilters.length > 0 ){
                                     <div class="item4">
-                                        <mat-chip selected (click)="clearFilters('organism')"
+                                        <mat-chip selected (click)="resetDataset('metadataTab')"
                                                   style="cursor: pointer; padding: 0; background-color: #F08080;">
                                             <div style="display: flex; align-items: center;">
                                                 <div style="margin-right: 3px"> Remove all filters</div>
@@ -147,7 +258,10 @@
                                 }
                             </mat-chip-set>
                         </div>
+
                         <div class="data-table-div">
+
+
                             <table #exporter="matTableExporter" #metadataSort="matSort" [dataSource]="metadataData" mat-table matSort matTableExporter>
 
                                 <ng-container matColumnDef="accession">
@@ -231,7 +345,7 @@
 
                             <mat-form-field class="searchField">
                                 <mat-label>Filter</mat-label>
-                                <input matInput
+                                <input matInput name="searchValue" type="search"
                                        (keyup)="applySearchFilter($event, annotationData)"
                                        placeholder="Illumina" #input>
                             </mat-form-field>
@@ -405,8 +519,8 @@
 
                             <mat-form-field class="searchField">
                                 <mat-label>Filter</mat-label>
-                                <input matInput
-                                       (keyup)="applySearchFilter($event, assembliesData)"
+                                <input matInput name="searchValue" type="search"
+                                       (keyup)="assembliesSearch($event)"
                                        placeholder="Illumina" #input>
                             </mat-form-field>
                             <table mat-table [dataSource]="assembliesData" matSort
@@ -489,7 +603,7 @@
 
                             <mat-form-field class="searchField">
                                 <mat-label>Filter</mat-label>
-                                <input matInput (keyup)="applySearchFilter($event, filesData)"
+                                <input type="search" matInput name="searchValue"  (keyup)="filesSearch($event)"
                                        placeholder="Illumina" #input>
                             </mat-form-field>
                             <table mat-table [dataSource]="filesData" matSort
@@ -589,34 +703,152 @@
                             <h1 class="page-header">Related Symbionts</h1>
                             <mat-form-field style="width: 100%; margin-top: 10px;">
                                 <mat-label>Filter</mat-label>
-                                <input matInput [(ngModel)]="symbiontsFilterState.searchTerm"
-                                       (keyup)="applyFilter('symbionts', $event, dataSourceSymbiontsRecords)"
+                                <input matInput  [(ngModel)]='searchSymbiontsText'
+                                       (keyup)="getSearchResults('relatedSymbionts')"
                                        placeholder="Ex. Mia" #input>
                             </mat-form-field>
                             <div class="main-container">
                                 <div class="left-panel">
-                                    @for (group of filterGroups; track $index) {
-                                        <mat-card class="example-card">
+                                    @if(symbiontsSexFilters && symbiontsSexFilters.length > 0){
+                                        <mat-card  class="example-card">
                                             <mat-card-header class="header-content">
-                                                <mat-card-title>{{ group.title }}</mat-card-title>
-                                                @if (symbiontsFilterState.countedFilters[group.key] && symbiontsFilterState.countedFilters[group.key].length > (symbiontsFilterState.filtersLimit[group.key] || 0)) {
-                                                    <i class="material-icons"
-                                                       style="cursor: pointer"
-                                                       (click)="toggleFilterView('symbionts', group.key)">
-                                                        {{ symbiontsFilterState.expandedFilters[group.key] ? 'remove' : 'add' }}
-                                                    </i>
-                                                }
+                                                <mat-card-title> Sex
+                                                    @if (symbiontsSexFilters.length > 3) {
+                                                        <mat-icon
+                                                                (click)="toggleFilter('symbiontsTab', 'sex')"
+                                                                style="cursor: pointer; margin-left: auto;">
+                                                            {{ showAllFilters['symbiontsTab']['sex'] ? 'remove' : 'add'  }}
+                                                        </mat-icon>
+                                                    }
+                                                </mat-card-title>
                                             </mat-card-header>
-                                            <mat-card class="filter-content">
-                                                @for (el of symbiontsFilterState.expandedFilters[group.key] ? symbiontsFilterState.countedFilters[group.key] : (symbiontsFilterState.countedFilters[group.key] | slice:0:symbiontsFilterState.filtersLimit[group.key]); track $index) {
-                                                    <div class="example-item">
-                                                        <button (click)="toggleFilter('symbionts', group.key, el.id)" [ngClass]="{'active-filter': isFilterActive('symbionts', group.key, el.id)}">
-                                                            <span>{{ el.id }}</span>
-                                                            <span class="badge">{{ el.value }}</span>
-                                                        </button>
-                                                    </div>
-                                                }
-                                            </mat-card>
+                                            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                                <mat-list role="list" style="width: 100%">
+                                                    @for (filter of (showAllFilters['symbiontsTab']['sex'] ?
+                                                        symbiontsSexFilters : symbiontsSexFilters.slice(0, 3));
+                                                        track $index ) {
+
+                                                        @if (filter.key != '') {
+                                                            <mat-list-item role="listitem"
+                                                                           [style]="checkFilterIsActive(filter.key)"
+                                                                           (click)="applyFilter('sex',filter.key,
+                                                                           dataSourceSymbiontsRecords,'symbiontsTab')"
+                                                                           style="cursor: pointer">
+                                                                <div fxLayout="row" fxFlexFill
+                                                                     fxFlexAlign="center center">
+                                                                    <div>
+                                                                        <h4 matLine
+                                                                            class="vertical-center">{{ filter.key }}</h4>
+                                                                    </div>
+                                                                    <div style="margin-left: auto">
+                                                                        <mat-chip-set>
+                                                                            <mat-chip style="font-size: 8px">
+                                                                                {{filter.doc_count }}
+                                                                            </mat-chip>
+                                                                        </mat-chip-set>
+                                                                    </div>
+                                                                </div>
+                                                            </mat-list-item>
+                                                        }
+
+                                                    }
+                                                </mat-list>
+                                            </mat-card-actions>
+                                        </mat-card>
+                                    }
+                                    @if(symbiontsOrganismPartFilters && symbiontsOrganismPartFilters.length > 0){
+                                        <mat-card  class="example-card">
+                                            <mat-card-header class="header-content">
+                                                <mat-card-title> Organism Part
+                                                    @if (symbiontsOrganismPartFilters.length > 3) {
+                                                        <mat-icon
+                                                                (click)="toggleFilter('symbiontsTab', 'organismPart')"
+                                                                style="cursor: pointer; margin-left: auto;">
+                                                            {{ showAllFilters['symbiontsTab']['organismPart'] ? 'remove' : 'add'  }}
+                                                        </mat-icon>
+                                                    }
+                                                </mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                                <mat-list role="list" style="width: 100%">
+                                                    @for (filter of (showAllFilters['symbiontsTab']['organismPart'] ?
+                                                        symbiontsOrganismPartFilters : symbiontsOrganismPartFilters.slice(0, 3));
+                                                        track $index ) {
+
+                                                        @if (filter.key != '') {
+                                                            <mat-list-item role="listitem"
+                                                                           [style]="checkFilterIsActive(filter.key)"
+                                                                           (click)="applyFilter('organismPart',filter.key,
+                                                               dataSourceSymbiontsRecords,'symbiontsab')"
+                                                                           style="cursor: pointer">
+                                                                <div fxLayout="row" fxFlexFill
+                                                                     fxFlexAlign="center center">
+                                                                    <div>
+                                                                        <h4 matLine
+                                                                            class="vertical-center">{{ filter.key }}</h4>
+                                                                    </div>
+                                                                    <div style="margin-left: auto">
+                                                                        <mat-chip-set>
+                                                                            <mat-chip style="font-size: 8px">
+                                                                                {{filter.doc_count }}
+                                                                            </mat-chip>
+                                                                        </mat-chip-set>
+                                                                    </div>
+                                                                </div>
+                                                            </mat-list-item>
+                                                        }
+
+                                                    }
+                                                </mat-list>
+                                            </mat-card-actions>
+                                        </mat-card>
+                                    }
+
+                                    @if(symbiontsTrackingSystemFilters && symbiontsTrackingSystemFilters.length > 0){
+                                        <mat-card  class="example-card">
+                                            <mat-card-header class="header-content">
+                                                <mat-card-title> Tracking System
+                                                    @if (symbiontsTrackingSystemFilters.length > 3) {
+                                                        <mat-icon
+                                                                (click)="toggleFilter('symbiontsTab', 'trackingSystem')"
+                                                                style="cursor: pointer; margin-left: auto;">
+                                                            {{ showAllFilters['symbiontsTab']['trackingSystem'] ? 'remove' : 'add'  }}
+                                                        </mat-icon>
+                                                    }
+                                                </mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                                <mat-list role="list" style="width: 100%">
+                                                    @for (filter of (showAllFilters['symbiontsTab']['trackingSystem'] ?
+                                                        symbiontsTrackingSystemFilters : symbiontsTrackingSystemFilters.slice(0, 3));
+                                                        track $index ) {
+
+                                                        @if (filter.key != '') {
+                                                            <mat-list-item role="listitem"
+                                                                           [style]="checkFilterIsActive(filter.key)"
+                                                                           (click)="applyFilter('trackingSystem',filter.key,
+                                                               dataSourceSymbiontsRecords,'symbiontsTab')"
+                                                                           style="cursor: pointer">
+                                                                <div fxLayout="row" fxFlexFill
+                                                                     fxFlexAlign="center center" class="badge">
+                                                                    <div>
+                                                                        <h4 matLine
+                                                                            class="vertical-center">{{ filter.key }}</h4>
+                                                                    </div>
+                                                                    <div style="margin-left: auto">
+                                                                        <mat-chip-set>
+                                                                            <mat-chip style="font-size: 8px">
+                                                                                {{filter.doc_count }}
+                                                                            </mat-chip>
+                                                                        </mat-chip-set>
+                                                                    </div>
+                                                                </div>
+                                                            </mat-list-item>
+                                                        }
+
+                                                    }
+                                                </mat-list>
+                                            </mat-card-actions>
                                         </mat-card>
                                     }
                                 </div>
@@ -624,26 +856,20 @@
                                 <div class="right-panel">
                                     <div class="filters_div">
                                         <mat-chip-set>
-                                            @for (key of symbiontsFilterState.filterKeys; track $index;) {
-                                                <div>
-                                                    @for (value of symbiontsFilterState.activeFilters[key]; track $index;) {
-                                                        <ng-container>
-                                                            <div class="item4">
-                                                                <mat-chip selected (click)="clearFilter('symbionts', key, value)"
-                                                                          style="cursor: pointer; padding: 0; background-color: #e0efea;">
-                                                                    <div style="display: flex; align-items: center;">
-                                                                        <div style="margin-right: 3px"> {{ value }}</div>
-                                                                        <mat-icon>close</mat-icon>
-                                                                    </div>
-                                                                </mat-chip>
-                                                            </div>
-                                                        </ng-container>
-                                                    }
+                                            @for (filter of activeFilters; track $index) {
+                                                <div class="item4">
+                                                    <mat-chip selected (click)="removeFilter(filter, metadataData,'symbiontsTab')"
+                                                              style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <div style="margin-right: 3px"> {{filter}}</div>
+                                                            <mat-icon>close</mat-icon>
+                                                        </div>
+                                                    </mat-chip>
                                                 </div>
                                             }
-                                            @if (getSelectedFilterCount('symbionts') > 0) {
+                                            @if(activeFilters.length > 0 ){
                                                 <div class="item4">
-                                                    <mat-chip selected (click)="clearFilters('symbionts')"
+                                                    <mat-chip selected (click)="resetDataset('symbiontsTab')"
                                                               style="cursor: pointer; padding: 0; background-color: #F08080;">
                                                         <div style="display: flex; align-items: center;">
                                                             <div style="margin-right: 3px"> Remove all filters</div>
@@ -741,6 +967,11 @@
                     @if (dataSourceSymbiontsAssembliesCount != 0) {
                         <div>
                             <h1 class="page-header">Related assemblies</h1>
+                            <mat-form-field style="width: 100%; margin-top: 10px;">
+                                <mat-label>Filter</mat-label>
+                                <input matInput  (keyup)="symbiontsAssembliesSearch($event)"
+                                       placeholder="Ex. Mia" #input>
+                            </mat-form-field>
 
                             <div class="table-container">
                                 <table mat-table
@@ -802,6 +1033,334 @@
                     }
                 </mat-tab>
             }
+
+            @if (organismData?.metagenomes_records?.length ) {
+                <mat-tab label="Metagenomes" class=tab-width>
+
+                        <div>
+                            <h1 class="page-header">Related Metagenomes</h1>
+                            <mat-form-field style="width: 100%; margin-top: 10px;">
+                                <mat-label>Filter</mat-label>
+                                <input matInput
+                                       [(ngModel)]='searchRelatedmetaGenomesText'
+                                       (keyup)="getSearchResults('relatedMetaGenomes')"
+                                       placeholder="Ex. Mia" #input>
+                            </mat-form-field>
+
+                            <div class="main-container">
+                                <div class="left-panel">
+                                    @if(metagenomesSexFilters && metagenomesSexFilters.length > 0){
+                                        <mat-card  class="example-card">
+                                            <mat-card-header class="header-content">
+                                                <mat-card-title> Sex
+                                                    @if (metagenomesSexFilters.length > 3) {
+                                                        <mat-icon
+                                                                (click)="toggleFilter('metagenomesTab', 'sex')"
+                                                                style="cursor: pointer; margin-left: auto;">
+                                                            {{ showAllFilters['metagenomesTab']['sex'] ? 'remove' : 'add'  }}
+                                                        </mat-icon>
+                                                    }
+                                                </mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                                <mat-list role="list" style="width: 100%">
+                                                    @for (filter of (showAllFilters['metagenomesTab']['sex'] ?
+                                                        metagenomesSexFilters : metagenomesSexFilters.slice(0, 3));
+                                                        track $index ) {
+
+                                                        @if (filter.key != '') {
+                                                            <mat-list-item role="listitem"
+                                                                           [style]="checkFilterIsActive(filter.key)"
+                                                                           (click)="applyFilter('sex',filter.key,
+                                                                           dataSourceMetagenomesRecords,'metagenomesTab')"
+                                                                           style="cursor: pointer">
+                                                                <div fxLayout="row" fxFlexFill
+                                                                     fxFlexAlign="center center">
+                                                                    <div>
+                                                                        <h4 matLine
+                                                                            class="vertical-center">{{ filter.key }}</h4>
+                                                                    </div>
+                                                                    <div style="margin-left: auto">
+                                                                        <mat-chip-set>
+                                                                            <mat-chip style="font-size: 8px">
+                                                                                {{filter.doc_count }}
+                                                                            </mat-chip>
+                                                                        </mat-chip-set>
+                                                                    </div>
+                                                                </div>
+                                                            </mat-list-item>
+                                                        }
+
+                                                    }
+                                                </mat-list>
+                                            </mat-card-actions>
+                                        </mat-card>
+                                    }
+
+                                    @if(metagenomesOrganismPartFilters && metagenomesOrganismPartFilters.length > 0){
+                                        <mat-card  class="example-card">
+                                            <mat-card-header class="header-content">
+                                                <mat-card-title> Organism Part
+                                                    @if (metagenomesOrganismPartFilters.length > 3) {
+                                                        <mat-icon
+                                                                (click)="toggleFilter('metagenomesTab', 'organismPart')"
+                                                                style="cursor: pointer; margin-left: auto;">
+                                                            {{ showAllFilters['metagenomesTab']['organismPart'] ? 'remove' : 'add'  }}
+                                                        </mat-icon>
+                                                    }
+                                                </mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                                <mat-list role="list" style="width: 100%">
+                                                    @for (filter of (showAllFilters['metagenomesTab']['organismPart'] ?
+                                                        metagenomesOrganismPartFilters : metagenomesOrganismPartFilters.slice(0, 3));
+                                                        track $index ) {
+
+                                                        @if (filter.key != '') {
+                                                            <mat-list-item role="listitem"
+                                                                           [style]="checkFilterIsActive(filter.key)"
+                                                                           (click)="applyFilter('organismPart',filter.key,
+                                                               dataSourceMetagenomesRecords,'metagenomesTab')"
+                                                                           style="cursor: pointer">
+                                                                <div fxLayout="row" fxFlexFill
+                                                                     fxFlexAlign="center center">
+                                                                    <div>
+                                                                        <h4 matLine
+                                                                            class="vertical-center">{{ filter.key }}</h4>
+                                                                    </div>
+                                                                    <div style="margin-left: auto">
+                                                                        <mat-chip-set>
+                                                                            <mat-chip style="font-size: 8px">
+                                                                                {{filter.doc_count }}
+                                                                            </mat-chip>
+                                                                        </mat-chip-set>
+                                                                    </div>
+                                                                </div>
+                                                            </mat-list-item>
+                                                        }
+
+                                                    }
+                                                </mat-list>
+                                            </mat-card-actions>
+                                        </mat-card>
+                                    }
+                                    @if(metagenomesTrackingSystemFilters && metagenomesTrackingSystemFilters.length > 0){
+                                        <mat-card  class="example-card">
+                                            <mat-card-header class="header-content">
+                                                <mat-card-title> Tracking System
+                                                    @if (metagenomesTrackingSystemFilters.length > 3) {
+                                                        <mat-icon
+                                                                (click)="toggleFilter('metagenomesTab', 'trackingSystem')"
+                                                                style="cursor: pointer; margin-left: auto;">
+                                                            {{ showAllFilters['metagenomesTab']['trackingSystem'] ? 'remove' : 'add'  }}
+                                                        </mat-icon>
+                                                    }
+                                                </mat-card-title>
+                                            </mat-card-header>
+                                            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                                                <mat-list role="list" style="width: 100%">
+                                                    @for (filter of (showAllFilters['metagenomesTab']['trackingSystem'] ?
+                                                        metagenomesTrackingSystemFilters : metagenomesTrackingSystemFilters.slice(0, 3));
+                                                        track $index ) {
+
+                                                        @if (filter.key != '') {
+                                                            <mat-list-item role="listitem"
+                                                                           [style]="checkFilterIsActive(filter.key)"
+                                                                           (click)="applyFilter('trackingSystem',filter.key,
+                                                               dataSourceMetagenomesRecords,'metagenomesTab')"
+                                                                           style="cursor: pointer">
+                                                                <div fxLayout="row" fxFlexFill
+                                                                     fxFlexAlign="center center" class="badge">
+                                                                    <div>
+                                                                        <h4 matLine
+                                                                            class="vertical-center">{{ filter.key }}</h4>
+                                                                    </div>
+                                                                    <div style="margin-left: auto">
+                                                                        <mat-chip-set>
+                                                                            <mat-chip style="font-size: 8px">
+                                                                                {{filter.doc_count }}
+                                                                            </mat-chip>
+                                                                        </mat-chip-set>
+                                                                    </div>
+                                                                </div>
+                                                            </mat-list-item>
+                                                        }
+
+                                                    }
+                                                </mat-list>
+                                            </mat-card-actions>
+                                        </mat-card>
+                                    }
+                                </div>
+
+                                <div class="right-panel">
+                                    <div class="filters_div">
+                                        <mat-chip-set>
+                                            @for (filter of activeFilters; track $index) {
+                                                <div class="item4">
+                                                    <mat-chip selected (click)="removeFilter(filter, dataSourceMetagenomesRecords,'metagenomesTab')"
+                                                              style="cursor: pointer; padding: 0; background-color: #e0efea;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <div style="margin-right: 3px"> {{filter}}</div>
+                                                            <mat-icon>close</mat-icon>
+                                                        </div>
+                                                    </mat-chip>
+                                                </div>
+                                            }
+                                            @if(activeFilters.length > 0 ){
+                                                <div class="item4">
+                                                    <mat-chip selected (click)="resetDataset('metagenomesTab')"
+                                                              style="cursor: pointer; padding: 0; background-color: #F08080;">
+                                                        <div style="display: flex; align-items: center;">
+                                                            <div style="margin-right: 3px"> Remove all filters</div>
+                                                            <mat-icon>close</mat-icon>
+                                                        </div>
+                                                    </mat-chip>
+                                                </div>
+                                            }
+                                        </mat-chip-set>
+                                    </div>
+                                    <div class="data-table-div">
+                                            <table mat-table
+                                                   [dataSource]="dataSourceMetagenomesRecords" >
+                                            <ng-container matColumnDef="accession">
+                                                    <th mat-header-cell *matHeaderCellDef>
+                                                        BioSample ID
+                                                    </th>
+                                                    <td mat-cell *matCellDef="let row">
+                                                        <a mat-button
+                                                           href="https://www.ebi.ac.uk/biosamples/samples/{{row.accession}}">
+                                                            {{ row.accession }}
+                                                        </a>
+                                                    </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="organism">
+                                                <th mat-header-cell *matHeaderCellDef > Organism</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row.organism.text }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="commonName">
+                                                <th mat-header-cell *matHeaderCellDef > Common Name</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row?.commonName }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="sex">
+                                                <th mat-header-cell *matHeaderCellDef > Sex</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row?.sex }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="organismPart">
+                                                <th mat-header-cell *matHeaderCellDef > Organism part</th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row?.organismPart }}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="trackingSystem"
+                                                          class="column-width">
+                                                <th mat-header-cell *matHeaderCellDef
+                                                     class="column-width"> Tracking status
+                                                </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    <mat-chip
+                                                            style="background-color: yellow; color: black">{{ row.trackingSystem }}
+                                                    </mat-chip>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row
+                                                *matHeaderRowDef="specDisplayedColumns"></tr>
+                                            <tr mat-row
+                                                *matRowDef="let row; columns: specDisplayedColumns;"></tr>
+                                            <tr class="mat-row" *matNoDataRow>
+                                                <td class="mat-cell" colspan="4">No data matching the filter "{{ input.value }}"</td>
+                                            </tr>
+                                        </table>
+                                   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"
+                                                       aria-label="Select page of symbionts"
+                                                       #metagenomesRecordsPaginator
+                                                       [length]="specMetagenomesTotalCount"></mat-paginator>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <br>
+                    <br>
+
+
+                    @if (dataSourceMetagenomesAssembliesCount > 0) {
+                        <div>
+                            <h1 class="page-header">Related assemblies</h1>
+
+                            <mat-form-field style="width: 100%; margin-top: 10px;">
+                                <mat-label>Filter</mat-label>
+                                <input matInput
+                                       (keyup)="metagenomesAssembliesSearch($event)"
+                                       placeholder="Ex. Mia" #input>
+                            </mat-form-field>
+                            <div class="table-container">
+                                <table mat-table
+                                       [dataSource]="dataSourceMetagenomesAssemblies">
+                                    <ng-container matColumnDef="accession">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Accession
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            <a mat-button target="_blank"
+                                               href="https://www.ebi.ac.uk/ena/browser/view/{{row.accession}}">{{ row.accession }}</a>
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="assembly_name">
+                                        <th mat-header-cell *matHeaderCellDef> Assembly
+                                            Name
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.assembly_name }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="description">
+                                        <th mat-header-cell *matHeaderCellDef>
+                                            Description
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.description }}
+                                        </td>
+                                    </ng-container>
+
+                                    <ng-container matColumnDef="version"
+                                                  class="column-width">
+                                        <th mat-header-cell *matHeaderCellDef
+                                            class="column-width">
+                                            Version
+                                        </th>
+                                        <td mat-cell *matCellDef="let row">
+                                            {{ row.version }}
+                                        </td>
+                                    </ng-container>
+
+                                    <tr mat-header-row
+                                        *matHeaderRowDef="displayedColumnsAssemblies"></tr>
+                                    <tr mat-row
+                                        *matRowDef="let row; columns: displayedColumnsAssemblies;"></tr>
+
+                                </table>
+                            </div>
+                            <mat-paginator #assembliesMetagenomesPaginator
+                                           [pageSizeOptions]="[5,10, 20, 30]"
+                                           showFirstLastButtons
+                                           [length]="dataSourceMetagenomesAssembliesCount"
+                                           style="width: 100%;"></mat-paginator>
+                        </div>
+                    }
+                </mat-tab>
+            }
+
 
             @if (goatDataLength !== 0) {
                 <mat-tab label="GoaT">

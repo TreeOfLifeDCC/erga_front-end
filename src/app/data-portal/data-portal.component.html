@@ -143,7 +143,36 @@
             </mat-card-actions>
         </mat-card>
         <br>
+        <mat-card class="main-card">
+            <mat-card-title class="card-title">Metagenomes</mat-card-title>
+            <mat-card-actions fxFlexAlign="center" style="width: 100%">
+                <mat-list role="list" style="width: 100%">
+                    @for (filter of metagenomesFilters; track $index) {
+                        <mat-list-item role="listitem"
+                                       [style]="checkStyle(filter.label + '-' + filter.key)"
+                                       (click)="onFilterClick(filter.label + '-' + filter.key)" style="cursor: pointer;"
+                                       style="cursor: pointer">
+                            <div fxLayout="row" fxFlexFill
+                                 fxFlexAlign="center center">
+                                <div>
+                                    <h4 matLine
+                                        class="vertical-center">{{ filter.key }}</h4>
+                                </div>
+                                <div style="margin-left: auto">
+                                    <mat-chip-set>
+                                        <mat-chip style="font-size: 10px">
+                                            {{ filter.doc_count }}
+                                        </mat-chip>
+                                    </mat-chip-set>
+                                </div>
+                            </div>
 
+                        </mat-list-item>
+                    }
+                </mat-list>
+            </mat-card-actions>
+        </mat-card>
+        <br>
         <!-- Experiment Type-->
         <mat-card class="main-card">
             <mat-card-title class="card-title" fxLayout="row" fxLayoutAlign="start center">
