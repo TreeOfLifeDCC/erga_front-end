@@ -29,7 +29,7 @@ export class ApiService {
             'ERGA Swiss node'
         ];
         const offset = pageIndex * pageSize;
-        let url = `https://portal.erga-biodiversity.eu/api/${indexName}?limit=${pageSize}&offset=${offset}`;
+        let url = `http://localhost:8000/${indexName}?limit=${pageSize}&offset=${offset}`;
         if (searchValue) {
             url += `&search=${searchValue}`;
         }
@@ -51,7 +51,10 @@ export class ApiService {
                             filterItem = 'assemblies_status:Done';
                         } else if (filterItem === 'genome_notes') {
                             filterItem = 'genome_notes:Submitted';
-                        } else {
+                        } else if (filterItem === 'images') {
+                            filterItem = 'images_available:true';
+                        }
+                        else {
                             filterItem = `${filterItem}:Done`;
                         }
                     }
@@ -77,7 +80,7 @@ export class ApiService {
     }
 
     getDetailsData(organismName: any, indexName: string) {
-        const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
+        const url = `http://localhost:8000/${indexName}/${organismName}`;
         return this.http.get<any>(url);
     }
 

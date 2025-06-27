@@ -109,6 +109,27 @@
                             </div>
                         </mat-list-item>
                     }
+
+                    @if (aggregations?.images_available.buckets) {
+                        <mat-list-item role="listitem"
+                                       [style]="checkStyle('Images - available')"
+                                       (click)="onFilterClick('Images - available')"
+                                       style="cursor: pointer">
+                            <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
+                                <div>
+                                    <h4 matLine class="vertical-center">
+                                        Images - available</h4>
+                                </div>
+                                <div style="margin-left: auto">
+                                    <mat-chip-set>
+                                        <mat-chip style="font-size: 10px">
+                                            {{ aggregations?.images_available.buckets[0].doc_count }}
+                                        </mat-chip>
+                                    </mat-chip-set>
+                                </div>
+                            </div>
+                        </mat-list-item>
+                    }
                 </mat-list>
             </mat-card-actions>
         </mat-card>
