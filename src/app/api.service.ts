@@ -29,7 +29,7 @@ export class ApiService {
             'ERGA Swiss node'
         ];
         const offset = pageIndex * pageSize;
-        let url = `http://localhost:8000/${indexName}?limit=${pageSize}&offset=${offset}`;
+        let url = `https://portal.erga-biodiversity.eu/api/${indexName}?limit=${pageSize}&offset=${offset}`;
         if (searchValue) {
             url += `&search=${searchValue}`;
         }
@@ -80,7 +80,7 @@ export class ApiService {
     }
 
     getDetailsData(organismName: any, indexName: string) {
-        const url = `http://localhost:8000/${indexName}/${organismName}`;
+        const url = `https://portal.erga-biodiversity.eu/api/${indexName}/${organismName}`;
         return this.http.get<any>(url);
     }
 
