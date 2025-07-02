@@ -332,6 +332,16 @@ export class DataPortalComponent implements OnInit, AfterViewInit {
         }
     }
 
+
+    getImagesAvailableTrueCount(data: any) {
+        if (data) {
+            for (let i = 0; i < data.length; ++i) {
+                if (data[i]['key_as_string'] === 'true')
+                    return data[i]['doc_count'];
+            }
+        }
+    }
+
     convertProjectName(data: string) {
         if (data === 'dtol') {
             return 'DToL';

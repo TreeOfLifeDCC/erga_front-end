@@ -51,7 +51,10 @@ export class ApiService {
                             filterItem = 'assemblies_status:Done';
                         } else if (filterItem === 'genome_notes') {
                             filterItem = 'genome_notes:Submitted';
-                        } else {
+                        } else if (filterItem === 'images') {
+                            filterItem = 'images_available:true';
+                        }
+                        else {
                             filterItem = `${filterItem}:Done`;
                         }
                     }
@@ -122,6 +125,8 @@ export class ApiService {
                             filterItem = 'assemblies_status:Done';
                         }else if (filterItem === 'genome_notes') {
                             filterItem = 'genome_notes:Submitted';
+                        } else if (filterItem === 'images') {
+                            filterItem = 'images_available:true';
                         } else
                             filterItem = `${filterItem}:Done`;
                     }
