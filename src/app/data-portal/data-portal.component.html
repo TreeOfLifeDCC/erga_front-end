@@ -110,15 +110,15 @@
                         </mat-list-item>
                     }
 
-                    @if (aggregations?.images_available.buckets) {
+                    @if (aggregations?.images_available != undefined && getImagesAvailableTrueCount(aggregations?.images_available.buckets)) {
                         <mat-list-item role="listitem"
-                                       [style]="checkStyle('Images - available')"
-                                       (click)="onFilterClick('Images - available')"
+                                       [style]="checkStyle('Images - Available')"
+                                       (click)="onFilterClick('Images - Available')"
                                        style="cursor: pointer">
                             <div fxLayout="row" fxFlexFill fxFlexAlign="center center">
                                 <div>
                                     <h4 matLine class="vertical-center">
-                                        Images - available</h4>
+                                        Images - Available</h4>
                                 </div>
                                 <div style="margin-left: auto">
                                     <mat-chip-set>
