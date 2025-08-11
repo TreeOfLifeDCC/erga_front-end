@@ -39,8 +39,8 @@
               "src/assets/css/jquery.dataTables.css",
               "node_modules/cookieconsent/build/cookieconsent.min.css",
               "node_modules/leaflet/dist/leaflet.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.css",
-              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css"
+              "src/assets/css/MarkerCluster.css",
+              "src/assets/css/MarkerCluster.Default.css"
             ],
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
@@ -48,6 +48,13 @@
               "src/assets/js/jquery.dataTables.min.js",
               "src/assets/js/autocomplete.js",
               "node_modules/cookieconsent/build/cookieconsent.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "leaflet",
+              "leaflet.markercluster",
+              "xlsx",
+              "bootstrap",
+              "jquery"
             ],
             "browser": "src/main.ts"
           },
