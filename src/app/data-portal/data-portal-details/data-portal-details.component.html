@@ -1440,9 +1440,8 @@
                     <mat-tab-group>
                         @if (geoLocation) {
                             <mat-tab label="Sampling Map">
-                                <div class="center-align">
-                                    <app-map-cluster [orgGeoList]="orgGeoList"
-                                                     [specGeoList]="specGeoList"></app-map-cluster>
+                                <div class="col-md-12">
+                                    <app-mapcluster [orgGeoList]="orgGeoList" [specGeoList]="specGeoList"></app-mapcluster>
                                 </div>
                             </mat-tab>
                         }
