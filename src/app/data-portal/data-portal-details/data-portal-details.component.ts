@@ -140,8 +140,8 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
     showData = false;
     showGenomeNote = false;
     geoLocation = false;
-    orgGeoList: any;
-    specGeoList: any;
+    orgGeoList: [];
+    specGeoList: [];
     showMetagenomes= false;
     nbnatlas: any;
     nbnatlasMapUrl: string;
@@ -288,18 +288,30 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
                 this.getFilters();
                 this.metadataData = new MatTableDataSource(this.organismData['records']);
 
-                this.orgGeoList = this.transformGeoList(this.metadataData.filteredData);
+                if (this.organismData.orgGeoList !== undefined && this.organismData.orgGeoList.length !== 0){
+                    this.geoLocation = true;
+                    // tslint:disable-next-line:only-arrow-functions
+                    this.orgGeoList = this.organismData.orgGeoList.filter((item: { lat: string | null; lng: string
+                            | null; }) => (item.lat != null && item.lat
+                        !== 'not collected' && item.lat !== 'not provided') || (item.lng != null && item.lat
+                        !== 'not collected' && item.lng !== 'not provided'));
 
-                this.specGeoList = [];
-                if (this.orgGeoList && this.orgGeoList.length !== 0) {
-                    for (let i = 0; i < this.orgGeoList.length; i++) {
-                        const { lat, lng } = this.orgGeoList[i];
-                        if (lat !== 'not collected' && lat !== 'not provided' && lat !== null && lng !== null) {
-                            this.geoLocation = true;
-                            break;
-                        }
-                    }
+                }else {
+                    this.orgGeoList = [];
                 }
+
+                if (this.organismData.specGeoList !== undefined && this.organismData.specGeoList.length !== 0){
+                    // tslint:disable-next-line:only-arrow-functions
+                    this.specGeoList = this.organismData.specGeoList.filter(function(item: { lat: string | null;
+                        lng: string | null; }) {
+                        return (item.lat != null && item.lat  !== 'not collected'  && item.lat !== 'not provided') ||
+                            (item.lng != null && item.lat !== 'not collected' && item.lng !== 'not provided');
+                    });
+
+                }else {
+                    this.specGeoList = [];
+                }
+
 
                 this.nbnatlas = this.organismData['nbnatlas'];
 
