@@ -670,7 +670,7 @@
                             </mat-expansion-panel-header>
                             @for(gen of organismData?.genome_notes; track $index){
                                 <div class="genome-card">
-                                    <h2 class="title" [innerHTML]="sanitizeHTML(gen.title)"></h2>
+                                    <h2 class="title" [innerHTML]="gen.title"></h2>
                                     <div class="content">
                                         <img class="image" src="{{gen.figureURI}}" alt="Genome Image" (click)="openPopup(gen.figureURI)">
                                         <div class="text">

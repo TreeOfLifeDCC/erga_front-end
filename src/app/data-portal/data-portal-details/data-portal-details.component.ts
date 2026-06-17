@@ -1,7 +1,7 @@
 import {Component, OnInit, AfterViewInit, ViewChild, Input, ElementRef} from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { ApiService } from '../../api.service';
-import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import {TitleCasePipe, SlicePipe, JsonPipe} from '@angular/common';
 import { FlexLayoutModule } from '@ngbracket/ngx-layout';
 import { MatTableExporterModule } from 'mat-table-exporter';
@@ -701,10 +701,6 @@ export class DataPortalDetailsComponent implements OnInit, AfterViewInit {
 
     closePopup() {
         this.popupImage = null;
-    }
-
-    sanitizeHTML(content: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(content);
     }
 
     onMapLoad() {
